@@ -5,6 +5,7 @@ import com.theone.common.ext.logE
 import com.theone.common.ext.logI
 import com.theone.common.ext.matchResult
 import com.theone.common.ext.trimAll
+import com.theone.music.app.ext.getMusicName
 import com.theone.music.app.ext.writeStringToFile
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.MusicInfo
@@ -68,7 +69,7 @@ object DataRepository {
                         val link = body.attr("href")
                         val name = body.html()
                         "avatar: $avatar  link: $link  name: $name".logI()
-                        list.add(Music(NetConstant.BASE_URL + avatar, name, link))
+                        list.add(Music(NetConstant.BASE_URL + avatar, name.getMusicName(), link))
                     }
                 }
             }

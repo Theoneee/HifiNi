@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.theone.music">
 
     <application
@@ -11,13 +12,34 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <service android:name=".player.notification.PlayerService" />
+
+        <receiver
+            android:name=".player.notification.PlayerReceiver"
+            android:exported="false"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="pure_music.kunminx.close" />
+                <action android:name="pure_music.kunminx.pause" />
+                <action android:name="pure_music.kunminx.next" />
+                <action android:name="pure_music.kunminx.play" />
+                <action android:name="pure_music.kunminx.previous" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

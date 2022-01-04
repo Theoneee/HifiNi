@@ -1,6 +1,5 @@
 package com.theone.music.ui
 
-import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -8,20 +7,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.theone.common.ext.match_wrap
 import com.theone.common.widget.TheSearchView
 import com.theone.music.R
-import com.theone.music.app.ext.writeStringToFile
 import com.theone.music.data.model.Music
-import com.theone.music.databinding.PageMainBinding
 import com.theone.music.ui.adapter.SearchAdapter
 import com.theone.music.viewmodel.MainViewModel
-import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.mvvm.core.base.fragment.BasePagerPullRefreshFragment
 import com.theone.mvvm.core.databinding.BasePullFreshFragmentBinding
-import com.theone.mvvm.core.databinding.BaseRecyclerPagerFragmentBinding
-import com.theone.mvvm.core.ext.addFailTipsObserve
-import com.theone.mvvm.core.util.FileDirectoryUtil
 import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
-import com.theone.mvvm.ext.qmui.setTitleWitchBackBtn
-import java.io.File
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -47,7 +38,9 @@ import java.io.File
  * @email 625805189@qq.com
  * @remark
  */
-class MainFragment:BasePagerPullRefreshFragment<Music,MainViewModel,BasePullFreshFragmentBinding>(),TheSearchView.OnTextChangedListener {
+class HomeFragment:BasePagerPullRefreshFragment<Music,MainViewModel,BasePullFreshFragmentBinding>(),TheSearchView.OnTextChangedListener {
+
+    override fun showTopBar(): Boolean =true
 
     override fun initView(root: View) {
         super.initView(root)
@@ -56,7 +49,7 @@ class MainFragment:BasePagerPullRefreshFragment<Music,MainViewModel,BasePullFres
                 onFirstLoading()
             }
             setCenterView(TheSearchView(requireContext(),true).apply {
-                mSearchListener = this@MainFragment
+                mSearchListener = this@HomeFragment
                 layoutParams = RelativeLayout.LayoutParams(match_wrap).apply {
                     addRule(RelativeLayout.LEFT_OF,R.id.topbar_right_view)
                     marginStart = 50
@@ -69,6 +62,8 @@ class MainFragment:BasePagerPullRefreshFragment<Music,MainViewModel,BasePullFres
         if(mViewModel.keyWord.isEmpty()){
             return
         }
+        mViewModel.isFirst = true
+        mViewModel.isFresh = false
         super.onFirstLoading()
     }
 
@@ -76,7 +71,7 @@ class MainFragment:BasePagerPullRefreshFragment<Music,MainViewModel,BasePullFres
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
         val music = adapter.getItem(position) as Music
-        startFragment(MusicInfoFragment.newInstance(music.link))
+        startFragment(MusicInfoFragment.newInstance(music.link,music.name))
     }
 
     override fun onLoadMoreComplete() {

@@ -54,3 +54,10 @@ fun String.fullSize():String{
     }
     return this
 }
+
+fun String.getMusicName():String{
+    if(contains("《")&&contains("》")){
+        return substring(indexOf("《")+1,indexOf("》"))
+    }
+    return this
+}
