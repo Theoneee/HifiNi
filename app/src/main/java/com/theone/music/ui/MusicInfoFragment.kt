@@ -48,7 +48,7 @@ class MusicInfoFragment private constructor() :
 
     private val mLink: String by getValueNonNull(BundleConstant.DATA)
 
-    private val mMediaPlayer:MediaPlayer by lazy {
+    private val mMediaPlayer: MediaPlayer by lazy {
         MediaPlayer()
     }
 
@@ -57,17 +57,17 @@ class MusicInfoFragment private constructor() :
     }
 
     override fun createObserver() {
-        mViewModel.getResponseLiveData().observeInFragment(this){
+        mViewModel.getResponseLiveData().observeInFragment(this) {
             showSuccessPage()
             mViewModel.cover.set(it.pic.fullSize())
             setMediaSource(it.getMusicUrl())
         }
-        mViewModel.getErrorLiveData().observeInFragment(this){
+        mViewModel.getErrorLiveData().observeInFragment(this) {
             showErrorPage(it)
         }
     }
 
-    private fun setMediaSource(url:String){
+    private fun setMediaSource(url: String) {
         mMediaPlayer.run {
             setDataSource(url)
             prepare()
@@ -82,16 +82,22 @@ class MusicInfoFragment private constructor() :
     }
 
     override fun onLazyInit() {
+        onPageReLoad()
+    }
+
+    override fun onPageReLoad() {
         showLoadingPage()
         mViewModel.requestServer()
     }
 
+    override fun onPause() {
+        super.onPause()
+        mMediaPlayer.stop()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        mMediaPlayer.run {
-            stop()
-            release()
-        }
+        mMediaPlayer.release()
     }
 
 }

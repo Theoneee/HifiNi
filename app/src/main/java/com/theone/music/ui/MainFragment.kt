@@ -88,8 +88,7 @@ class MainFragment:BasePagerPullRefreshFragment<Music,MainViewModel,BasePullFres
     override fun getRefreshLayout(): PullRefreshLayout = mBinding.refreshLayout
 
     override fun onSearchViewClick(content: String, empty: Boolean) {
-        Log.e(TAG, "onSearchViewClick: " )
-//        onFirstLoading()
+        onFirstLoading()
     }
 
     override fun onSearchViewTextChanged(content: String, empty: Boolean) {

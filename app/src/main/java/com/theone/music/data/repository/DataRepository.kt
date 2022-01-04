@@ -76,49 +76,32 @@ object DataRepository {
         }
     }
 
-    private suspend fun parseInfo(response: String): List<Music> {
-        return withContext(Dispatchers.IO) {
-            val list = mutableListOf<Music>()
-            Jsoup.parse(response).run {
-                val elements = select("li.media.thread.tap")
-                val pageInfo = select("ul.pagination")
-
-                for (element in elements) {
-                    with(element) {
-                        val avatar = select("img.avatar-3").attr("src")
-                        val body = select("div.subject.break-all").select("a").first()
-                        val link = body.attr("href")
-                        val name = body.html()
-                        "avatar: $avatar  link: $link  name: $name".logI()
-                        list.add(Music(NetConstant.BASE_URL + avatar, name, link))
-                    }
-                }
-            }
-            list
-        }
-    }
-
-
     suspend fun getMusicInfo(link: String): MusicInfo {
         val response = RxHttp.get(link)
             .toStr()
             .await()
         var result = ""
-        val elements = Jsoup.parse(response).select("script")
-        for (element in elements) {
-            val item = element.toString()
-            if (item.contains("APlayer")) {
-                result = item
-                break
+        try {
+            val elements = Jsoup.parse(response).select("script")
+            for (element in elements) {
+                val item = element.toString()
+                if (item.contains("APlayer")) {
+                    result = item
+                    break
+                }
             }
+            if(result.isEmpty()){
+                TODO("暂无资源")
+            }
+            val start = result.indexOf("[")+1
+            val end = result.indexOf("}")+1
+            result = result.substring(start, end)
+            val musicInfo = GsonUtil.fromJson<MusicInfo>(result,MusicInfo::class.java)
+            return musicInfo
+        }catch (e:Exception){
+            TODO("暂无资源")
         }
 
-        val start = result.indexOf("[")+1
-        val end = result.indexOf("}")+1
-        result = result.substring(start, end)
-        val musicInfo = GsonUtil.fromJson<MusicInfo>(result,MusicInfo::class.java)
-        "getMusicInfo: $musicInfo".logE()
-        return musicInfo
     }
 
 }
