@@ -1,0 +1,15 @@
+apply plugin: 'com.android.application'
+apply from: "../default.gradle"
+
+android {
+    defaultConfig {
+        applicationId "com.theone.music"
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    // html解析
+    implementation "org.jsoup:jsoup:1.11.3"
+}

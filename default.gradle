@@ -1,0 +1,59 @@
+apply from: "../base.gradle"
+
+// 通用配置
+android {
+
+    defaultConfig {
+        multiDexEnabled true
+
+        kapt {
+            arguments {
+                arg("rxhttp_rxjava", "3.1.1")
+                arg("rxhttp_package", "rxhttp.wrapper.param")  ////非必须，指定RxHttp类包名
+            }
+        }
+
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->  // each 改为 all
+            def fileName = "lover_new_${variant.versionName}_release.apk"
+            def outFile = output.outputFile
+            if (outFile != null && outFile.name.endsWith('.apk')) {
+                outputFileName = fileName  //  output.outputFile 改为 outputFileName
+            }
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("..\\keystore\\lover.jks")
+            storePassword "lover758258"
+            keyAlias "lover"
+            keyPassword "lover758258"
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            // Zipalign优化
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+//    implementation project(path: ':core')
+    implementation 'com.github.Theoneee:TheCore-MVVM:1.0.6.1'
+    kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:2.7.1" //生成RxHttp类
+}

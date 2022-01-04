@@ -1,0 +1,80 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext {
+        minSdkVersion = 21
+        targetSdkVersion = 30
+        compileSdkVersion = 30
+        buildVersion = '30.0.3'
+
+        kotlin_version = "1.4.32"
+    }
+    repositories {
+        maven{ url'http://maven.aliyun.com/nexus/content/groups/public/' }
+        jcenter { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/central/'}
+        google()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.1.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url 'https://www.jitpack.io'
+        }
+        maven{ url'http://maven.aliyun.com/nexus/content/groups/public/' }
+        jcenter { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/central/'}
+        google()
+    }
+    //配置这个
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+/*****   使用Gradle assembleRelease 打包，以下代码为将打包好的APK文件复制到项目目录下的apks文件夹下  *******/
+
+subprojects(){
+    // 这里获取到assembleRelease和assembleDebug的task任务
+    //注意这里使用tasks.getByName("assembleRelease")会报错，找不到这个task
+    def releaseTasks = project.getTasksByName("assembleRelease",false)
+    copyApkFile(releaseTasks, project)
+}
+
+def copyApkFile(Set<Task> tasks , Project project) {
+    for (task in tasks) {
+        def projectPath = project.getProjectDir().getAbsolutePath() // 项目地址
+        def copyPath = projectPath + "\\build\\outputs\\apk\\release" // 复制的地址
+        def target = rootProject.getProjectDir().getAbsolutePath() + "\\apks"  // 目标地址
+        println "=================== assemble release path = $copyPath"
+        def file = new File(copyPath)
+        //在生成此apk之前，如果先将之前存在生成的apk则删除
+        if (file.exists()) {
+            def result = delete(copyPath)
+            println "=================== clear before create $copyPath + ---- $result"
+        }
+        task.doLast {
+            if (file.exists()) {
+                //将生成的apk拷贝出来
+                copy{ //copy是gradle中的project提供的方法，用于拷贝，里面有两个特定的属性
+                    //from srcDir ， into desDir （当这个目录不存在的时候会尝试创建这个文件夹）
+                    println "=================== copy file from ---- "+copyPath+" to ---- "+target
+                    from copyPath
+                    into target
+                }
+                println "=================== delete after copy -------------------$copyPath "
+                // 拷贝完后删除
+                delete(copyPath)
+            }
+        }
+    }
+}

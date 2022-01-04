@@ -1,0 +1,30 @@
+别名: lover
+创建日期: 2020-7-30
+条目类型: PrivateKeyEntry
+证书链长度: 1
+证书[1]:
+所有者: CN=Lover, OU=Lover, O=Lover, L=TR, ST=GZ, C=86
+发布者: CN=Lover, OU=Lover, O=Lover, L=TR, ST=GZ, C=86
+序列号: 2cc7a7b9
+有效期开始日期: Thu Jul 30 11:53:57 GMT+08:00 2020, 截止日期: Mon Jul 24 11:53:57 GMT+08:00 2045
+证书指纹:
+         MD5: BC:66:F4:1D:F0:DB:79:AC:E2:6E:04:06:A6:E9:C3:33
+         SHA1: BA:CD:92:0E:FB:65:9C:1A:E9:FC:AE:C1:70:D2:3F:D4:96:1D:1F:D4
+         SHA256: 6D:CD:B6:0B:36:BD:11:BF:9E:8C:93:46:9F:A8:EF:31:FB:91:EA:89:B5:50:2C:1E:6B:87:54:F9:44:8C:C8:07
+         签名算法名称: SHA256withRSA
+         版本: 3
+
+扩展:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 02 24 3B C6 B1 AC DF 23   39 46 D4 2F BF A7 A2 BE  .$;....#9F./....
+0010: 2C A3 81 E0                                        ,...
+]
+]
+
+
+
+*******************************************
+*******************************************
