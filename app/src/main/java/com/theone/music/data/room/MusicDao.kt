@@ -42,7 +42,7 @@ interface MusicDao {
     @Query("DELETE FROM MusicInfo WHERE url ==:url")
     fun delete(url:String)
 
-    @Query("select * from MusicInfo ")
+    @Query("select * from MusicInfo order by createDate desc ")
     suspend fun getMusicList():List<MusicInfo>
 
     @Query("select * from MusicInfo where shareUrl ==:url")
