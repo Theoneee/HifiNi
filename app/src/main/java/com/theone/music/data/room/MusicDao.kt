@@ -1,10 +1,7 @@
-package com.theone.music.ui.adapter
+package com.theone.music.data.room
 
-import com.theone.music.R
-import com.theone.music.data.model.Music
+import androidx.room.*
 import com.theone.music.data.model.MusicInfo
-import com.theone.music.databinding.ItemMusicBinding
-import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -25,10 +22,30 @@ import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-04 14:15
+ * @date 2021-10-08 09:31
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class MusicAdapter:TheBaseQuickAdapter<MusicInfo,ItemMusicBinding>(R.layout.item_music) {
+@Dao
+interface MusicDao {
+
+    @Insert
+    fun insert(backgrounds: List<MusicInfo>)
+
+    @Update
+    fun update(backgrounds: List<MusicInfo>):Int
+
+    @Delete
+    fun delete(backgrounds: List<MusicInfo>):Int
+
+    @Query("DELETE FROM MusicInfo WHERE url ==:url")
+    fun delete(url:String)
+
+    @Query("select * from MusicInfo ")
+    suspend fun getMusicList():List<MusicInfo>
+
+    @Query("select * from MusicInfo where shareUrl ==:url")
+    suspend fun findMusics(url: String):List<MusicInfo>
+
 }

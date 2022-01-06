@@ -1,7 +1,13 @@
 package com.theone.music.data.model
 
+import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.theone.common.callback.IImageUrl
+import com.theone.music.app.ext.getHtmlString
 import com.theone.music.net.NetConstant
+import kotlinx.android.parcel.Parcelize
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -27,27 +33,45 @@ import com.theone.music.net.NetConstant
  * @email 625805189@qq.com
  * @remark
  */
-data class MusicInfo(var title: String, var author: String, var url: String, var pic: String):
-    IImageUrl {
 
-    fun getMusicUrl():String {
-        return if (url.startsWith("http")) {
-            url
-        } else {
-            NetConstant.BASE_URL + url
+@Entity(tableName = "MusicInfo",indices = [Index(value = ["shareUrl"],unique = true)])
+@Parcelize
+data class MusicInfo(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var title: String = "",
+    var author: String = "",
+    var url: String = "",
+    var pic: String = "",
+    var shareUrl: String = "",
+    var realUrl: String = "",
+    var createDate: Long = 0
+) : Parcelable {
+
+    constructor(music: TestAlbum.TestMusic?):this(){
+        music?.run {
+            this@MusicInfo.title = title
+            this@MusicInfo.author = author
+            this@MusicInfo.pic = coverImg
+            this@MusicInfo.url = url
+            this@MusicInfo.shareUrl = shareUrl
+            this@MusicInfo.author = author
         }
     }
 
-    override fun getHeight(): Int  = 0
+    fun getMusicUrl(): String = if (realUrl.isEmpty()) url else realUrl
 
-    override fun getImageUrl(): String = getMusicUrl()
+    fun getAuthorHtml(): CharSequence{
+        return author.getHtmlString()
+    }
 
-    override fun getRefer(): String? = null
+    fun getTitleHtml(): CharSequence{
+        return title.getHtmlString()
+    }
 
-    override fun getThumbnail(): String?  = null
+    override fun toString(): String {
+        return "MusicInfo(id=$id, title='$title', author='$author', url='$url', pic='$pic', shareUrl='$shareUrl', realUrl='$realUrl', createDate=$createDate)"
+    }
 
-    override fun getWidth(): Int = 0
-
-    override fun isVideo(): Boolean  = false
 
 }

@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.theone.music.databinding.**{*;}
+-keep class com.theone.music.data.model.** { *; }
+-keep class com.theone.music.net.** { *; }
+-keep class com.kunminx.player.bean.** {*;}

@@ -8,6 +8,7 @@ import com.theone.common.ext.match_wrap
 import com.theone.common.widget.TheSearchView
 import com.theone.music.R
 import com.theone.music.data.model.Music
+import com.theone.music.data.model.MusicInfo
 import com.theone.music.ui.adapter.MusicAdapter
 import com.theone.music.viewmodel.MainViewModel
 import com.theone.mvvm.core.base.fragment.BasePagerPullRefreshFragment
@@ -38,7 +39,7 @@ import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
  * @email 625805189@qq.com
  * @remark
  */
-class SearchFragment:BasePagerPullRefreshFragment<Music,MainViewModel,BasePullFreshFragmentBinding>(),TheSearchView.OnTextChangedListener {
+class SearchFragment:BasePagerPullRefreshFragment<MusicInfo,MainViewModel,BasePullFreshFragmentBinding>(),TheSearchView.OnTextChangedListener {
 
     override fun showTopBar(): Boolean =true
 
@@ -70,11 +71,11 @@ class SearchFragment:BasePagerPullRefreshFragment<Music,MainViewModel,BasePullFr
         super.onFirstLoading()
     }
 
-    override fun createAdapter(): BaseQuickAdapter<Music, *> = MusicAdapter()
+    override fun createAdapter(): BaseQuickAdapter<MusicInfo, *> = MusicAdapter()
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
-        val music = adapter.getItem(position) as Music
-        startFragment(PlayerFragment.newInstance(music.link,music.name))
+        val music = adapter.getItem(position) as MusicInfo
+        startFragment(PlayerFragment.newInstance(music))
     }
 
     override fun onLoadMoreComplete() {

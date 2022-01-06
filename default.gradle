@@ -17,7 +17,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->  // each 改为 all
-            def fileName = "lover_new_${variant.versionName}_release.apk"
+            def fileName = "HifiNi_${variant.versionName}_release.apk"
             def outFile = output.outputFile
             if (outFile != null && outFile.name.endsWith('.apk')) {
                 outputFileName = fileName  //  output.outputFile 改为 outputFileName
@@ -53,7 +53,6 @@ android {
 }
 
 dependencies {
-//    implementation project(path: ':core')
     implementation 'com.github.Theoneee:TheCore-MVVM:1.0.6.1'
     kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:2.7.1" //生成RxHttp类
 }

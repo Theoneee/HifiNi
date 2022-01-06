@@ -1,17 +1,17 @@
 package com.theone.music.ui
 
 import android.view.View
+import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.theone.common.constant.BundleConstant
-import com.theone.common.ext.bundle
-import com.theone.common.ext.getValueNonNull
+import com.theone.common.ext.match_wrap
+import com.theone.common.widget.TheSearchView
+import com.theone.music.R
 import com.theone.music.data.model.Music
-import com.theone.music.data.model.MusicInfo
-import com.theone.music.net.NetConstant
 import com.theone.music.ui.adapter.MusicAdapter
-import com.theone.music.viewmodel.MusicViewModel
+import com.theone.music.viewmodel.MainViewModel
 import com.theone.mvvm.core.base.fragment.BasePagerPullRefreshFragment
+import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 import com.theone.mvvm.core.databinding.BasePullFreshFragmentBinding
 import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
 
@@ -39,32 +39,16 @@ import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
  * @email 625805189@qq.com
  * @remark
  */
-class MusicItemFragment private constructor() :
-    BasePagerPullRefreshFragment<MusicInfo, MusicViewModel, BasePullFreshFragmentBinding>() {
+abstract class BasePagerFragment<T, VM : BaseListViewModel<T>> :BasePagerPullRefreshFragment<T,VM,BasePullFreshFragmentBinding>() {
 
-    companion object {
-        fun newInstance(type: Int): MusicItemFragment = MusicItemFragment().bundle {
-            putInt(BundleConstant.TYPE, type)
-        }
-    }
-
-    val mType: Int by getValueNonNull(BundleConstant.TYPE)
-
-    override fun initData() {
-        mViewModel.type = mType
-        mViewModel.url = NetConstant.FORUM
-    }
-
-    override fun createAdapter(): BaseQuickAdapter<MusicInfo, *> = MusicAdapter()
-
-    override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
-        val music = adapter.getItem(position) as MusicInfo
-        startFragment(PlayerFragment.newInstance(music))
-    }
+    override fun getDataBindingClass(): Class<*> = BasePullFreshFragmentBinding::class.java
 
     override fun getRecyclerView(): RecyclerView = mBinding.recyclerView
 
     override fun getRefreshLayout(): PullRefreshLayout = mBinding.refreshLayout
 
+    override fun onPageReLoad() {
+        onFirstLoading()
+    }
 
 }

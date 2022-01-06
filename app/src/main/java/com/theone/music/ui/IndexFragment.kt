@@ -42,13 +42,13 @@ class IndexFragment:BaseTabInTitleFragment<BaseViewModel>() {
         fragments: MutableList<QMUIFragment>
     ) {
 
-//        with(tabs){
-//            addTab("首页")
-//        }
-//
-//        with(fragments){
-//            add(HomeFragment())
-//        }
+        with(tabs){
+            addTab("收藏")
+        }
+
+        with(fragments){
+            add(CollectionFragment())
+        }
 
         for ((k,v) in NetConstant.CATEGORY){
             tabs.addTab(k)

@@ -37,14 +37,23 @@ public class TestAlbum extends BaseAlbumItem<TestAlbum.TestMusic, TestAlbum.Test
 
     public static class TestMusic extends BaseMusicItem<TestArtist> {
 
-        private String songMid;
+        private String shareUrl;
+        private String author;
 
-        public String getSongMid() {
-            return songMid;
+        public String getAuthor() {
+            return author;
         }
 
-        public void setSongMid(String songMid) {
-            this.songMid = songMid;
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public String getShareUrl() {
+            return shareUrl;
+        }
+
+        public void setShareUrl(String shareUrl) {
+            this.shareUrl = shareUrl;
         }
     }
 

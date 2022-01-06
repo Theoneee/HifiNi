@@ -23,4 +23,16 @@
         <attr name="drawableColor" format="reference|color" />
     </declare-styleable>
 
+    <declare-styleable name="TheSelectImageView">
+        <!-- 普通状态下的图片 -->
+        <attr name="img_normal" format="reference" />
+        <!-- 选中状态下的图片 -->
+        <attr name="img_selected" format="reference" />
+        <!-- 动画时间 -->
+        <attr name="animal_duration" format="integer" />
+        <!-- 动画开关 -->
+        <attr name="animal_enable" format="boolean" />
+        <attr name="isSelected" format="boolean" />
+    </declare-styleable>
+
 </resources>

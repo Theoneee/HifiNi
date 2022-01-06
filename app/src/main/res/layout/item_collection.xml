@@ -37,23 +37,17 @@
             android:layout_marginBottom="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="20dp"
-            android:text="@{item.getTitleHtml()}"
+            android:text="@{item.title}"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"/>
 
-<!--        <com.theone.music.ui.view.FrequencyView-->
-<!--            android:layout_width="50dp"-->
-<!--            android:layout_height="50dp"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/name"-->
-<!--            app:layout_constraintBottom_toBottomOf="@id/avatar"-->
-<!--            app:layout_constraintStart_toStartOf="@id/name"/>-->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="信乐团"
             android:textSize="12sp"
-            android:text="@{item.getAuthorHtml()}"
+            android:text="@{item.author}"
             android:textColor="@color/qmui_config_color_gray_3"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintBottom_toBottomOf="@id/avatar"

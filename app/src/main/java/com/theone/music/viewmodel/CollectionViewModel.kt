@@ -1,10 +1,9 @@
-package com.theone.music.ui.adapter
+package com.theone.music.viewmodel
 
-import com.theone.music.R
-import com.theone.music.data.model.Music
+import com.theone.lover.data.room.AppDataBase
 import com.theone.music.data.model.MusicInfo
-import com.theone.music.databinding.ItemMusicBinding
-import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
+import com.theone.music.data.repository.DataRepository
+import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -25,10 +24,16 @@ import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-04 14:15
+ * @date 2022-01-06 13:43
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class MusicAdapter:TheBaseQuickAdapter<MusicInfo,ItemMusicBinding>(R.layout.item_music) {
+class CollectionViewModel:BaseListViewModel<MusicInfo>() {
+
+    override fun requestServer() {
+       request({
+           onSuccess(DataRepository.MUSIC_DAO.getMusicList())
+       })
+    }
 }

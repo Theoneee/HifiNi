@@ -1,8 +1,11 @@
 package com.theone.music.data.repository
 
 import com.theone.common.ext.logI
+import com.theone.lover.data.room.AppDataBase
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.MusicInfo
+import com.theone.music.data.model.TestAlbum
+import com.theone.music.data.room.MusicDao
 import com.theone.music.net.NetConstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,6 +16,7 @@ import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.utils.GsonUtil
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -45,6 +49,10 @@ class DataRepository {
         val INSTANCE: DataRepository by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             DataRepository()
         }
+
+        val MUSIC_DAO: MusicDao by lazy {
+            AppDataBase.INSTANCE.musicDao()
+        }
     }
 
     suspend fun request(url: String, vararg formatArgs: Any): String {
@@ -60,9 +68,9 @@ class DataRepository {
      * @param response String
      * @return List<Music>
      */
-    private suspend fun parseMusicList(response: String): List<Music> {
+    private suspend fun parseMusicList(response: String): List<MusicInfo> {
         return withContext(Dispatchers.IO) {
-            val list = mutableListOf<Music>()
+            val list = mutableListOf<MusicInfo>()
             Jsoup.parse(response).run {
                 val elements = select("li.media.thread.tap")
                 val pageInfo = select("ul.pagination")
@@ -95,7 +103,14 @@ class DataRepository {
                                 }
                         }
 
-                        list.add(Music(author, NetConstant.BASE_URL + avatar, name, link))
+                        list.add(
+                            MusicInfo(
+                                author = author,
+                                pic = NetConstant.BASE_URL + avatar,
+                                title = name,
+                                shareUrl = link
+                            )
+                        )
                     }
                 }
             }
@@ -141,17 +156,44 @@ class DataRepository {
         }
     }
 
-    suspend fun get(url: String, vararg formatArgs: Any): List<Music> {
+    suspend fun get(url: String, vararg formatArgs: Any): List<MusicInfo> {
         return parseMusicList(request(url, *formatArgs))
     }
 
     suspend fun getMusicInfo(link: String): MusicInfo {
         val response = request(link)
         return parseMusicInfo(response).apply {
+            shareUrl = link
             if (!url.startsWith("http")) {
                 // 然后得到重定向后的地址
-                url = getRedirectUrl(url)
+                realUrl = getRedirectUrl(url)
             }
+        }
+    }
+
+    fun createAlbum(data: MusicInfo): TestAlbum {
+        val artists = TestAlbum.TestArtist().apply {
+            name = "UnKnown"
+        }
+        val music = mutableListOf<TestAlbum.TestMusic>().apply {
+            add(TestAlbum.TestMusic().apply {
+                musicId = UUID.randomUUID().toString()
+                shareUrl = data.shareUrl
+                coverImg = data.pic
+                title = data.title
+                author = data.author
+                url = data.getMusicUrl()
+                artist = artists
+            })
+        }
+
+        return TestAlbum().apply {
+            albumId = UUID.randomUUID().toString()
+            title = "HiFiNi"
+            summary = data.author
+            artist = artists
+            coverImg = data.pic
+            musics = music
         }
     }
 

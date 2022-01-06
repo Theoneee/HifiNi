@@ -144,7 +144,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
     setChangingPlayingMusic(false);
     bindProgressListener();
     mIsPaused = false;
-    pauseLiveData.setValue(false);
+    pauseLiveData.postValue(false);
     if (mIServiceNotifier != null) {
       mIServiceNotifier.notifyService(true);
     }
@@ -175,9 +175,9 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
   }
 
   public void requestLastPlayingInfo() {
-    playingMusicLiveData.setValue(mCurrentPlay);
-    changeMusicLiveData.setValue(mChangeMusic);
-    pauseLiveData.setValue(mIsPaused);
+    playingMusicLiveData.postValue(mCurrentPlay);
+    changeMusicLiveData.postValue(mChangeMusic);
+    pauseLiveData.postValue(mIsPaused);
   }
 
   public void setSeek(int progress) {
@@ -228,7 +228,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
   public void pauseAudio() {
     MediaPlayerHelper.getInstance().getMediaPlayer().pause();
     mIsPaused = true;
-    pauseLiveData.setValue(true);
+    pauseLiveData.postValue(true);
     if (mIServiceNotifier != null) {
       mIServiceNotifier.notifyService(true);
     }
@@ -279,7 +279,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
     mIsChangingPlayingMusic = changingPlayingMusic;
     if (mIsChangingPlayingMusic) {
       mChangeMusic.setBaseInfo(mPlayingInfoManager.getMusicAlbum(), getCurrentPlayingMusic());
-      changeMusicLiveData.setValue(mChangeMusic);
+      changeMusicLiveData.postValue(mChangeMusic);
       mCurrentPlay.setBaseInfo(mPlayingInfoManager.getMusicAlbum(), getCurrentPlayingMusic());
     }
   }

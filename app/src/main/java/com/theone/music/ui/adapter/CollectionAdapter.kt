@@ -3,6 +3,7 @@ package com.theone.music.ui.adapter
 import com.theone.music.R
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.MusicInfo
+import com.theone.music.databinding.ItemCollectionBinding
 import com.theone.music.databinding.ItemMusicBinding
 import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
 
@@ -30,5 +31,5 @@ import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
  * @email 625805189@qq.com
  * @remark
  */
-class MusicAdapter:TheBaseQuickAdapter<MusicInfo,ItemMusicBinding>(R.layout.item_music) {
+class CollectionAdapter:TheBaseQuickAdapter<MusicInfo,ItemCollectionBinding>(R.layout.item_collection) {
 }

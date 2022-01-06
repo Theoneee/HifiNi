@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "com.theone.music"
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0 beta"
     }
 }
 
@@ -15,4 +15,8 @@ dependencies {
     implementation project(path: ':player')
 //    implementation "com.kunminx.player:player:3.1.0"
     implementation 'com.danikula:videocache:2.7.1'
+
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }

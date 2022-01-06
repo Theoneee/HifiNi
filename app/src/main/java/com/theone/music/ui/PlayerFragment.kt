@@ -1,19 +1,21 @@
 package com.theone.music.ui
 
-import android.graphics.Bitmap
+import android.util.SparseArray
 import android.view.View
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
+import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.*
-import com.theone.music.R
+import com.theone.lover.data.room.AppDataBase
+import com.theone.music.BR
 import com.theone.music.app.ext.fullSize
 import com.theone.music.data.model.MusicInfo
 import com.theone.music.data.model.TestAlbum
+import com.theone.music.data.repository.DataRepository
+import com.theone.music.data.room.MusicDao
 import com.theone.music.databinding.PageMusicInfoBinding
 import com.theone.music.player.PlayerManager
+import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.mvvm.core.data.entity.DownloadBean
@@ -21,10 +23,11 @@ import com.theone.mvvm.core.ext.showErrorPage
 import com.theone.mvvm.core.ext.showLoadingPage
 import com.theone.mvvm.core.ext.showSuccessPage
 import com.theone.mvvm.core.service.startDownloadService
-import com.theone.mvvm.core.util.DownloadUtil
 import com.theone.mvvm.core.util.FileDirectoryManager
-import com.theone.mvvm.core.util.glide.GlideUtil
-import jp.wasabeef.glide.transformations.BlurTransformation
+import com.theone.mvvm.ext.addParams
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
 
@@ -56,14 +59,14 @@ class PlayerFragment private constructor() :
     BaseCoreFragment<MusicInfoViewModel, PageMusicInfoBinding>() {
 
     companion object {
-        fun newInstance(link: String, name: String): PlayerFragment =
+
+        fun newInstance(musicInfo: MusicInfo): PlayerFragment =
             PlayerFragment().bundle {
-                putString(BundleConstant.URL, link)
-                putString(BundleConstant.DATA, name)
+                putParcelable(BundleConstant.DATA, musicInfo)
             }
     }
 
-    private val mLink: String by getValueNonNull(BundleConstant.URL)
+    private val mMusicInfo: MusicInfo by getValueNonNull(BundleConstant.DATA)
 
     override fun initView(root: View) {
         getTopBar()?.run {
@@ -72,36 +75,41 @@ class PlayerFragment private constructor() :
     }
 
     override fun initData() {
-        mViewModel.link = mLink
+        with(mMusicInfo) {
+            if (url.isEmpty()) {
+                mViewModel.link = mMusicInfo.shareUrl
+            } else {
+                setMediaSource(this)
+            }
+        }
+        setMediaSource(mMusicInfo)
     }
 
     override fun createObserver() {
         mViewModel.getResponseLiveData().observeInFragment(this) {
             showSuccessPage()
-            mViewModel.cover.set(it.pic.fullSize())
-            getTopBar()?.setTitle(it.title)
             setMediaSource(it)
         }
         mViewModel.getErrorLiveData().observeInFragment(this) {
             showErrorPage(it)
         }
 
-        with(PlayerManager.getInstance()){
+        with(PlayerManager.getInstance()) {
 
-           pauseEvent.observe(this@PlayerFragment){
+            pauseEvent.observe(this@PlayerFragment) {
                 mViewModel.isPlaying.set(!it)
             }
 
-            playModeEvent.observe(this@PlayerFragment){
+            playModeEvent.observe(this@PlayerFragment) {
 
             }
 
-            playingMusicEvent.observe(this@PlayerFragment){
+            playingMusicEvent.observe(this@PlayerFragment) {
 
 
             }
 
-            changeMusicEvent.observe(this@PlayerFragment){
+            changeMusicEvent.observe(this@PlayerFragment) {
 
 
             }
@@ -110,56 +118,75 @@ class PlayerFragment private constructor() :
 
     }
 
+    private fun setMusicInfo(cover:String,title:String,shareUrl:String){
+        mViewModel.isSuccess.set(true)
+        mViewModel.cover.set(cover)
+        getTopBar()?.setTitle(title)
+        mViewModel.requestCollection(shareUrl)
+    }
+
     private fun setMediaSource(data: MusicInfo) {
-        val artists = TestAlbum.TestArtist().apply {
-            name = "UnKnown"
-        }
-        val music = mutableListOf<TestAlbum.TestMusic>().apply {
-            add(TestAlbum.TestMusic().apply {
-                musicId = UUID.randomUUID().toString()
-                coverImg = data.pic
-                title = data.title
-                url = data.getMusicUrl()
-                artist = artists
-            })
-        }
-        val album = TestAlbum().apply {
-            albumId = UUID.randomUUID().toString()
-            title = "HiFiNi"
-            summary = data.author
-            artist = artists
-            coverImg = data.pic
-            musics = music
-        }
-        "url = ${data.url}".logI()
         with(PlayerManager.getInstance()) {
-            loadAlbum(album,0)
+            if (null != currentPlayingMusic ) {
+                with(currentPlayingMusic){
+                    if(shareUrl == data.shareUrl){
+                        setMusicInfo(coverImg,title,shareUrl)
+                        return
+                    }
+                }
+            }
+            if(data.getMusicUrl().isEmpty()){
+                return
+            }
+        }
+        setMusicInfo(data.pic.fullSize(),data.title,data.shareUrl)
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val album = DataRepository.INSTANCE.createAlbum(data)
+                PlayerManager.getInstance().loadAlbum(album, 0)
+            }
         }
     }
 
     override fun onLazyInit() {
-        onPageReLoad()
+        if(!mViewModel.isSuccess.get())
+            onPageReLoad()
     }
 
     override fun onPageReLoad() {
+        showLoadingPage()
         mViewModel.requestServer()
+    }
+
+    override fun createBindingParams(bindingParams: SparseArray<Any>) {
+        super.createBindingParams(bindingParams)
+        bindingParams.addParams(BR.listener, SelectListener())
     }
 
     override fun getBindingClick(): Any = ClickProxy()
 
-    inner class ClickProxy{
 
-        fun togglePlayPause(){
+    inner class SelectListener : TheSelectImageView.OnSelectChangedListener {
+
+        override fun onSelectChanged(isSelected: Boolean) {
+            mViewModel.toggleCollection(isSelected,PlayerManager.getInstance().currentPlayingMusic)
+        }
+
+    }
+
+    inner class ClickProxy {
+
+        fun togglePlayPause() {
             PlayerManager.getInstance().togglePlay()
         }
 
-        fun download(){
+        fun download() {
             mViewModel.getResponseLiveData().value?.let {
-                val type = if(it.url.contains("mp3")) "mp3" else "m4a"
+                val type = if (it.url.contains("mp3")) "mp3" else "m4a"
                 val download = DownloadBean(
-                    it.getImageUrl(),
+                    it.getMusicUrl(),
                     FileDirectoryManager.getDownloadPath() + File.separator + "Music",
-                    it.author+"-"+it.title+".$type"
+                    it.author + "-" + it.title + ".$type"
                 )
                 ToastUtils.show("开始下载")
                 mActivity.startDownloadService(download)
