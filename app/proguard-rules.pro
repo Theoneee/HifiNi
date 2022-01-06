@@ -24,3 +24,4 @@
 -keep class com.theone.music.data.model.** { *; }
 -keep class com.theone.music.net.** { *; }
 -keep class com.kunminx.player.bean.** {*;}
+-keep class com.theone.music.** { *; }
