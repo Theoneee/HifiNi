@@ -10,10 +10,18 @@ class EventViewModel : BaseViewModel() {
 
     private val collection = UnPeekLiveData<CollectionEvent>()
 
+    private val playMusic = UnPeekLiveData<Music>()
+
     fun getCollectionLiveData(): ProtectedUnPeekLiveData<CollectionEvent> = collection
+
+    fun getPlayMusicLiveData(): ProtectedUnPeekLiveData<Music> = playMusic
 
     fun dispatchCollectionEvent(event: CollectionEvent){
         collection.value = event
+    }
+
+    fun dispatchPlayMusic(music: Music){
+        playMusic.value = music
     }
 
 }

@@ -107,19 +107,16 @@ class PlayerFragment private constructor() :
             }
 
             playingMusicEvent.observe(this@PlayerFragment) {
-
                 mViewModel.run {
                     max.set(it.duration)
                     nowTime.set(it.nowTime)
                     allTime.set(it.allTime)
                     progress.set(it.playerPosition)
                 }
-
             }
 
             changeMusicEvent.observe(this@PlayerFragment) {
-
-
+                mEvent.dispatchPlayMusic(getCurrentMusic())
             }
 
         }
@@ -190,13 +187,18 @@ class PlayerFragment private constructor() :
 
     override fun getBindingClick(): Any = ClickProxy()
 
+    /**
+     * 获取当前播放的
+     */
+    private fun getCurrentMusic():Music{
+       return mViewModel.getResponseLiveData().value
+            ?: Music(PlayerManager.getInstance().currentPlayingMusic)
+    }
 
     inner class SelectListener : TheSelectImageView.OnSelectChangedListener {
 
         override fun onSelectChanged(isSelected: Boolean) {
-            (mViewModel.getResponseLiveData().value
-                ?: Music(PlayerManager.getInstance().currentPlayingMusic)).let {
-
+            getCurrentMusic().let {
                 CollectionEvent(isSelected, it).let { event ->
                     mViewModel.toggleCollection(event)
                     mEvent.dispatchCollectionEvent(event)
