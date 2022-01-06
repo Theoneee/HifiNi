@@ -1,6 +1,7 @@
 package com.theone.music.app
 
 import android.app.Application
+import com.kunminx.player.DefaultPlayerManager
 import com.theone.music.BuildConfig
 import com.theone.music.player.PlayerManager
 import com.theone.mvvm.core.CoreApplication

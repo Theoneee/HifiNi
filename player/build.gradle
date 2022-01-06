@@ -1,0 +1,16 @@
+apply plugin: 'com.android.library'
+apply from: "../base.gradle"
+android {
+
+    defaultConfig {
+        versionName '1.0'
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ["*.jar", "*.aar"])
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation "androidx.lifecycle:lifecycle-livedata:2.3.1"
+}

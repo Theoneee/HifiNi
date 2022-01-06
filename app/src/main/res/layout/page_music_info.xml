@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:playpauseview="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="com.theone.music.viewmodel.MusicInfoViewModel" />
+
+        <variable
+            name="click"
+            type="com.theone.music.ui.PlayerFragment.ClickProxy" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,28 +22,52 @@
         <com.theone.mvvm.core.widge.layout.QMUISquareRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="50dp"
+            app:qmui_borderColor="@color/qmui_config_color_background"
+            app:qmui_general_shadow_alpha="0.85"
+            app:qmui_radius="10dp"
+            android:background="@color/white"
+            app:qmui_shadowElevation="10dp"
+            app:qmui_showBorderOnlyBeforeL="false"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:qmui_is_circle="true"
-                android:layout_margin="50dp"
-                app:imageUrl="@{vm.cover}"/>
+                app:imageUrl="@{vm.cover}" />
 
         </com.theone.mvvm.core.widge.layout.QMUISquareRelativeLayout>
 
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+        <com.theone.music.ui.view.PlayPauseView
+            android:id="@+id/player_pause"
+            isPlaying="@{vm.isPlaying}"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginBottom="50dp"
-            android:src="@drawable/picture_icon_video_play"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{()->click.togglePlayPause()}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            playpauseview:circleAlpha="0"
+            playpauseview:isCircleDraw="true" />
+
+
+        <ImageButton
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="50dp"
+            android:onClick="@{()->click.download()}"
+            android:src="@drawable/ic_svg_download"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintTop_toTopOf="@id/player_pause"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/player_pause"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

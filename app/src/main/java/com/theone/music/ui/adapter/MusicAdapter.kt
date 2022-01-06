@@ -1,11 +1,9 @@
-package com.theone.music.viewmodel
+package com.theone.music.ui.adapter
 
-import com.theone.common.ext.logE
-import com.theone.music.app.ext.URLEncode
+import com.theone.music.R
 import com.theone.music.data.model.Music
-import com.theone.music.data.repository.DataRepository
-import com.theone.music.net.NetConstant
-import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
+import com.theone.music.databinding.ItemMusicBinding
+import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -26,25 +24,10 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-04 11:25
+ * @date 2022-01-04 14:15
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class MainViewModel : BaseListViewModel<Music>() {
-
-    var keyWord: String = ""
-
-
-    override fun requestServer() {
-        request({
-            onSuccess(
-                DataRepository.INSTANCE.get(
-                    NetConstant.SEARCH,
-                    keyWord.URLEncode()
-                )
-            )
-        })
-    }
-
+class MusicAdapter:TheBaseQuickAdapter<Music,ItemMusicBinding>(R.layout.item_music) {
 }

@@ -187,14 +187,17 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
         return mController.getAlbumIndex();
     }
 
+    @Override
     public LiveData<ChangeMusic> getChangeMusicEvent() {
         return mController.getChangeMusicEvent();
     }
 
+    @Override
     public LiveData<PlayingMusic> getPlayingMusicEvent() {
         return mController.getPlayingMusicEvent();
     }
 
+    @Override
     public LiveData<Boolean> getPauseEvent() {
         return mController.getPauseEvent();
     }

@@ -1,5 +1,6 @@
 package com.theone.music.data.model
 
+import com.theone.common.callback.IImageUrl
 import com.theone.music.net.NetConstant
 
 //  ┏┓　　　┏┓
@@ -26,8 +27,8 @@ import com.theone.music.net.NetConstant
  * @email 625805189@qq.com
  * @remark
  */
-data class MusicInfo(var title: String, var author: String, var url: String, var pic: String) {
-
+data class MusicInfo(var title: String, var author: String, var url: String, var pic: String):
+    IImageUrl {
 
     fun getMusicUrl():String {
         return if (url.startsWith("http")) {
@@ -37,7 +38,16 @@ data class MusicInfo(var title: String, var author: String, var url: String, var
         }
     }
 
-    override fun toString(): String {
-        return "MusicInfo(title='$title', author='$author', url='$url', pic='$pic')"
-    }
+    override fun getHeight(): Int  = 0
+
+    override fun getImageUrl(): String = getMusicUrl()
+
+    override fun getRefer(): String? = null
+
+    override fun getThumbnail(): String?  = null
+
+    override fun getWidth(): Int = 0
+
+    override fun isVideo(): Boolean  = false
+
 }

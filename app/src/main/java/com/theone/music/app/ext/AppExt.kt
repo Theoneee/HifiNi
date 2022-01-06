@@ -1,5 +1,6 @@
 package com.theone.music.app.ext
 
+import com.theone.common.ext.toHtml
 import com.theone.mvvm.core.util.FileDirectoryUtil
 import java.io.File
 import java.io.FileWriter
@@ -55,9 +56,19 @@ fun String.fullSize():String{
     return this
 }
 
-fun String.getMusicName():String{
-    if(contains("《")&&contains("》")){
-        return substring(indexOf("《")+1,indexOf("》"))
+fun String.getHtmlString():CharSequence{
+    if(contains("span")){
+        return toHtml()
     }
     return this
+}
+
+fun String.splitMusicInfo(r1:String, r2:String):List<String>{
+    val result = mutableListOf<String>()
+    if(contains(r1) && contains(r2)){
+        val index  = indexOf(r1)
+        result[0] = substring(0,index)
+        result[1] = substring(index+1,indexOf(r2))
+    }
+    return result
 }

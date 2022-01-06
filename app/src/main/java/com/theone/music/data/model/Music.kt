@@ -1,7 +1,7 @@
 package com.theone.music.data.model
 
-import android.text.Spanned
 import com.theone.common.ext.toHtml
+import com.theone.music.app.ext.getHtmlString
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -29,10 +29,17 @@ import com.theone.common.ext.toHtml
  */
 data class Music(
     var author: String,
+    var avatar: String,
     var name: String,
-    var link: String) {
+    var link: String
+) {
 
+    fun getAuthorHtml(): CharSequence{
+        return author.getHtmlString()
+    }
 
-    fun getHtmlName(): Spanned  =  name.toHtml()
+    fun getNameHtml(): CharSequence{
+        return name.getHtmlString()
+    }
 
 }

@@ -25,19 +25,26 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import java.io.File;
+
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.theone.music.player.helper.PlayerCallHelper;
 import com.theone.music.player.PlayerManager;
 import com.theone.music.data.model.TestAlbum;
 import com.theone.music.R;
 import com.theone.music.ui.MainActivity;
+import com.theone.mvvm.core.util.glide.GlideUtil;
 
 
 /**
@@ -100,36 +107,36 @@ public class PlayerService extends Service {
             String summary = album.getSummary();
 
             RemoteViews simpleContentView = new RemoteViews(
-                getApplicationContext().getPackageName(), R.layout.notify_player_small);
+                    getApplicationContext().getPackageName(), R.layout.notify_player_small);
 
             RemoteViews expandedView;
             expandedView = new RemoteViews(
-                getApplicationContext().getPackageName(), R.layout.notify_player_big);
+                    getApplicationContext().getPackageName(), R.layout.notify_player_big);
 
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.setAction("showPlayer");
             PendingIntent contentIntent = PendingIntent.getActivity(
-                this, 0, intent, 0);
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                NotificationManager notificationManager = (NotificationManager)
+                    this, 0, intent, 0);
+            final NotificationManager notificationManager = (NotificationManager)
                     getSystemService(Context.NOTIFICATION_SERVICE);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
 
                 NotificationChannelGroup playGroup = new NotificationChannelGroup(GROUP_ID, getString(R.string.play));
                 notificationManager.createNotificationChannelGroup(playGroup);
 
                 NotificationChannel playChannel = new NotificationChannel(CHANNEL_ID,
-                    getString(R.string.notify_of_play), NotificationManager.IMPORTANCE_DEFAULT);
+                        getString(R.string.notify_of_play), NotificationManager.IMPORTANCE_DEFAULT);
                 playChannel.setGroup(GROUP_ID);
                 notificationManager.createNotificationChannel(playChannel);
             }
 
             Notification notification = new NotificationCompat.Builder(
-                getApplicationContext(), CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_player)
-                .setContentIntent(contentIntent)
-                .setOnlyAlertOnce(true)
-                .setContentTitle(title).build();
+                    getApplicationContext(), CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_player)
+                    .setContentIntent(contentIntent)
+                    .setOnlyAlertOnce(true)
+                    .setContentTitle(title).build();
 
             notification.contentView = simpleContentView;
             notification.bigContentView = expandedView;
@@ -156,17 +163,18 @@ public class PlayerService extends Service {
             notification.bigContentView.setTextViewText(R.id.player_author_name, summary);
             notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
-//            String coverPath = Configs.COVER_PATH + File.separator + testMusic.getMusicId() + ".jpg";
-//            Bitmap bitmap = ImageUtils.getBitmap(coverPath);
-//
-//            if (bitmap != null) {
-//                notification.contentView.setImageViewBitmap(R.id.player_album_art, bitmap);
-//                notification.bigContentView.setImageViewBitmap(R.id.player_album_art, bitmap);
-//            } else {
-//                requestAlbumCover(testMusic.getCoverImg(), testMusic.getMusicId());
-//                notification.contentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_album_default);
-//                notification.bigContentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_album_default);
-//            }
+            notification.contentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_album_default);
+            notification.bigContentView.setImageViewResource(R.id.player_album_art, R.drawable.bg_album_default);
+
+            GlideUtil.loadImageAsBitmap(this, testMusic.getCoverImg(), new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap bitmap, @Nullable Transition<? super Bitmap> transition) {
+                    notification.contentView.setImageViewBitmap(R.id.player_album_art, bitmap);
+                    notification.bigContentView.setImageViewBitmap(R.id.player_album_art, bitmap);
+                    notificationManager.notify(5,notification);
+                }
+
+            });
 
             startForeground(5, notification);
 
@@ -181,38 +189,28 @@ public class PlayerService extends Service {
     public void setListeners(RemoteViews view) {
         try {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                0, new Intent(NOTIFY_PREVIOUS).setPackage(getPackageName()),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                    0, new Intent(NOTIFY_PREVIOUS).setPackage(getPackageName()),
+                    PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent(R.id.player_previous, pendingIntent);
             pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                0, new Intent(NOTIFY_CLOSE).setPackage(getPackageName()),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                    0, new Intent(NOTIFY_CLOSE).setPackage(getPackageName()),
+                    PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent(R.id.player_close, pendingIntent);
             pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                0, new Intent(NOTIFY_PAUSE).setPackage(getPackageName()),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                    0, new Intent(NOTIFY_PAUSE).setPackage(getPackageName()),
+                    PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent(R.id.player_pause, pendingIntent);
             pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                0, new Intent(NOTIFY_NEXT).setPackage(getPackageName()),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                    0, new Intent(NOTIFY_NEXT).setPackage(getPackageName()),
+                    PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent(R.id.player_next, pendingIntent);
             pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),
-                0, new Intent(NOTIFY_PLAY).setPackage(getPackageName()),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                    0, new Intent(NOTIFY_PLAY).setPackage(getPackageName()),
+                    PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent(R.id.player_play, pendingIntent);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void requestAlbumCover(String coverUrl, String musicId) {
-//        if (mDownloadUseCase == null) {
-//            mDownloadUseCase = new DownloadUseCase();
-//        }
-//
-//        UseCaseHandler.getInstance().execute(mDownloadUseCase,
-//            new DownloadUseCase.RequestValues(coverUrl, musicId + ".jpg"),
-//            response -> startService(new Intent(getApplicationContext(), PlayerService.class)));
     }
 
     @Override

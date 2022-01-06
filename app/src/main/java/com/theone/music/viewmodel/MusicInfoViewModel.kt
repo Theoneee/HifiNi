@@ -1,8 +1,8 @@
 package com.theone.music.viewmodel
 
+import androidx.databinding.ObservableBoolean
 import com.theone.music.data.model.MusicInfo
 import com.theone.music.data.repository.DataRepository
-import com.theone.mvvm.base.viewmodel.BaseViewModel
 import com.theone.mvvm.callback.databind.StringObservableField
 import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
 
@@ -32,12 +32,13 @@ import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
  */
 class MusicInfoViewModel:BaseRequestViewModel<MusicInfo>() {
 
+    val isPlaying = ObservableBoolean()
     var cover:StringObservableField = StringObservableField()
     var link:String = ""
 
     override fun requestServer() {
         request({
-            onSuccess(DataRepository.getMusicInfo(link))
+            onSuccess(DataRepository.INSTANCE.getMusicInfo(link))
         })
     }
 
