@@ -1,4 +1,4 @@
-package com.theone.music.ui
+package com.theone.music.ui.page
 
 import android.os.Bundle
 import com.hjq.permissions.OnPermission
@@ -31,7 +31,7 @@ import com.theone.mvvm.base.activity.BaseFragmentActivity
  * @email 625805189@qq.com
  * @remark
  */
-@DefaultFirstFragment(IndexFragment::class)
+@DefaultFirstFragment(MainFragment::class)
 class MainActivity:BaseFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

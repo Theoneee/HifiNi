@@ -3,7 +3,7 @@ package com.theone.lover.data.room
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.theone.music.data.model.MusicInfo
+import com.theone.music.data.model.Music
 import com.theone.music.data.room.MusicDao
 import com.theone.mvvm.base.appContext
 
@@ -39,7 +39,7 @@ import com.theone.mvvm.base.appContext
  *              因为大部分情况，操作数据库都还算是比较耗时的动作。
  *              如果需要在主线程调用则使用allowMainThreadQueries进行说明。
  */
-@Database(entities = [MusicInfo::class],version = 2)
+@Database(entities = [Music::class],version = 2,exportSchema = false)
 abstract class AppDataBase:RoomDatabase() {
 
     abstract fun musicDao(): MusicDao

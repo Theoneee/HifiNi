@@ -1,19 +1,10 @@
-package com.theone.music.ui
+package com.theone.music.ui.page
 
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.bundle
 import com.theone.common.ext.getValueNonNull
-import com.theone.music.data.model.Music
-import com.theone.music.data.model.MusicInfo
 import com.theone.music.net.NetConstant
-import com.theone.music.ui.adapter.MusicAdapter
 import com.theone.music.viewmodel.MusicViewModel
-import com.theone.mvvm.core.base.fragment.BasePagerPullRefreshFragment
-import com.theone.mvvm.core.databinding.BasePullFreshFragmentBinding
-import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -40,7 +31,7 @@ import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
  * @remark
  */
 class MusicItemFragment private constructor() :
-    BasePagerPullRefreshFragment<MusicInfo, MusicViewModel, BasePullFreshFragmentBinding>() {
+    BaseMusicFragment<MusicViewModel>() {
 
     companion object {
         fun newInstance(type: Int): MusicItemFragment = MusicItemFragment().bundle {
@@ -54,17 +45,5 @@ class MusicItemFragment private constructor() :
         mViewModel.type = mType
         mViewModel.url = NetConstant.FORUM
     }
-
-    override fun createAdapter(): BaseQuickAdapter<MusicInfo, *> = MusicAdapter()
-
-    override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
-        val music = adapter.getItem(position) as MusicInfo
-        startFragment(PlayerFragment.newInstance(music))
-    }
-
-    override fun getRecyclerView(): RecyclerView = mBinding.recyclerView
-
-    override fun getRefreshLayout(): PullRefreshLayout = mBinding.refreshLayout
-
 
 }

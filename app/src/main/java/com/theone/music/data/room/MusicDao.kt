@@ -1,7 +1,7 @@
 package com.theone.music.data.room
 
 import androidx.room.*
-import com.theone.music.data.model.MusicInfo
+import com.theone.music.data.model.Music
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -31,21 +31,21 @@ import com.theone.music.data.model.MusicInfo
 interface MusicDao {
 
     @Insert
-    fun insert(backgrounds: List<MusicInfo>)
+    fun insert(backgrounds: List<Music>)
 
     @Update
-    fun update(backgrounds: List<MusicInfo>):Int
+    fun update(backgrounds: List<Music>):Int
 
     @Delete
-    fun delete(backgrounds: List<MusicInfo>):Int
+    fun delete(backgrounds: List<Music>):Int
 
-    @Query("DELETE FROM MusicInfo WHERE url ==:url")
-    fun delete(url:String)
+    @Query("DELETE FROM MusicInfo WHERE shareUrl ==:shareUrl")
+    fun delete(shareUrl:String)
 
     @Query("select * from MusicInfo order by createDate desc ")
-    suspend fun getMusicList():List<MusicInfo>
+    suspend fun getMusicList():List<Music>
 
-    @Query("select * from MusicInfo where shareUrl ==:url")
-    suspend fun findMusics(url: String):List<MusicInfo>
+    @Query("select * from MusicInfo where shareUrl ==:shareUrl")
+    suspend fun findMusics(shareUrl: String):List<Music>
 
 }

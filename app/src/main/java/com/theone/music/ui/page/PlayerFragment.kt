@@ -1,22 +1,20 @@
-package com.theone.music.ui
+package com.theone.music.ui.page
 
-import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.*
-import com.theone.lover.data.room.AppDataBase
 import com.theone.music.BR
 import com.theone.music.app.ext.fullSize
-import com.theone.music.data.model.MusicInfo
-import com.theone.music.data.model.TestAlbum
+import com.theone.music.data.model.CollectionEvent
+import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
-import com.theone.music.data.room.MusicDao
-import com.theone.music.databinding.PageMusicInfoBinding
+import com.theone.music.databinding.PageMusicPlayerBinding
 import com.theone.music.player.PlayerManager
 import com.theone.music.ui.view.TheSelectImageView
+import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.mvvm.core.data.entity.DownloadBean
@@ -26,6 +24,7 @@ import com.theone.mvvm.core.ext.showSuccessPage
 import com.theone.mvvm.core.service.startDownloadService
 import com.theone.mvvm.core.util.FileDirectoryManager
 import com.theone.mvvm.ext.addParams
+import com.theone.mvvm.ext.getAppViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,17 +56,19 @@ import java.util.*
  * @remark
  */
 class PlayerFragment private constructor() :
-    BaseCoreFragment<MusicInfoViewModel, PageMusicInfoBinding>() {
+    BaseCoreFragment<MusicInfoViewModel, PageMusicPlayerBinding>() {
 
     companion object {
 
-        fun newInstance(musicInfo: MusicInfo): PlayerFragment =
+        fun newInstance(music: Music): PlayerFragment =
             PlayerFragment().bundle {
-                putParcelable(BundleConstant.DATA, musicInfo)
+                putParcelable(BundleConstant.DATA, music)
             }
     }
 
-    private val mMusicInfo: MusicInfo by getValueNonNull(BundleConstant.DATA)
+    private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
+
+    private val mMusic: Music by getValueNonNull(BundleConstant.DATA)
 
     override fun initView(root: View) {
         getTopBar()?.run {
@@ -76,14 +77,14 @@ class PlayerFragment private constructor() :
     }
 
     override fun initData() {
-        with(mMusicInfo) {
+        with(mMusic) {
             if (url.isEmpty()) {
-                mViewModel.link = mMusicInfo.shareUrl
+                mViewModel.link = mMusic.shareUrl
             } else {
                 setMediaSource(this)
             }
         }
-        setMediaSource(mMusicInfo)
+        setMediaSource(mMusic)
     }
 
     override fun createObserver() {
@@ -125,30 +126,45 @@ class PlayerFragment private constructor() :
 
     }
 
-    private fun setMusicInfo(cover:String,title:String,author:String,shareUrl:String){
+    private fun reset() {
+        mViewModel.run {
+            max.set(0)
+            progress.set(0)
+            nowTime.set("")
+            allTime.set("")
+            isCollection.set(false)
+        }
+    }
+
+    private fun setMusicInfo(cover: String, title: String, author: String, shareUrl: String) {
         mViewModel.run {
             isSuccess.set(true)
             name.set(title)
             this.author.set(author)
             this.cover.set(cover)
+            reset()
             requestCollection(shareUrl)
-
         }
     }
 
-    private fun setMediaSource(data: MusicInfo) {
+
+    private fun setMediaSource(data: Music) {
         with(PlayerManager.getInstance()) {
             currentPlayingMusic?.run {
-                if(shareUrl == data.shareUrl){
-                    setMusicInfo(coverImg,title,author,shareUrl)
+                if (shareUrl == data.shareUrl) {
+                    setMusicInfo(coverImg, title, author, shareUrl)
                     return
                 }
             }
-            if(data.getMusicUrl().isEmpty()){
+            if (isPlaying) {
+                pauseAudio()
+                reset()
+            }
+            if (data.getMusicUrl().isEmpty()) {
                 return
             }
         }
-        setMusicInfo(data.pic.fullSize(),data.title,data.author,data.shareUrl)
+        setMusicInfo(data.pic.fullSize(), data.title, data.author, data.shareUrl)
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val album = DataRepository.INSTANCE.createAlbum(data)
@@ -158,7 +174,7 @@ class PlayerFragment private constructor() :
     }
 
     override fun onLazyInit() {
-        if(!mViewModel.isSuccess.get())
+        if (!mViewModel.isSuccess.get())
             onPageReLoad()
     }
 
@@ -178,7 +194,14 @@ class PlayerFragment private constructor() :
     inner class SelectListener : TheSelectImageView.OnSelectChangedListener {
 
         override fun onSelectChanged(isSelected: Boolean) {
-            mViewModel.toggleCollection(isSelected,PlayerManager.getInstance().currentPlayingMusic)
+            (mViewModel.getResponseLiveData().value
+                ?: Music(PlayerManager.getInstance().currentPlayingMusic)).let {
+
+                CollectionEvent(isSelected, it).let { event ->
+                    mViewModel.toggleCollection(event)
+                    mEvent.dispatchCollectionEvent(event)
+                }
+            }
         }
 
     }

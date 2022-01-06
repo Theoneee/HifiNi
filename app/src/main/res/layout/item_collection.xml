@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="com.theone.music.data.model.MusicInfo" />
+            type="com.theone.music.data.model.Music" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

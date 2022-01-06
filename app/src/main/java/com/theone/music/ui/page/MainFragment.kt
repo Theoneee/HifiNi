@@ -1,20 +1,18 @@
-package com.theone.music.ui
+package com.theone.music.ui.page
 
 import android.widget.RelativeLayout
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.kotlin.matchParent
 import com.qmuiteam.qmui.kotlin.wrapContent
-import com.theone.common.ext.invisible
 import com.theone.music.R
 import com.theone.music.net.NetConstant
 import com.theone.mvvm.base.viewmodel.BaseViewModel
 import com.theone.mvvm.core.base.fragment.BaseTabInTitleFragment
-import com.theone.mvvm.core.base.fragment.BaseTabIndexFragment
 import com.theone.mvvm.core.data.entity.QMUITabBean
 import com.theone.mvvm.core.ext.qmui.addTab
 import net.lucode.hackware.magicindicator.MagicIndicator
 
-class IndexFragment:BaseTabInTitleFragment<BaseViewModel>() {
+class MainFragment:BaseTabInTitleFragment<BaseViewModel>() {
 
     private val mMagicIndicator: MagicIndicator by lazy {
         MagicIndicator(context).apply {

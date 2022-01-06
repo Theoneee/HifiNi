@@ -1,19 +1,11 @@
-package com.theone.music.ui
+package com.theone.music.ui.page
 
 import android.view.View
 import android.widget.RelativeLayout
-import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
 import com.theone.common.ext.match_wrap
 import com.theone.common.widget.TheSearchView
 import com.theone.music.R
-import com.theone.music.data.model.Music
-import com.theone.music.data.model.MusicInfo
-import com.theone.music.ui.adapter.MusicAdapter
 import com.theone.music.viewmodel.MainViewModel
-import com.theone.mvvm.core.base.fragment.BasePagerPullRefreshFragment
-import com.theone.mvvm.core.databinding.BasePullFreshFragmentBinding
-import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -39,7 +31,7 @@ import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
  * @email 625805189@qq.com
  * @remark
  */
-class SearchFragment:BasePagerPullRefreshFragment<MusicInfo,MainViewModel,BasePullFreshFragmentBinding>(),TheSearchView.OnTextChangedListener {
+class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextChangedListener {
 
     override fun showTopBar(): Boolean =true
 
@@ -71,20 +63,9 @@ class SearchFragment:BasePagerPullRefreshFragment<MusicInfo,MainViewModel,BasePu
         super.onFirstLoading()
     }
 
-    override fun createAdapter(): BaseQuickAdapter<MusicInfo, *> = MusicAdapter()
-
-    override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
-        val music = adapter.getItem(position) as MusicInfo
-        startFragment(PlayerFragment.newInstance(music))
-    }
-
     override fun onLoadMoreComplete() {
         onLoadMoreEnd()
     }
-
-    override fun getRecyclerView(): RecyclerView = mBinding.recyclerView
-
-    override fun getRefreshLayout(): PullRefreshLayout = mBinding.refreshLayout
 
     override fun onSearchViewClick(content: String, empty: Boolean) {
         onFirstLoading()

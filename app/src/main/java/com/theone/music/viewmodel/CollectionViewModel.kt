@@ -1,7 +1,6 @@
 package com.theone.music.viewmodel
 
-import com.theone.lover.data.room.AppDataBase
-import com.theone.music.data.model.MusicInfo
+import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 
@@ -29,7 +28,8 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
  * @email 625805189@qq.com
  * @remark
  */
-class CollectionViewModel:BaseListViewModel<MusicInfo>() {
+class CollectionViewModel:BaseListViewModel<Music>() {
+
 
     override fun requestServer() {
        request({

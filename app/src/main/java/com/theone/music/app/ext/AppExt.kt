@@ -1,5 +1,7 @@
 package com.theone.music.app.ext
 
+import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.theone.common.ext.toHtml
 import com.theone.mvvm.core.util.FileDirectoryUtil
 import java.io.File
@@ -63,12 +65,10 @@ fun String.getHtmlString():CharSequence{
     return this
 }
 
-fun String.splitMusicInfo(r1:String, r2:String):List<String>{
-    val result = mutableListOf<String>()
-    if(contains(r1) && contains(r2)){
-        val index  = indexOf(r1)
-        result[0] = substring(0,index)
-        result[1] = substring(index+1,indexOf(r2))
+fun BaseQuickAdapter<*, *>.removeItem(position: Int){
+    if (position != RecyclerView.NO_POSITION && data.size > position) {
+        data.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, data.size)
     }
-    return result
 }

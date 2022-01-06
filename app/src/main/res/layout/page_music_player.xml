@@ -11,11 +11,11 @@
 
         <variable
             name="click"
-            type="com.theone.music.ui.PlayerFragment.ClickProxy" />
+            type="com.theone.music.ui.page.PlayerFragment.ClickProxy" />
 
         <variable
             name="listener"
-            type="com.theone.music.ui.PlayerFragment.SelectListener" />
+            type="com.theone.music.ui.page.PlayerFragment.SelectListener" />
     </data>
 
     <FrameLayout

@@ -1,10 +1,10 @@
-package com.theone.music.ui
+package com.theone.music.ui.page
 
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.theone.music.data.model.MusicInfo
-import com.theone.music.ui.adapter.CollectionAdapter
-import com.theone.music.viewmodel.CollectionViewModel
+import com.theone.music.data.model.Music
+import com.theone.music.ui.adapter.MusicAdapter
+import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -30,17 +30,15 @@ import com.theone.music.viewmodel.CollectionViewModel
  * @email 625805189@qq.com
  * @remark
  */
-class CollectionFragment:BasePagerFragment<MusicInfo,CollectionViewModel>() {
+abstract class BaseMusicFragment<VM:BaseListViewModel<Music>>: BasePagerFragment<Music, VM>() {
 
-    override fun createAdapter(): BaseQuickAdapter<MusicInfo, *> =  CollectionAdapter()
+    override fun getViewModelIndex(): Int = 0
+
+    override fun createAdapter(): BaseQuickAdapter<Music, *> =  MusicAdapter()
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
-        val music = adapter.getItem(position) as MusicInfo
+        val music = adapter.getItem(position) as Music
         startFragment(PlayerFragment.newInstance(music))
-    }
-
-    override fun onLoadMoreComplete() {
-        onLoadMoreEnd()
     }
 
 }

@@ -1,15 +1,6 @@
-package com.theone.music.ui
+package com.theone.music.ui.page
 
-import android.view.View
-import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.theone.common.ext.match_wrap
-import com.theone.common.widget.TheSearchView
-import com.theone.music.R
-import com.theone.music.data.model.Music
-import com.theone.music.ui.adapter.MusicAdapter
-import com.theone.music.viewmodel.MainViewModel
 import com.theone.mvvm.core.base.fragment.BasePagerPullRefreshFragment
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 import com.theone.mvvm.core.databinding.BasePullFreshFragmentBinding

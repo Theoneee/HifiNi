@@ -25,9 +25,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -35,15 +33,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import java.io.File;
-
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.theone.music.player.helper.PlayerCallHelper;
 import com.theone.music.player.PlayerManager;
 import com.theone.music.data.model.TestAlbum;
 import com.theone.music.R;
-import com.theone.music.ui.MainActivity;
+import com.theone.music.ui.page.MainActivity;
 import com.theone.mvvm.core.util.glide.GlideUtil;
 
 

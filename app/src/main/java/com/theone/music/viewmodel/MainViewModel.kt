@@ -1,9 +1,7 @@
 package com.theone.music.viewmodel
 
-import com.theone.common.ext.logE
 import com.theone.music.app.ext.URLEncode
 import com.theone.music.data.model.Music
-import com.theone.music.data.model.MusicInfo
 import com.theone.music.data.repository.DataRepository
 import com.theone.music.net.NetConstant
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
@@ -32,7 +30,7 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
  * @email 625805189@qq.com
  * @remark
  */
-class MainViewModel : BaseListViewModel<MusicInfo>() {
+class MainViewModel : BaseListViewModel<Music>() {
 
     var keyWord: String = ""
 

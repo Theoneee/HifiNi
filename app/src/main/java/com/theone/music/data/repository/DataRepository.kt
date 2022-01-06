@@ -3,7 +3,6 @@ package com.theone.music.data.repository
 import com.theone.common.ext.logI
 import com.theone.lover.data.room.AppDataBase
 import com.theone.music.data.model.Music
-import com.theone.music.data.model.MusicInfo
 import com.theone.music.data.model.TestAlbum
 import com.theone.music.data.room.MusicDao
 import com.theone.music.net.NetConstant
@@ -68,9 +67,9 @@ class DataRepository {
      * @param response String
      * @return List<Music>
      */
-    private suspend fun parseMusicList(response: String): List<MusicInfo> {
+    private suspend fun parseMusicList(response: String): List<Music> {
         return withContext(Dispatchers.IO) {
-            val list = mutableListOf<MusicInfo>()
+            val list = mutableListOf<Music>()
             Jsoup.parse(response).run {
                 val elements = select("li.media.thread.tap")
                 val pageInfo = select("ul.pagination")
@@ -104,7 +103,7 @@ class DataRepository {
                         }
 
                         list.add(
-                            MusicInfo(
+                            Music(
                                 author = author,
                                 pic = NetConstant.BASE_URL + avatar,
                                 title = name,
@@ -123,7 +122,7 @@ class DataRepository {
      * @param response String
      * @return MusicInfo
      */
-    private suspend fun parseMusicInfo(response: String): MusicInfo {
+    private suspend fun parseMusicInfo(response: String): Music {
         return withContext(Dispatchers.IO) {
             var result = ""
             val elements = Jsoup.parse(response).select("script")
@@ -137,7 +136,7 @@ class DataRepository {
             val start = result.indexOf("[") + 1
             val end = result.indexOf("}") + 1
             result = result.substring(start, end)
-            GsonUtil.fromJson<MusicInfo>(result, MusicInfo::class.java)
+            GsonUtil.fromJson<Music>(result, Music::class.java)
         }
     }
 
@@ -156,11 +155,11 @@ class DataRepository {
         }
     }
 
-    suspend fun get(url: String, vararg formatArgs: Any): List<MusicInfo> {
+    suspend fun get(url: String, vararg formatArgs: Any): List<Music> {
         return parseMusicList(request(url, *formatArgs))
     }
 
-    suspend fun getMusicInfo(link: String): MusicInfo {
+    suspend fun getMusicInfo(link: String): Music {
         val response = request(link)
         return parseMusicInfo(response).apply {
             shareUrl = link
@@ -171,7 +170,7 @@ class DataRepository {
         }
     }
 
-    fun createAlbum(data: MusicInfo): TestAlbum {
+    fun createAlbum(data: Music): TestAlbum {
         val artists = TestAlbum.TestArtist().apply {
             name = "UnKnown"
         }
