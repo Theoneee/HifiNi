@@ -7,6 +7,7 @@ import com.theone.music.data.model.MusicInfo
 import com.theone.music.data.model.TestAlbum
 import com.theone.music.data.repository.DataRepository
 import com.theone.music.player.PlayerManager
+import com.theone.mvvm.callback.databind.IntObservableField
 import com.theone.mvvm.callback.databind.StringObservableField
 import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
 
@@ -35,6 +36,16 @@ import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
  * @remark
  */
 class MusicInfoViewModel : BaseRequestViewModel<MusicInfo>() {
+
+
+    val max = IntObservableField()
+    val progress = IntObservableField()
+
+
+    val name = StringObservableField()
+    val author = StringObservableField()
+    val nowTime = StringObservableField()
+    val allTime = StringObservableField()
 
     val isSuccess = ObservableBoolean(false)
     val isCollection = ObservableBoolean(false)

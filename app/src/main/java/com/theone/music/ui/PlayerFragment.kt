@@ -1,5 +1,6 @@
 package com.theone.music.ui
 
+import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import androidx.lifecycle.lifecycleScope
@@ -106,6 +107,12 @@ class PlayerFragment private constructor() :
 
             playingMusicEvent.observe(this@PlayerFragment) {
 
+                mViewModel.run {
+                    max.set(it.duration)
+                    nowTime.set(it.nowTime)
+                    allTime.set(it.allTime)
+                    progress.set(it.playerPosition)
+                }
 
             }
 
@@ -118,28 +125,30 @@ class PlayerFragment private constructor() :
 
     }
 
-    private fun setMusicInfo(cover:String,title:String,shareUrl:String){
-        mViewModel.isSuccess.set(true)
-        mViewModel.cover.set(cover)
-        getTopBar()?.setTitle(title)
-        mViewModel.requestCollection(shareUrl)
+    private fun setMusicInfo(cover:String,title:String,author:String,shareUrl:String){
+        mViewModel.run {
+            isSuccess.set(true)
+            name.set(title)
+            this.author.set(author)
+            this.cover.set(cover)
+            requestCollection(shareUrl)
+
+        }
     }
 
     private fun setMediaSource(data: MusicInfo) {
         with(PlayerManager.getInstance()) {
-            if (null != currentPlayingMusic ) {
-                with(currentPlayingMusic){
-                    if(shareUrl == data.shareUrl){
-                        setMusicInfo(coverImg,title,shareUrl)
-                        return
-                    }
+            currentPlayingMusic?.run {
+                if(shareUrl == data.shareUrl){
+                    setMusicInfo(coverImg,title,author,shareUrl)
+                    return
                 }
             }
             if(data.getMusicUrl().isEmpty()){
                 return
             }
         }
-        setMusicInfo(data.pic.fullSize(),data.title,data.shareUrl)
+        setMusicInfo(data.pic.fullSize(),data.title,data.author,data.shareUrl)
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val album = DataRepository.INSTANCE.createAlbum(data)

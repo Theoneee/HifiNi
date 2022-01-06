@@ -101,4 +101,14 @@ public class PlayingMusic<
   public void setPlayerPosition(int playerPosition) {
     this.playerPosition = playerPosition;
   }
+
+  @Override
+  public String toString() {
+    return "PlayingMusic{" +
+            "nowTime='" + nowTime + '\'' +
+            ", allTime='" + allTime + '\'' +
+            ", duration=" + duration +
+            ", playerPosition=" + playerPosition +
+            '}';
+  }
 }

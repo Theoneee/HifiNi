@@ -1,5 +1,6 @@
 package com.theone.music.ui.binding_adapter;
 
+import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.databinding.BindingAdapter;
 
 import com.theone.music.ui.view.PlayPauseView;
@@ -35,6 +36,12 @@ public class IconBindingAdapter {
     @BindingAdapter(value = {"select"}, requireAll = false)
     public static void setSelectImage(TheSelectImageView selectImageView, Boolean select) {
         selectImageView.setSelect(select);
+    }
+
+    @BindingAdapter(value = {"progress","max"}, requireAll = false)
+    public static void seekBar(AppCompatSeekBar seekBar, int progress,int max) {
+        seekBar.setMax(max);
+        seekBar.setProgress(progress,true);
     }
 
 }
