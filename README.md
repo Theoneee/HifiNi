@@ -1,8 +1,14 @@
 # HifiNi
 
+### 下载地址
+
+
+
 #### 介绍
 
-爬取[HiFiNi](https://www.hifini.com/)网站资源
+爬取[HiFiNi](https://www.hifini.com/)网站资源。
+
+**那些需要VIP的、正常软件上没有的音乐，试试这个。**
 
 #### 功能
 
