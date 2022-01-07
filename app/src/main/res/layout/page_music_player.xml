@@ -11,11 +11,11 @@
 
         <variable
             name="click"
-            type="com.theone.music.ui.page.PlayerFragment.ClickProxy" />
+            type="com.theone.music.ui.page.PlayerActivity.ClickProxy" />
 
         <variable
             name="listener"
-            type="com.theone.music.ui.page.PlayerFragment.SelectListener" />
+            type="com.theone.music.ui.page.PlayerActivity.SelectListener" />
     </data>
 
     <FrameLayout
@@ -133,7 +133,6 @@
                 app:select="@{vm.isCollection}"
                 app:img_normal="@drawable/svg_collection_normal"
                 app:img_selected="@drawable/svg_collection_selected"
-                app:long_click_enable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/player_pause"
                 app:layout_constraintTop_toTopOf="@id/player_pause"/>

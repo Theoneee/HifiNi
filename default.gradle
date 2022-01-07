@@ -53,6 +53,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.Theoneee:TheCore-MVVM:1.0.6.1'
+    implementation 'com.github.Theoneee:TheCore-MVVM:1.0.7'
     kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:2.7.1" //生成RxHttp类
 }

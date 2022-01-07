@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.theone.music.viewmodel.MusicInfoViewModel" />
+
+        <variable
+            name="proxy"
+            type="com.theone.music.ui.page.MainActivity.ClickProxy" />
+
+    </data>
+
+    <com.qmuiteam.qmui.layout.QMUIConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:qmui_borderColor="@color/qmui_config_color_separator"
+        app:qmui_general_shadow_alpha="0.55"
+        app:qmui_shadowElevation="10dp"
+        app:qmui_showBorderOnlyBeforeL="false"
+        android:background="@color/white">
+
+        <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
+            android:id="@+id/cover"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:qmui_is_circle="true"
+            android:layout_marginStart="20dp"
+            app:imageUrl="@{vm.cover}"
+            android:src="@drawable/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/cover"
+            app:layout_constraintStart_toEndOf="@id/cover"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:text="@{vm.name}"
+            android:layout_marginStart="12dp"
+            tools:text="天使"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/cover"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            android:text="@{vm.author}"
+            android:textColor="@color/qmui_config_color_gray_3"
+            android:textSize="12sp"
+            tools:text="五月天"/>
+
+
+        <com.theone.music.ui.view.PlayPauseView
+            android:id="@+id/play_pause"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="25dp"
+            isPlaying="@{vm.isPlaying}"
+            android:foreground="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{()->proxy.togglePlayPause()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.theone.music.ui.view.TheSelectImageView
+            android:id="@+id/collection"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:selectListener="@{proxy}"
+            app:select="@{vm.isCollection}"
+            app:img_normal="@drawable/svg_collection_normal"
+            app:img_selected="@drawable/svg_collection_selected"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toStartOf="@id/play_pause"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/collection"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="20dp"
+            android:onClick="@{()->proxy.jumpPlayerActivity()}"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </com.qmuiteam.qmui.layout.QMUIConstraintLayout>
+
+</layout>
