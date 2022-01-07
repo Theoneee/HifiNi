@@ -6,6 +6,7 @@ import com.theone.common.ext.match_wrap
 import com.theone.common.widget.TheSearchView
 import com.theone.music.R
 import com.theone.music.viewmodel.MainViewModel
+import com.theone.mvvm.core.ext.showEmptyPage
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -56,6 +57,7 @@ class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextCha
 
     override fun onFirstLoading() {
         if(mViewModel.keyWord.isEmpty()){
+            showEmptyPage("")
             return
         }
         mViewModel.isFirst = true

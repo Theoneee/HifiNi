@@ -35,10 +35,8 @@ import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
  */
 class MusicInfoViewModel : BaseRequestViewModel<Music>() {
 
-
     val max = IntObservableField()
     val progress = IntObservableField()
-
 
     val name = StringObservableField()
     val author = StringObservableField()

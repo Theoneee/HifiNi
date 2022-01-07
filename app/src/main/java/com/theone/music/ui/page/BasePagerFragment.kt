@@ -38,8 +38,4 @@ abstract class BasePagerFragment<T, VM : BaseListViewModel<T>> :BasePagerPullRef
 
     override fun getRefreshLayout(): PullRefreshLayout = mBinding.refreshLayout
 
-    override fun onPageReLoad() {
-        onFirstLoading()
-    }
-
 }

@@ -1,5 +1,7 @@
 package com.theone.music.ui.page
 
+import android.app.Activity
+import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.lifecycle.lifecycleScope
@@ -7,6 +9,7 @@ import com.hjq.toast.ToastUtils
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.*
 import com.theone.music.BR
+import com.theone.music.R
 import com.theone.music.app.ext.fullSize
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
@@ -16,7 +19,7 @@ import com.theone.music.player.PlayerManager
 import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
-import com.theone.mvvm.core.base.fragment.BaseCoreFragment
+import com.theone.mvvm.core.base.activity.BaseCoreActivity
 import com.theone.mvvm.core.data.entity.DownloadBean
 import com.theone.mvvm.core.ext.showErrorPage
 import com.theone.mvvm.core.ext.showLoadingPage
@@ -55,15 +58,17 @@ import java.util.*
  * @email 625805189@qq.com
  * @remark
  */
-class PlayerFragment private constructor() :
-    BaseCoreFragment<MusicInfoViewModel, PageMusicPlayerBinding>() {
+class PlayerActivity :
+    BaseCoreActivity<MusicInfoViewModel, PageMusicPlayerBinding>() {
 
-    companion object {
+    companion object{
 
-        fun newInstance(music: Music): PlayerFragment =
-            PlayerFragment().bundle {
-                putParcelable(BundleConstant.DATA, music)
+        fun startPlay(activity: Activity,music: Music){
+            activity.startActivity<PlayerActivity> {
+                putExtra(BundleConstant.DATA,music)
             }
+        }
+
     }
 
     private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
@@ -84,29 +89,30 @@ class PlayerFragment private constructor() :
                 setMediaSource(this)
             }
         }
-        setMediaSource(mMusic)
+        if (!mViewModel.isSuccess.get())
+            onPageReLoad()
     }
 
     override fun createObserver() {
-        mViewModel.getResponseLiveData().observeInFragment(this) {
+        mViewModel.getResponseLiveData().observeInActivity(this) {
             showSuccessPage()
             setMediaSource(it)
         }
-        mViewModel.getErrorLiveData().observeInFragment(this) {
+        mViewModel.getErrorLiveData().observeInActivity(this) {
             showErrorPage(it)
         }
 
         with(PlayerManager.getInstance()) {
 
-            pauseEvent.observe(this@PlayerFragment) {
+            pauseEvent.observe(this@PlayerActivity) {
                 mViewModel.isPlaying.set(!it)
             }
 
-            playModeEvent.observe(this@PlayerFragment) {
+            playModeEvent.observe(this@PlayerActivity) {
 
             }
 
-            playingMusicEvent.observe(this@PlayerFragment) {
+            playingMusicEvent.observe(this@PlayerActivity) {
                 mViewModel.run {
                     max.set(it.duration)
                     nowTime.set(it.nowTime)
@@ -115,7 +121,7 @@ class PlayerFragment private constructor() :
                 }
             }
 
-            changeMusicEvent.observe(this@PlayerFragment) {
+            changeMusicEvent.observe(this@PlayerActivity) {
                 mEvent.dispatchPlayMusic(getCurrentMusic())
             }
 
@@ -144,7 +150,6 @@ class PlayerFragment private constructor() :
         }
     }
 
-
     private fun setMediaSource(data: Music) {
         with(PlayerManager.getInstance()) {
             currentPlayingMusic?.run {
@@ -170,11 +175,6 @@ class PlayerFragment private constructor() :
         }
     }
 
-    override fun onLazyInit() {
-        if (!mViewModel.isSuccess.get())
-            onPageReLoad()
-    }
-
     override fun onPageReLoad() {
         showLoadingPage()
         mViewModel.requestServer()
@@ -190,8 +190,8 @@ class PlayerFragment private constructor() :
     /**
      * 获取当前播放的
      */
-    private fun getCurrentMusic():Music{
-       return mViewModel.getResponseLiveData().value
+    private fun getCurrentMusic(): Music {
+        return mViewModel.getResponseLiveData().value
             ?: Music(PlayerManager.getInstance().currentPlayingMusic)
     }
 
@@ -223,7 +223,7 @@ class PlayerFragment private constructor() :
                     it.author + "-" + it.title + ".$type"
                 )
                 ToastUtils.show("开始下载")
-                mActivity.startDownloadService(download)
+                startDownloadService(download)
             }
         }
 

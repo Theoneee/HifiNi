@@ -76,7 +76,6 @@ class DataRepository {
 
                 for (element in elements) {
                     val author = element.select("span.haya-post-info-username").first().toString()
-                    author.logI()
                     if (author.contains("Admin")) {
                         continue
                     }

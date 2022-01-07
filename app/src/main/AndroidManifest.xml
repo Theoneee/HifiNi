@@ -12,18 +12,21 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.page.MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleInstance"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+
+        <activity android:name=".ui.page.LauncherActivity"
+            android:theme="@style/StartAppTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
+        <activity android:name=".ui.page.MainActivity"/>
+
+        <activity android:name=".ui.page.PlayerActivity"/>
 
         <service android:name=".player.notification.PlayerService" />
 
