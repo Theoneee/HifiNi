@@ -4,8 +4,8 @@ apply from: "../default.gradle"
 android {
     defaultConfig {
         applicationId "com.theone.music"
-        versionCode 2
-        versionName "1.0.1 beta"
+        versionCode 3
+        versionName "1.0.2 beta"
     }
 }
 
