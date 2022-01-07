@@ -5,7 +5,7 @@ import android.widget.RelativeLayout
 import com.theone.common.ext.match_wrap
 import com.theone.common.widget.TheSearchView
 import com.theone.music.R
-import com.theone.music.viewmodel.MainViewModel
+import com.theone.music.viewmodel.SearchViewModel
 import com.theone.mvvm.core.ext.showEmptyPage
 
 //  ┏┓　　　┏┓
@@ -32,7 +32,7 @@ import com.theone.mvvm.core.ext.showEmptyPage
  * @email 625805189@qq.com
  * @remark
  */
-class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextChangedListener {
+class SearchFragment: BaseMusicFragment<SearchViewModel>(),TheSearchView.OnTextChangedListener {
 
     override fun showTopBar(): Boolean =true
 

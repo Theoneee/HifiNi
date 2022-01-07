@@ -30,7 +30,7 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
  * @email 625805189@qq.com
  * @remark
  */
-class MainViewModel : BaseListViewModel<Music>() {
+class SearchViewModel : BaseListViewModel<Music>() {
 
     var keyWord: String = ""
 
