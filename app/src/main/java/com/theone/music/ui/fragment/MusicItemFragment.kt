@@ -1,4 +1,4 @@
-package com.theone.music.ui.page
+package com.theone.music.ui.fragment
 
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.bundle

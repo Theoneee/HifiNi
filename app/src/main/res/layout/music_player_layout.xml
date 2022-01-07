@@ -11,7 +11,7 @@
 
         <variable
             name="proxy"
-            type="com.theone.music.ui.page.MainActivity.ClickProxy" />
+            type="com.theone.music.ui.activity.MainActivity.ClickProxy" />
 
     </data>
 
@@ -66,8 +66,9 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="25dp"
-            isPlaying="@{vm.isPlaying}"
+            app:isPlaying="@{vm.isPlaying}"
             android:foreground="?attr/selectableItemBackground"
+            app:enable="@{vm.isSuccess}"
             android:clickable="true"
             android:focusable="true"
             android:onClick="@{()->proxy.togglePlayPause()}"
@@ -82,6 +83,7 @@
             android:layout_height="24dp"
             app:selectListener="@{proxy}"
             app:select="@{vm.isCollection}"
+            app:enable="@{vm.isSuccess}"
             app:img_normal="@drawable/svg_collection_normal"
             app:img_selected="@drawable/svg_collection_selected"
             android:background="?attr/selectableItemBackground"
@@ -95,6 +97,7 @@
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/collection"
+            app:enable="@{vm.isSuccess}"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="20dp"
             android:onClick="@{()->proxy.jumpPlayerActivity()}"

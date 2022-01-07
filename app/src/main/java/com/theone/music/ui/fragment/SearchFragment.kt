@@ -1,4 +1,4 @@
-package com.theone.music.ui.page
+package com.theone.music.ui.fragment
 
 import android.view.View
 import android.widget.RelativeLayout

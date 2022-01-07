@@ -1,11 +1,9 @@
-package com.theone.music.ui.page
+package com.theone.music.ui.fragment
 
-import android.content.Intent
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.theone.common.constant.BundleConstant
-import com.theone.common.ext.startActivity
 import com.theone.music.data.model.Music
+import com.theone.music.ui.activity.PlayerActivity
 import com.theone.music.ui.adapter.MusicAdapter
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
@@ -46,6 +44,17 @@ abstract class BaseMusicFragment<VM:BaseListViewModel<Music>>: BasePagerFragment
     override fun initAdapter() {
         super.initAdapter()
         (mAdapter as MusicAdapter).currentMusic = mEvent.getPlayMusicLiveData().value?.shareUrl
+    }
+
+    override fun onRefreshSuccess(data: List<Music>) {
+        if (mViewModel.isFirst) {
+            super.onRefreshSuccess(data)
+        } else {
+            mAdapter.getDiffer().submitList(data.toMutableList()) {
+                setRefreshLayoutEnabled(true)
+                getRecyclerView().scrollToPosition(0)
+            }
+        }
     }
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {

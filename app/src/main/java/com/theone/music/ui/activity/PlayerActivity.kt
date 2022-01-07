@@ -1,7 +1,6 @@
-package com.theone.music.ui.page
+package com.theone.music.ui.activity
 
 import android.app.Activity
-import android.os.Bundle
 import android.util.SparseArray
 import android.view.View
 import androidx.lifecycle.lifecycleScope
@@ -10,7 +9,6 @@ import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.*
 import com.theone.music.BR
 import com.theone.music.R
-import com.theone.music.app.ext.fullSize
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
@@ -61,19 +59,20 @@ import java.util.*
 class PlayerActivity :
     BaseCoreActivity<MusicInfoViewModel, PageMusicPlayerBinding>() {
 
-    companion object{
+    companion object {
 
-        fun startPlay(activity: Activity,music: Music){
+        fun startPlay(activity: Activity, music: Music) {
             activity.startActivity<PlayerActivity> {
-                putExtra(BundleConstant.DATA,music)
+                putExtra(BundleConstant.DATA, music)
             }
+            activity.overridePendingTransition(R.anim.anim_in, 0)
         }
 
     }
 
     private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
 
-    private val mMusic: Music by getValueNonNull(BundleConstant.DATA)
+    private val mMusic: Music? by getValue(BundleConstant.DATA)
 
     override fun initView(root: View) {
         getTopBar()?.run {
@@ -82,15 +81,30 @@ class PlayerActivity :
     }
 
     override fun initData() {
-        with(mMusic) {
-            if (url.isEmpty()) {
-                mViewModel.link = mMusic.shareUrl
-            } else {
-                setMediaSource(this)
+        (mMusic ?: getCurrentMusic()).let { music ->
+            with(PlayerManager.getInstance()) {
+                currentPlayingMusic?.run {
+                    // 和当前播放的是同一个，直接拿当前的播放的数据显示
+                    if (shareUrl == music.shareUrl) {
+                        getCurrentMusic().setMusicInfo()
+                        return
+                    }
+                }
+                // 不是同一个，就暂停上一个，重置信息
+                if (isPlaying) {
+                    pauseAudio()
+                    reset()
+                }
+                // 是否有音频地址，有说明是收藏过来的，设置新的数据
+                if (music.getMusicUrl().isNotEmpty()) {
+                    setMediaSource(music)
+                    return
+                }
             }
-        }
-        if (!mViewModel.isSuccess.get())
+            mViewModel.link = music.shareUrl
             onPageReLoad()
+        }
+
     }
 
     override fun createObserver() {
@@ -106,10 +120,6 @@ class PlayerActivity :
 
             pauseEvent.observe(this@PlayerActivity) {
                 mViewModel.isPlaying.set(!it)
-            }
-
-            playModeEvent.observe(this@PlayerActivity) {
-
             }
 
             playingMusicEvent.observe(this@PlayerActivity) {
@@ -139,34 +149,19 @@ class PlayerActivity :
         }
     }
 
-    private fun setMusicInfo(cover: String, title: String, author: String, shareUrl: String) {
-        mViewModel.run {
-            isSuccess.set(true)
-            name.set(title)
-            this.author.set(author)
-            this.cover.set(cover)
+    private fun Music.setMusicInfo() {
+        mViewModel.let {
+            it.isSuccess.set(true)
+            it.name.set(title)
+            it.author.set(author)
+            it.cover.set(pic)
             reset()
-            requestCollection(shareUrl)
+            it.requestCollection(shareUrl)
         }
     }
 
     private fun setMediaSource(data: Music) {
-        with(PlayerManager.getInstance()) {
-            currentPlayingMusic?.run {
-                if (shareUrl == data.shareUrl) {
-                    setMusicInfo(coverImg, title, author, shareUrl)
-                    return
-                }
-            }
-            if (isPlaying) {
-                pauseAudio()
-                reset()
-            }
-            if (data.getMusicUrl().isEmpty()) {
-                return
-            }
-        }
-        setMusicInfo(data.pic.fullSize(), data.title, data.author, data.shareUrl)
+        data.setMusicInfo()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val album = DataRepository.INSTANCE.createAlbum(data)
@@ -215,7 +210,7 @@ class PlayerActivity :
         }
 
         fun download() {
-            mViewModel.getResponseLiveData().value?.let {
+            getCurrentMusic().let {
                 val type = if (it.url.contains("mp3")) "mp3" else "m4a"
                 val download = DownloadBean(
                     it.getMusicUrl(),

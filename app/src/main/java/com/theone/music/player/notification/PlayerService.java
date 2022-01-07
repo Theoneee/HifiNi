@@ -35,11 +35,12 @@ import androidx.core.app.NotificationCompat;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.theone.common.constant.BundleConstant;
 import com.theone.music.player.helper.PlayerCallHelper;
 import com.theone.music.player.PlayerManager;
 import com.theone.music.data.model.TestAlbum;
 import com.theone.music.R;
-import com.theone.music.ui.page.MainActivity;
+import com.theone.music.ui.activity.PlayerActivity;
 import com.theone.mvvm.core.util.glide.GlideUtil;
 
 
@@ -109,8 +110,9 @@ public class PlayerService extends Service {
             expandedView = new RemoteViews(
                     getApplicationContext().getPackageName(), R.layout.notify_player_big);
 
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
             intent.setAction("showPlayer");
+            intent.putExtra(BundleConstant.DATA,testMusic);
             PendingIntent contentIntent = PendingIntent.getActivity(
                     this, 0, intent, 0);
             final NotificationManager notificationManager = (NotificationManager)
@@ -121,8 +123,9 @@ public class PlayerService extends Service {
                 NotificationChannelGroup playGroup = new NotificationChannelGroup(GROUP_ID, getString(R.string.play));
                 notificationManager.createNotificationChannelGroup(playGroup);
 
+                // 设置为 IMPORTANCE_LOW 就不会有声音了
                 NotificationChannel playChannel = new NotificationChannel(CHANNEL_ID,
-                        getString(R.string.notify_of_play), NotificationManager.IMPORTANCE_DEFAULT);
+                        getString(R.string.notify_of_play), NotificationManager.IMPORTANCE_LOW);
                 playChannel.setGroup(GROUP_ID);
                 notificationManager.createNotificationChannel(playChannel);
             }

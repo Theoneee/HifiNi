@@ -1,4 +1,4 @@
-package com.theone.music.ui.page
+package com.theone.music.ui.fragment
 
 import com.theone.music.app.ext.removeItem
 import com.theone.music.viewmodel.CollectionViewModel

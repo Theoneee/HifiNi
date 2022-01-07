@@ -1,4 +1,4 @@
-package com.theone.music.ui.page
+package com.theone.music.ui.activity
 
 import android.content.Intent
 import android.os.Bundle

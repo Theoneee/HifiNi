@@ -11,11 +11,15 @@
 
         <variable
             name="click"
-            type="com.theone.music.ui.page.PlayerActivity.ClickProxy" />
+            type="com.theone.music.ui.activity.PlayerActivity" />
 
         <variable
             name="listener"
-            type="com.theone.music.ui.page.PlayerActivity.SelectListener" />
+            type="com.theone.music.ui.activity.PlayerActivity" />
+        
+        <variable
+            name="util"
+            type="android.text.TextUtils" />
     </data>
 
     <FrameLayout
@@ -87,6 +91,7 @@
                 android:layout_marginBottom="50dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:enable="@{vm.isSuccess}"
                 android:foreground="?attr/selectableItemBackground"
                 android:onClick="@{()->click.togglePlayPause()}"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -131,6 +136,7 @@
                 android:layout_margin="50dp"
                 app:selectListener="@{listener}"
                 app:select="@{vm.isCollection}"
+                app:enable="@{vm.isSuccess}"
                 app:img_normal="@drawable/svg_collection_normal"
                 app:img_selected="@drawable/svg_collection_selected"
                 app:layout_constraintStart_toStartOf="parent"
@@ -141,8 +147,9 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_margin="50dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:onClick="@{()->click.download()}"
+                app:enable="@{vm.isSuccess}"
                 android:src="@drawable/ic_svg_download"
                 app:layout_constraintBottom_toBottomOf="@id/player_pause"
                 app:layout_constraintEnd_toEndOf="parent"

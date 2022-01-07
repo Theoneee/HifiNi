@@ -1,10 +1,9 @@
-package com.theone.music.ui.page
+package com.theone.music.ui.fragment
 
 import android.widget.RelativeLayout
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.kotlin.matchParent
 import com.qmuiteam.qmui.kotlin.wrapContent
-import com.theone.common.ext.getColor
 import com.theone.music.R
 import com.theone.music.net.NetConstant
 import com.theone.mvvm.base.viewmodel.BaseViewModel

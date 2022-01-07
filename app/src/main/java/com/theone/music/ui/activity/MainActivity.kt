@@ -1,4 +1,4 @@
-package com.theone.music.ui.page
+package com.theone.music.ui.activity
 
 import android.content.Context
 import android.os.Bundle
@@ -10,9 +10,7 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.layout.QMUIConstraintLayout
-import com.qmuiteam.qmui.layout.QMUILayoutHelper
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout
-import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.*
 import com.theone.music.R
 import com.theone.music.data.model.CollectionEvent
@@ -20,6 +18,7 @@ import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
 import com.theone.music.databinding.MusicPlayerLayoutBinding
 import com.theone.music.player.PlayerManager
+import com.theone.music.ui.fragment.MainFragment
 import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
@@ -65,13 +64,13 @@ class MainActivity : BaseFragmentActivity() {
                 mMusicViewModel.isPlaying.set(!it)
             }
 
-            playModeEvent.observe(this@MainActivity) {
-
-            }
-
-            playingMusicEvent.observe(this@MainActivity) {
-
-            }
+//            playModeEvent.observe(this@MainActivity) {
+//
+//            }
+//
+//            playingMusicEvent.observe(this@MainActivity) {
+//
+//            }
 
             changeMusicEvent.observe(this@MainActivity) { changeMusic ->
                 (changeMusic.music as TestAlbum.TestMusic).let { music ->
@@ -79,6 +78,7 @@ class MainActivity : BaseFragmentActivity() {
                         cover.set(music.coverImg)
                         name.set(music.title)
                         author.set(music.author)
+                        isSuccess.set(true)
                         requestCollection(music.shareUrl)
                     }
                 }
@@ -123,7 +123,7 @@ class MainActivity : BaseFragmentActivity() {
 
         fun jumpPlayerActivity() {
             getCurrentMusic()?.let {
-                PlayerActivity.startPlay(this@MainActivity,it)
+                PlayerActivity.startPlay(this@MainActivity, it)
             }
         }
 

@@ -5,8 +5,9 @@ import androidx.databinding.BindingAdapter;
 
 import com.theone.music.ui.view.PlayPauseView;
 import com.theone.music.ui.view.TheSelectImageView;
+import android.view.View;
 
-public class IconBindingAdapter {
+public class AppBindingAdapter {
 
     @BindingAdapter(value = {"isPlaying"}, requireAll = false)
     public static void isPlaying(PlayPauseView pauseView, boolean isPlaying) {
@@ -28,14 +29,15 @@ public class IconBindingAdapter {
     }
 
 
-    @BindingAdapter(value = {"selectListener"}, requireAll = false)
-    public static void setSelectImageListener(TheSelectImageView selectImageView, TheSelectImageView.OnSelectChangedListener listener) {
+    @BindingAdapter(value = {"selectListener","select"}, requireAll = false)
+    public static void setSelectImageListener(TheSelectImageView selectImageView, TheSelectImageView.OnSelectChangedListener listener, Boolean select) {
         selectImageView.setOnSelectChangedListener(listener);
+        selectImageView.setSelect(select);
     }
 
-    @BindingAdapter(value = {"select"}, requireAll = false)
-    public static void setSelectImage(TheSelectImageView selectImageView, Boolean select) {
-        selectImageView.setSelect(select);
+    @BindingAdapter(value = {"enable"}, requireAll = false)
+    public static void setViewEnalbe(View view, Boolean enable) {
+        view.setEnabled(enable);
     }
 
     @BindingAdapter(value = {"progress","max"}, requireAll = false)
