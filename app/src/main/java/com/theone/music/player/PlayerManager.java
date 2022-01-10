@@ -28,10 +28,12 @@ import com.kunminx.player.bean.dto.PlayingMusic;
 import com.kunminx.player.contract.ICacheProxy;
 import com.kunminx.player.contract.IPlayController;
 import com.kunminx.player.contract.IServiceNotifier;
+import com.kunminx.player.helper.MediaPlayerHelper;
 import com.theone.music.data.model.TestAlbum;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.theone.music.player.helper.PlayerFileNameGenerator;
 import com.theone.music.player.notification.PlayerService;
 
@@ -63,9 +65,9 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
         Context context1 = context.getApplicationContext();
 
         mProxy = new HttpProxyCacheServer.Builder(context1)
-            .fileNameGenerator(new PlayerFileNameGenerator())
-            .maxCacheSize(2147483648L) // 2GB
-            .build();
+                .fileNameGenerator(new PlayerFileNameGenerator())
+                .maxCacheSize(2147483648L) // 2GB
+                .build();
 
         //添加额外的音乐格式
         List<String> extraFormats = new ArrayList<>();
@@ -79,7 +81,12 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
             } else {
                 context1.stopService(intent);
             }
-        }, url -> mProxy.getProxyUrl(url));
+        }, url -> mProxy.getProxyUrl(url), new MediaPlayerHelper.CustomCheckAvailable() {
+            @Override
+            public boolean onCheckAvailable(String path) {
+                return true;
+            }
+        });
     }
 
     @Override

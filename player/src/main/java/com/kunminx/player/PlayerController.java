@@ -55,12 +55,13 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
 
   public void init(Context context, List<String> extraFormatList,
                    IServiceNotifier iServiceNotifier,
-                   ICacheProxy iCacheProxy) {
+                   ICacheProxy iCacheProxy, MediaPlayerHelper.CustomCheckAvailable customCheckAvailable) {
 
     mIServiceNotifier = iServiceNotifier;
     mICacheProxy = iCacheProxy;
 
     MediaPlayerHelper.getInstance().initAssetManager(context);
+    MediaPlayerHelper.getInstance().setCustomCheckAvailable(customCheckAvailable);
 
     if (extraFormatList != null) {
       MediaPlayerHelper.getInstance().getFormatList().addAll(extraFormatList);
