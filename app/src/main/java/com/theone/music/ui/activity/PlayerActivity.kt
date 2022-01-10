@@ -1,8 +1,10 @@
 package com.theone.music.ui.activity
 
 import android.app.Activity
+import android.util.Log
 import android.util.SparseArray
 import android.view.View
+import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.theone.common.constant.BundleConstant
@@ -74,11 +76,8 @@ class PlayerActivity :
 
     private val mMusic: Music? by getValue(BundleConstant.DATA)
 
-    override fun initView(root: View) {
-        getTopBar()?.run {
-            updateBottomDivider(0, 0, 0, 0)
-        }
-    }
+    private var isTrackingTouch: Boolean = false
+    private var mTrackingProgress: Int = 0
 
     override fun initData() {
         (mMusic ?: getCurrentMusic()).let { music ->
@@ -107,6 +106,9 @@ class PlayerActivity :
 
     }
 
+    override fun initView(root: View) {
+    }
+
     override fun createObserver() {
         mViewModel.getResponseLiveData().observeInActivity(this) {
             showSuccessPage()
@@ -123,11 +125,15 @@ class PlayerActivity :
             }
 
             playingMusicEvent.observe(this@PlayerActivity) {
+                // 拖动进度条时不再进行设值
+                if (isTrackingTouch) {
+                    return@observe
+                }
                 mViewModel.run {
                     max.set(it.duration)
+                    progress.set(it.playerPosition)
                     nowTime.set(it.nowTime)
                     allTime.set(it.allTime)
-                    progress.set(it.playerPosition)
                 }
             }
 
@@ -143,8 +149,8 @@ class PlayerActivity :
         mViewModel.run {
             max.set(0)
             progress.set(0)
-            nowTime.set("")
-            allTime.set("")
+            nowTime.set("00:00")
+            allTime.set("00:00")
             isCollection.set(false)
         }
     }
@@ -177,7 +183,7 @@ class PlayerActivity :
 
     override fun createBindingParams(bindingParams: SparseArray<Any>) {
         super.createBindingParams(bindingParams)
-        bindingParams.addParams(BR.listener, SelectListener())
+        bindingParams.addParams(BR.listener, ProxyListener())
     }
 
     override fun getBindingClick(): Any = ClickProxy()
@@ -190,7 +196,9 @@ class PlayerActivity :
             ?: Music(PlayerManager.getInstance().currentPlayingMusic)
     }
 
-    inner class SelectListener : TheSelectImageView.OnSelectChangedListener {
+
+    inner class ProxyListener : TheSelectImageView.OnSelectChangedListener,
+        SeekBar.OnSeekBarChangeListener {
 
         override fun onSelectChanged(isSelected: Boolean) {
             getCurrentMusic().let {
@@ -199,6 +207,22 @@ class PlayerActivity :
                     mEvent.dispatchCollectionEvent(event)
                 }
             }
+        }
+
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            if(fromUser){
+                mTrackingProgress = progress
+                mViewModel.nowTime.set(PlayerManager.getInstance().getTrackTime(progress))
+            }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            isTrackingTouch = true
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            isTrackingTouch = false
+            PlayerManager.getInstance().setSeek(mTrackingProgress)
         }
 
     }
