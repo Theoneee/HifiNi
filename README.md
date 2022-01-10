@@ -17,7 +17,7 @@
 
 ### 下载地址
 
-![HiFiNi](https://qr.api.cli.im/newqr/create?data=http%253A%252F%252Ffile.cudag.com%252F2022%252F01%252F07%252Fe12cf85740f7b943806c793f213af56a.apk&level=H&transparent=0&bgcolor=%23FFFFFF&forecolor=%23000&blockpixel=12&marginblock=2&logourl=&size=400&logoshape=no&embed_text_fontfamily=simhei.ttc&eye_use_fore=&background=images%2Fbackground%2Fbg25.png&wper=0.84&hper=0.84&tper=0.08&lper=0.08&qrcode_eyes=pin-3.png&outcolor=&incolor=%231694e3&body_type=0&qr_rotate=0&text=&fontfamily=msyh.ttf&fontsize=30&fontcolor=&logo_pos=0&kid=bizcliim&time=1641561500&key=d8470190cecfd0c2c43877c997ac00d2 "xxx.png")
+![HiFiNi](https://qr.api.cli.im/newqr/create?data=http%253A%252F%252Ffile.cudag.com%252F2022%252F01%252F10%252Fadcd3d4940d22d4980436ae11050eb2e.apk&level=H&transparent=0&bgcolor=%23FFFFFF&forecolor=%23000&blockpixel=12&marginblock=2&logourl=&logoshape=no&size=400&embed_text_fontfamily=simhei.ttc&eye_use_fore=&background=images%2Fbackground%2Fbg25.png&wper=0.84&hper=0.84&tper=0.08&lper=0.08&qrcode_eyes=pin-3.png&outcolor=&incolor=%231694e3&body_type=0&qr_rotate=0&text=&fontfamily=msyh.ttf&fontsize=30&fontcolor=&logo_pos=0&kid=cliim&key=c713bb30124e66227c13c990fe274b16 "xxx.png")
 
 #### 感谢
 
