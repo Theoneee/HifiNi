@@ -24,6 +24,7 @@ import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.base.activity.BaseFragmentActivity
 import com.theone.mvvm.ext.getAppViewModel
+import com.theone.mvvm.ext.qmui.showFailTipsDialog
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -77,6 +78,10 @@ class MainActivity : BaseFragmentActivity() {
                         isSuccess.set(true)
                         requestCollection(music.shareUrl)
                     }
+                }
+
+                playErrorEvent.observe(this@MainActivity){
+                    showFailTipsDialog(it)
                 }
 
             }

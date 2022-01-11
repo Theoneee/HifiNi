@@ -181,6 +181,11 @@ public class DefaultPlayerManager implements IPlayController<DefaultAlbum, Defau
   }
 
   @Override
+  public LiveData<String> getPlayErrorEvent() {
+    return mController.getPlayErrorEvent();
+  }
+
+  @Override
   public Enum getRepeatMode() {
     return mController.getRepeatMode();
   }

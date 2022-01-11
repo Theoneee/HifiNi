@@ -162,11 +162,11 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
     /**
      * 设置回调
      *
-     * @param MediaPlayerHelperCallBack 回调
+     * @param mediaPlayerHelperCallBack 回调
      * @return 类对象
      */
-    public MediaPlayerHelper setMediaPlayerHelperCallBack(MediaPlayerHelperCallBack MediaPlayerHelperCallBack) {
-        this.MediaPlayerHelperCallBack = MediaPlayerHelperCallBack;
+    public MediaPlayerHelper setMediaPlayerHelperCallBack(MediaPlayerHelperCallBack mediaPlayerHelperCallBack) {
+        this.MediaPlayerHelperCallBack = mediaPlayerHelperCallBack;
         return instance;
     }
 

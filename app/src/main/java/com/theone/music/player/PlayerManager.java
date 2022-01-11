@@ -215,6 +215,11 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
     }
 
     @Override
+    public LiveData<String> getPlayErrorEvent() {
+        return mController.getPlayErrorEvent();
+    }
+
+    @Override
     public Enum getRepeatMode() {
         return mController.getRepeatMode();
     }

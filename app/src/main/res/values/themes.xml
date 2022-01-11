@@ -2,7 +2,6 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="CoreTheme">
         <item name="app_skin_background_color_1">@color/white</item>
-        <item name="app_skin_tab_indicator_text_size">18sp</item>
         <item name="qmui_skin_support_topbar_separator_height">0dp</item>
     </style>
 
