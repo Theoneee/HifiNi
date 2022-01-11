@@ -2,11 +2,12 @@ package com.theone.music.ui.fragment
 
 import android.view.View
 import android.widget.RelativeLayout
+import com.qmuiteam.qmui.util.QMUIKeyboardHelper
 import com.theone.common.ext.match_wrap
 import com.theone.common.widget.TheSearchView
 import com.theone.music.R
 import com.theone.music.viewmodel.MainViewModel
-import com.theone.mvvm.core.ext.showEmptyPage
+import com.theone.mvvm.core.app.ext.showEmptyPage
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -34,6 +35,19 @@ import com.theone.mvvm.core.ext.showEmptyPage
  */
 class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextChangedListener {
 
+    private val mSearchView:TheSearchView by lazy {
+        TheSearchView(requireContext(),true).apply {
+            mSearchListener = this@SearchFragment
+            layoutParams = RelativeLayout.LayoutParams(match_wrap).apply {
+                addRule(RelativeLayout.LEFT_OF,R.id.topbar_right_view)
+                addRule(RelativeLayout.RIGHT_OF,R.id.qmui_topbar_item_left_back)
+                marginStart = 30
+                marginEnd = 30
+            }
+            mEditText.setHint(R.string.search_hint)
+        }
+    }
+
     override fun showTopBar(): Boolean =true
 
     override fun initView(root: View) {
@@ -43,16 +57,9 @@ class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextCha
             addRightTextButton("搜索", R.id.topbar_right_view).setOnClickListener {
                 onFirstLoading()
             }
-            setCenterView(TheSearchView(requireContext(),true).apply {
-                mSearchListener = this@SearchFragment
-                layoutParams = RelativeLayout.LayoutParams(match_wrap).apply {
-                    addRule(RelativeLayout.LEFT_OF,R.id.topbar_right_view)
-                    addRule(RelativeLayout.RIGHT_OF,R.id.qmui_topbar_item_left_back)
-                    marginStart = 30
-                    marginEnd = 30
-                }
-            })
+            setCenterView(mSearchView)
         }
+        QMUIKeyboardHelper.showKeyboard(mSearchView.mEditText,200)
     }
 
     override fun onFirstLoading() {
