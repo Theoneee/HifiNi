@@ -58,19 +58,15 @@ class MainActivity : BaseFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermission()
+        createObserve()
+    }
+
+    private fun createObserve(){
         with(PlayerManager.getInstance()) {
 
             pauseEvent.observe(this@MainActivity) {
                 mMusicViewModel.isPlaying.set(!it)
             }
-
-//            playModeEvent.observe(this@MainActivity) {
-//
-//            }
-//
-//            playingMusicEvent.observe(this@MainActivity) {
-//
-//            }
 
             changeMusicEvent.observe(this@MainActivity) { changeMusic ->
                 (changeMusic.music as TestAlbum.TestMusic).let { music ->
@@ -84,7 +80,9 @@ class MainActivity : BaseFragmentActivity() {
                 }
 
             }
-
+        }
+        mEvent.getCollectionLiveData().observeInActivity(this){
+            mMusicViewModel.isCollection.set(it.collection)
         }
     }
 
