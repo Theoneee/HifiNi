@@ -24,6 +24,7 @@ import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.base.activity.BaseFragmentActivity
 import com.theone.mvvm.ext.getAppViewModel
+import com.theone.mvvm.ext.qmui.showFailTipsDialog
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -58,19 +59,15 @@ class MainActivity : BaseFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermission()
+        createObserve()
+    }
+
+    private fun createObserve(){
         with(PlayerManager.getInstance()) {
 
             pauseEvent.observe(this@MainActivity) {
                 mMusicViewModel.isPlaying.set(!it)
             }
-
-//            playModeEvent.observe(this@MainActivity) {
-//
-//            }
-//
-//            playingMusicEvent.observe(this@MainActivity) {
-//
-//            }
 
             changeMusicEvent.observe(this@MainActivity) { changeMusic ->
                 (changeMusic.music as TestAlbum.TestMusic).let { music ->
@@ -83,8 +80,14 @@ class MainActivity : BaseFragmentActivity() {
                     }
                 }
 
-            }
+                playErrorEvent.observe(this@MainActivity){
+                    showFailTipsDialog(it)
+                }
 
+            }
+        }
+        mEvent.getCollectionLiveData().observeInActivity(this){
+            mMusicViewModel.isCollection.set(it.collection)
         }
     }
 

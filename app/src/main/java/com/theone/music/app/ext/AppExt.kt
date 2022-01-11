@@ -3,7 +3,9 @@ package com.theone.music.app.ext
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.theone.common.ext.toHtml
-import com.theone.mvvm.core.util.FileDirectoryUtil
+import com.theone.mvvm.core.app.ext.showLoading
+import com.theone.mvvm.core.app.util.FileDirectoryUtil
+import com.theone.mvvm.core.base.callback.ICore
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -34,6 +36,12 @@ import java.io.PrintWriter
  * @remark
  */
 
+
+fun ICore.showLoadingPage() {
+    loadSirRegisterView()?.post {
+        getLoadSir()?.showLoading()
+    }
+}
 
 fun writeStringToFile(path: String = FileDirectoryUtil.getCachePath()+ File.separator+"temp.txt", content: String) {
     try {

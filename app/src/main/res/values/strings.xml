@@ -9,5 +9,6 @@
     <string name="play_repeat">列表循环</string>
     <string name="play_repeat_once">单曲循环</string>
     <string name="play_shuffle">随机播放</string>
+    <string name="search_hint">输入歌名/歌手名</string>
 
 </resources>

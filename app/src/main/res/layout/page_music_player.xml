@@ -15,7 +15,7 @@
 
         <variable
             name="listener"
-            type="com.theone.music.ui.activity.PlayerActivity.SelectListener" />
+            type="com.theone.music.ui.activity.PlayerActivity.ProxyListener" />
         
         <variable
             name="util"
@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             app:visible="@{vm.isSuccess}">
 
-            <com.theone.mvvm.core.widge.layout.QMUISquareRelativeLayout
+            <com.theone.mvvm.core.app.widge.layout.QMUISquareRelativeLayout
                 android:id="@+id/cover_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                     android:layout_height="match_parent"
                     app:imageUrl="@{vm.cover}" />
 
-            </com.theone.mvvm.core.widge.layout.QMUISquareRelativeLayout>
+            </com.theone.mvvm.core.app.widge.layout.QMUISquareRelativeLayout>
 
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -99,24 +99,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:isCircleDraw="true" />
 
+
+            <!-- 用minHeight控制高度，paddingVertical增加高度，高度太低了不容易触摸到进行滑动操作-->
             <androidx.appcompat.widget.AppCompatSeekBar
                 android:id="@+id/seek_bar"
                 app:progress="@{vm.progress}"
                 app:max="@{vm.max}"
+                app:changeListener="@{listener}"
                 android:layout_width="match_parent"
                 android:thumb="@null"
+                android:paddingStart="0dp"
+                android:minHeight="5dp"
+                android:paddingEnd="0dp"
+                android:paddingVertical="10dp"
+                android:duplicateParentState="true"
                 android:progressDrawable="@drawable/layer_progress"
-                android:layout_marginHorizontal="35dp"
+                android:layout_marginHorizontal="50dp"
                 app:layout_constraintTop_toBottomOf="@id/singer"
                 app:layout_constraintBottom_toTopOf="@id/player_pause"
-                android:layout_height="5dp"/>
+                android:layout_height="wrap_content"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/now_time"
-                android:layout_marginTop="10dp"
                 tools:text="00:00"
                 android:text="@{vm.nowTime}"
-                android:layout_marginStart="15dp"
                 app:layout_constraintStart_toStartOf="@id/seek_bar"
                 app:layout_constraintTop_toBottomOf="@id/seek_bar"
                 style="@style/music_time_text_style" />
@@ -125,7 +131,6 @@
                 style="@style/music_time_text_style"
                 android:text="@{vm.allTime}"
                 tools:text="01:00"
-                android:layout_marginEnd="15dp"
                 app:layout_constraintEnd_toEndOf="@id/seek_bar"
                 app:layout_constraintTop_toTopOf="@id/now_time"/>
 

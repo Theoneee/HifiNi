@@ -6,6 +6,7 @@ import androidx.databinding.BindingAdapter;
 import com.theone.music.ui.view.PlayPauseView;
 import com.theone.music.ui.view.TheSelectImageView;
 import android.view.View;
+import android.widget.SeekBar;
 
 public class AppBindingAdapter {
 
@@ -40,10 +41,11 @@ public class AppBindingAdapter {
         view.setEnabled(enable);
     }
 
-    @BindingAdapter(value = {"progress","max"}, requireAll = false)
-    public static void seekBar(AppCompatSeekBar seekBar, int progress,int max) {
+    @BindingAdapter(value = {"progress","max","changeListener"}, requireAll = false)
+    public static void seekBar(AppCompatSeekBar seekBar, int progress, int max, AppCompatSeekBar.OnSeekBarChangeListener changeListener) {
         seekBar.setMax(max);
         seekBar.setProgress(progress,true);
+        seekBar.setOnSeekBarChangeListener(changeListener);
     }
 
 }

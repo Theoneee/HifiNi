@@ -34,4 +34,6 @@ public interface ILiveDataNotifier {
 
   LiveData<Enum> getPlayModeEvent();
 
+  LiveData<String> getPlayErrorEvent();
+
 }

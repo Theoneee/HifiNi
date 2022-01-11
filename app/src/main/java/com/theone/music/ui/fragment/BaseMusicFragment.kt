@@ -2,6 +2,8 @@ package com.theone.music.ui.fragment
 
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.theone.common.ext.getColor
+import com.theone.music.R
 import com.theone.music.data.model.Music
 import com.theone.music.ui.activity.PlayerActivity
 import com.theone.music.ui.adapter.MusicAdapter
@@ -40,6 +42,11 @@ abstract class BaseMusicFragment<VM:BaseListViewModel<Music>>: BasePagerFragment
     override fun getViewModelIndex(): Int = 0
 
     override fun createAdapter(): BaseQuickAdapter<Music, *> =  MusicAdapter()
+
+    override fun initView(root: View) {
+        root.setBackgroundColor(getColor(mActivity,R.color.white))
+        super.initView(root)
+    }
 
     override fun initAdapter() {
         super.initAdapter()

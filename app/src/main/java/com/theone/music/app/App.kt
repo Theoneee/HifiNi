@@ -1,11 +1,10 @@
 package com.theone.music.app
 
 import android.app.Application
-import com.kunminx.player.DefaultPlayerManager
 import com.theone.music.BuildConfig
 import com.theone.music.player.PlayerManager
-import com.theone.mvvm.core.CoreApplication
-import com.theone.mvvm.core.util.RxHttpManager
+import com.theone.mvvm.core.app.CoreApplication
+import com.theone.mvvm.core.app.util.RxHttpManager
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓

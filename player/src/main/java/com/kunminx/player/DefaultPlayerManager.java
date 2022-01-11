@@ -51,7 +51,7 @@ public class DefaultPlayerManager implements IPlayController<DefaultAlbum, Defau
   @Override
   public void init(Context context, IServiceNotifier iServiceNotifier, ICacheProxy iCacheProxy) {
     mContext = context.getApplicationContext();
-    mController.init(mContext, null, iServiceNotifier, iCacheProxy);
+    mController.init(mContext, null, iServiceNotifier, iCacheProxy,null);
   }
 
   @Override
@@ -178,6 +178,11 @@ public class DefaultPlayerManager implements IPlayController<DefaultAlbum, Defau
   @Override
   public LiveData<Enum> getPlayModeEvent() {
     return mController.getPlayModeEvent();
+  }
+
+  @Override
+  public LiveData<String> getPlayErrorEvent() {
+    return mController.getPlayErrorEvent();
   }
 
   @Override

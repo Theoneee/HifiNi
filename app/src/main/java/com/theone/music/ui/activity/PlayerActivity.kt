@@ -3,12 +3,14 @@ package com.theone.music.ui.activity
 import android.app.Activity
 import android.util.SparseArray
 import android.view.View
+import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.*
 import com.theone.music.BR
 import com.theone.music.R
+import com.theone.music.app.ext.showLoadingPage
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
@@ -19,13 +21,15 @@ import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.core.base.activity.BaseCoreActivity
 import com.theone.mvvm.core.data.entity.DownloadBean
-import com.theone.mvvm.core.ext.showErrorPage
-import com.theone.mvvm.core.ext.showLoadingPage
-import com.theone.mvvm.core.ext.showSuccessPage
+import com.theone.mvvm.core.app.ext.showErrorPage
+import com.theone.mvvm.core.app.ext.showLoading
+import com.theone.mvvm.core.app.ext.showSuccessPage
 import com.theone.mvvm.core.service.startDownloadService
-import com.theone.mvvm.core.util.FileDirectoryManager
+import com.theone.mvvm.core.app.util.FileDirectoryManager
+import com.theone.mvvm.core.base.callback.ICore
 import com.theone.mvvm.ext.addParams
 import com.theone.mvvm.ext.getAppViewModel
+import com.theone.mvvm.ext.qmui.showFailTipsDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -74,13 +78,18 @@ class PlayerActivity :
 
     private val mMusic: Music? by getValue(BundleConstant.DATA)
 
-    override fun initView(root: View) {
-        getTopBar()?.run {
-            updateBottomDivider(0, 0, 0, 0)
-        }
+    private var isTrackingTouch: Boolean = false
+    private var mTrackingProgress: Int = 0
+
+    /**
+     * 获取当前播放的
+     */
+    private fun getCurrentMusic(): Music {
+        return mViewModel.getResponseLiveData().value
+            ?: Music(PlayerManager.getInstance().currentPlayingMusic)
     }
 
-    override fun initData() {
+    override fun initView(root: View) {
         (mMusic ?: getCurrentMusic()).let { music ->
             with(PlayerManager.getInstance()) {
                 currentPlayingMusic?.run {
@@ -104,7 +113,6 @@ class PlayerActivity :
             mViewModel.link = music.shareUrl
             onPageReLoad()
         }
-
     }
 
     override fun createObserver() {
@@ -123,16 +131,24 @@ class PlayerActivity :
             }
 
             playingMusicEvent.observe(this@PlayerActivity) {
+                // 拖动进度条时不再进行设值
+                if (isTrackingTouch) {
+                    return@observe
+                }
                 mViewModel.run {
                     max.set(it.duration)
+                    progress.set(it.playerPosition)
                     nowTime.set(it.nowTime)
                     allTime.set(it.allTime)
-                    progress.set(it.playerPosition)
                 }
             }
 
             changeMusicEvent.observe(this@PlayerActivity) {
                 mEvent.dispatchPlayMusic(getCurrentMusic())
+            }
+
+            playErrorEvent.observe(this@PlayerActivity) {
+                showFailTipsDialog(it)
             }
 
         }
@@ -143,8 +159,8 @@ class PlayerActivity :
         mViewModel.run {
             max.set(0)
             progress.set(0)
-            nowTime.set("")
-            allTime.set("")
+            nowTime.set("00:00")
+            allTime.set("00:00")
             isCollection.set(false)
         }
     }
@@ -175,22 +191,15 @@ class PlayerActivity :
         mViewModel.requestServer()
     }
 
-    override fun createBindingParams(bindingParams: SparseArray<Any>) {
-        super.createBindingParams(bindingParams)
-        bindingParams.addParams(BR.listener, SelectListener())
+    override fun SparseArray<Any>.applyBindingParams() {
+        addParams(BR.listener, ProxyListener())
     }
 
     override fun getBindingClick(): Any = ClickProxy()
 
-    /**
-     * 获取当前播放的
-     */
-    private fun getCurrentMusic(): Music {
-        return mViewModel.getResponseLiveData().value
-            ?: Music(PlayerManager.getInstance().currentPlayingMusic)
-    }
 
-    inner class SelectListener : TheSelectImageView.OnSelectChangedListener {
+    inner class ProxyListener : TheSelectImageView.OnSelectChangedListener,
+        SeekBar.OnSeekBarChangeListener {
 
         override fun onSelectChanged(isSelected: Boolean) {
             getCurrentMusic().let {
@@ -199,6 +208,22 @@ class PlayerActivity :
                     mEvent.dispatchCollectionEvent(event)
                 }
             }
+        }
+
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            if (fromUser) {
+                mTrackingProgress = progress
+                mViewModel.nowTime.set(PlayerManager.getInstance().getTrackTime(progress))
+            }
+        }
+
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            isTrackingTouch = true
+        }
+
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            isTrackingTouch = false
+            PlayerManager.getInstance().setSeek(mTrackingProgress)
         }
 
     }

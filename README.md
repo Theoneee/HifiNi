@@ -17,7 +17,7 @@
 
 ### 下载地址
 
-![HiFiNi](https://qr.api.cli.im/newqr/create?data=http%253A%252F%252Ffile.cudag.com%252F2022%252F01%252F07%252Fe12cf85740f7b943806c793f213af56a.apk&level=H&transparent=0&bgcolor=%23FFFFFF&forecolor=%23000&blockpixel=12&marginblock=2&logourl=&size=400&logoshape=no&embed_text_fontfamily=simhei.ttc&eye_use_fore=&background=images%2Fbackground%2Fbg25.png&wper=0.84&hper=0.84&tper=0.08&lper=0.08&qrcode_eyes=pin-3.png&outcolor=&incolor=%231694e3&body_type=0&qr_rotate=0&text=&fontfamily=msyh.ttf&fontsize=30&fontcolor=&logo_pos=0&kid=bizcliim&time=1641561500&key=d8470190cecfd0c2c43877c997ac00d2 "xxx.png")
+![HiFiNi](https://qr.api.cli.im/newqr/create?data=http%3A%2F%2Ffile.cudag.com%2F2022%2F01%2F11%2F212fb5744078ce728046fb50ecf6d5ad.apk&level=H&transparent=false&bgcolor=%23FFFFFF&forecolor=%23000&blockpixel=12&marginblock=2&logourl=&logoshape=no&size=176&bgimg=&text=&fontsize=30&fontcolor=&fontfamily=msyh.ttf&incolor=%231694e3&outcolor=&qrcode_eyes=pin-3.png&background=images%2Fbackground%2Fbg25.png&wper=0.84&hper=0.84&tper=0.08&lper=0.08&eye_use_fore=&qrpad=10&embed_text_fontfamily=simhei.ttc&body_type=0&qr_rotate=0&logo_pos=0&kid=cliim&key=b9863c81a4a8820ce45f41f27e6f460d "HifiNi-Download.png")
 
 #### 感谢
 

@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.theone.mvvm.core.base.fragment.BasePagerPullRefreshFragment
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 import com.theone.mvvm.core.databinding.BasePullFreshFragmentBinding
-import com.theone.mvvm.core.widge.pullrefresh.PullRefreshLayout
+import com.theone.mvvm.core.app.widge.pullrefresh.PullRefreshLayout
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
