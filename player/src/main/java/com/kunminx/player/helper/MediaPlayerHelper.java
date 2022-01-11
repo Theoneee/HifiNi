@@ -253,15 +253,16 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
      * @return 结果
      */
     private boolean checkAvailable(String path) {
-        boolean support = getFormatList().contains(path);
-        if (!support) {
-            callBack(CallBackState.FORMATE_NOT_SURPORT, uiHolder.player);
-            if (null == customCheckAvailable) {
-                return false;
+        for (String s : ext) {
+            if (path.toLowerCase().endsWith(s)) {
+                return true;
             }
-            return customCheckAvailable.onCheckAvailable(path);
         }
-        return true;
+        callBack(CallBackState.FORMATE_NOT_SURPORT, uiHolder.player);
+        if (null == customCheckAvailable) {
+            return false;
+        }
+        return customCheckAvailable.onCheckAvailable(path);
     }
 
     /**
@@ -386,7 +387,8 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
 
         /**
          * 自定义检查播放地址
-         * @param path  播放地址
+         *
+         * @param path 播放地址
          * @return 是否可以进行播放
          */
         boolean onCheckAvailable(String path);
