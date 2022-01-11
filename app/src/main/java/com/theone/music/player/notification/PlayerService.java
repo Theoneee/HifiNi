@@ -41,7 +41,7 @@ import com.theone.music.player.PlayerManager;
 import com.theone.music.data.model.TestAlbum;
 import com.theone.music.R;
 import com.theone.music.ui.activity.PlayerActivity;
-import com.theone.mvvm.core.util.glide.GlideUtil;
+import com.theone.mvvm.core.app.util.glide.GlideUtil;
 
 
 /**

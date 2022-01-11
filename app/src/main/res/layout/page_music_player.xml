@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             app:visible="@{vm.isSuccess}">
 
-            <com.theone.mvvm.core.widge.layout.QMUISquareRelativeLayout
+            <com.theone.mvvm.core.app.widge.layout.QMUISquareRelativeLayout
                 android:id="@+id/cover_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                     android:layout_height="match_parent"
                     app:imageUrl="@{vm.cover}" />
 
-            </com.theone.mvvm.core.widge.layout.QMUISquareRelativeLayout>
+            </com.theone.mvvm.core.app.widge.layout.QMUISquareRelativeLayout>
 
 
             <androidx.appcompat.widget.AppCompatTextView

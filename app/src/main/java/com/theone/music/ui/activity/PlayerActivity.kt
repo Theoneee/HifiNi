@@ -21,11 +21,11 @@ import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.core.base.activity.BaseCoreActivity
 import com.theone.mvvm.core.data.entity.DownloadBean
-import com.theone.mvvm.core.ext.showErrorPage
-import com.theone.mvvm.core.ext.showLoadingPage
-import com.theone.mvvm.core.ext.showSuccessPage
+import com.theone.mvvm.core.app.ext.showErrorPage
+import com.theone.mvvm.core.app.ext.showLoadingPage
+import com.theone.mvvm.core.app.ext.showSuccessPage
 import com.theone.mvvm.core.service.startDownloadService
-import com.theone.mvvm.core.util.FileDirectoryManager
+import com.theone.mvvm.core.app.util.FileDirectoryManager
 import com.theone.mvvm.ext.addParams
 import com.theone.mvvm.ext.getAppViewModel
 import kotlinx.coroutines.Dispatchers
@@ -181,9 +181,8 @@ class PlayerActivity :
         mViewModel.requestServer()
     }
 
-    override fun createBindingParams(bindingParams: SparseArray<Any>) {
-        super.createBindingParams(bindingParams)
-        bindingParams.addParams(BR.listener, ProxyListener())
+    override fun SparseArray<Any>.applyBindingParams() {
+        addParams(BR.listener, ProxyListener())
     }
 
     override fun getBindingClick(): Any = ClickProxy()
