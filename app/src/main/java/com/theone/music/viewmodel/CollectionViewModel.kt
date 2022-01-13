@@ -33,7 +33,7 @@ class CollectionViewModel:BaseListViewModel<Music>() {
 
     override fun requestServer() {
        request({
-           onSuccess(DataRepository.MUSIC_DAO.getMusicList())
+           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList())
        })
     }
 }

@@ -159,14 +159,22 @@ class DataRepository {
     }
 
     suspend fun getMusicInfo(link: String): Music {
+        // 先从数据里查是否有
+        val list = MUSIC_DAO.findMusics(link)
+        if (list.isNotEmpty()) {
+            return list[0]
+        }
         val response = request(link)
-        return parseMusicInfo(response).apply {
+        val music = parseMusicInfo(response).apply {
+            createDate = System.currentTimeMillis()
             shareUrl = link
             if (!url.startsWith("http")) {
                 // 然后得到重定向后的地址
                 realUrl = getRedirectUrl(url)
             }
         }
+        MUSIC_DAO.insert(music)
+        return music
     }
 
     fun createAlbum(data: Music): TestAlbum {

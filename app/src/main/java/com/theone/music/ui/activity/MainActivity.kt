@@ -5,17 +5,21 @@ import android.os.Bundle
 import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.lifecycleScope
 import com.hjq.permissions.OnPermission
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.layout.QMUIConstraintLayout
+import com.qmuiteam.qmui.util.QMUIDeviceHelper
+import com.qmuiteam.qmui.util.QMUIPackageHelper
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout
 import com.theone.common.ext.*
 import com.theone.music.R
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
+import com.theone.music.data.repository.DataRepository
 import com.theone.music.databinding.MusicPlayerLayoutBinding
 import com.theone.music.player.PlayerManager
 import com.theone.music.ui.fragment.MainFragment
@@ -23,8 +27,12 @@ import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.base.activity.BaseFragmentActivity
+import com.theone.mvvm.core.app.util.MMKVUtil
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -62,7 +70,7 @@ class MainActivity : BaseFragmentActivity() {
         createObserve()
     }
 
-    private fun createObserve(){
+    private fun createObserve() {
         with(PlayerManager.getInstance()) {
 
             pauseEvent.observe(this@MainActivity) {
@@ -80,13 +88,13 @@ class MainActivity : BaseFragmentActivity() {
                     }
                 }
 
-                playErrorEvent.observe(this@MainActivity){
+                playErrorEvent.observe(this@MainActivity) {
                     showFailTipsDialog(it)
                 }
 
             }
         }
-        mEvent.getCollectionLiveData().observeInActivity(this){
+        mEvent.getCollectionLiveData().observeInActivity(this) {
             mMusicViewModel.isCollection.set(it.collection)
         }
     }
@@ -101,7 +109,6 @@ class MainActivity : BaseFragmentActivity() {
             .request(object : OnPermission {
 
                 override fun hasPermission(granted: MutableList<String>?, all: Boolean) {
-
                 }
 
                 override fun noPermission(denied: MutableList<String>?, quick: Boolean) {
@@ -160,16 +167,16 @@ class MainActivity : BaseFragmentActivity() {
                 (root as QMUIConstraintLayout).run {
 //                    val radius = dp2px(20)
 //                    setRadius(radius,QMUILayoutHelper.HIDE_RADIUS_SIDE_BOTTOM)
-                    updateTopDivider(0,0,1,getColor(R.color.qmui_config_color_separator))
+                    updateTopDivider(0, 0, 1, getColor(R.color.qmui_config_color_separator))
                 }
             }
 
             val insetLayout = QMUIWindowInsetLayout(context).apply {
                 val playerLayoutHeight = dp2px(60)
                 addView(fragmentContainer, LayoutParams(matchParent, matchParent).apply {
-                    setMargins(0,0,0,playerLayoutHeight)
+                    setMargins(0, 0, 0, playerLayoutHeight)
                 })
-                addView(mBinding.root, LayoutParams(matchParent,playerLayoutHeight).apply {
+                addView(mBinding.root, LayoutParams(matchParent, playerLayoutHeight).apply {
                     gravity = Gravity.BOTTOM
                 })
             }

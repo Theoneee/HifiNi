@@ -43,7 +43,8 @@ data class Music(
     var pic: String = "",
     var shareUrl: String = "",
     var realUrl: String = "",
-    var createDate: Long = 0
+    var createDate: Long = 0,
+    var collection:Int = 0
 ) : Parcelable {
 
     constructor(music: TestAlbum.TestMusic?):this(){
@@ -68,8 +69,7 @@ data class Music(
     }
 
     override fun toString(): String {
-        return "MusicInfo(id=$id, title='$title', author='$author', url='$url', pic='$pic', shareUrl='$shareUrl', realUrl='$realUrl', createDate=$createDate)"
+        return "Music(id=$id, title='$title', author='$author', url='$url', pic='$pic', shareUrl='$shareUrl', realUrl='$realUrl', createDate=$createDate, collection=$collection)"
     }
-
 
 }

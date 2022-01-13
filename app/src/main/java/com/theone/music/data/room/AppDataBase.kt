@@ -3,9 +3,12 @@ package com.theone.lover.data.room
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.theone.music.data.model.Music
 import com.theone.music.data.room.MusicDao
 import com.theone.mvvm.base.appContext
+
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -39,7 +42,7 @@ import com.theone.mvvm.base.appContext
  *              因为大部分情况，操作数据库都还算是比较耗时的动作。
  *              如果需要在主线程调用则使用allowMainThreadQueries进行说明。
  */
-@Database(entities = [Music::class],version = 2,exportSchema = false)
+@Database(entities = [Music::class], version = 3, exportSchema = false)
 abstract class AppDataBase:RoomDatabase() {
 
     abstract fun musicDao(): MusicDao
@@ -52,8 +55,15 @@ abstract class AppDataBase:RoomDatabase() {
                 appContext,
                 AppDataBase::class.java,
                 DB_NAME
-            ).allowMainThreadQueries().build()
+            ).allowMainThreadQueries().addMigrations(MIGRATION_2_3).build()
         }
+
+        var MIGRATION_2_3: Migration = object : Migration(2, 3) {
+            override fun migrate( database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE MusicInfo " + " ADD COLUMN collection INTEGER " + " NOT NULL DEFAULT 1")
+            }
+        }
+
     }
 
 }

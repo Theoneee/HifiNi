@@ -187,8 +187,10 @@ class PlayerActivity :
     }
 
     override fun onPageReLoad() {
-        showLoadingPage()
-        mViewModel.requestServer()
+        getContentView().post {
+            showLoadingPage()
+            mViewModel.requestServer()
+        }
     }
 
     override fun SparseArray<Any>.applyBindingParams() {
