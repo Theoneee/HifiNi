@@ -3,6 +3,7 @@ package com.theone.music.ui.fragment
 import com.theone.music.app.ext.removeItem
 import com.theone.music.viewmodel.CollectionViewModel
 import com.theone.music.viewmodel.EventViewModel
+import com.theone.mvvm.core.app.ext.showEmptyPage
 import com.theone.mvvm.ext.getAppViewModel
 
 //  ┏┓　　　┏┓
@@ -40,10 +41,14 @@ class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
                 onAutoRefresh()
             }else{
                 mAdapter.run {
-                    for ((index,item) in data.withIndex()){
-                        if(item.shareUrl == it.music.shareUrl){
-                            removeItem(index)
-                            break
+                    if(data.size == 1){
+                        showEmptyPage()
+                    }else{
+                        for ((index,item) in data.withIndex()){
+                            if(item.shareUrl == it.music.shareUrl){
+                                removeItem(index)
+                                break
+                            }
                         }
                     }
                 }
