@@ -8,6 +8,7 @@ import com.theone.music.data.model.Music
 import com.theone.music.ui.activity.PlayerActivity
 import com.theone.music.ui.adapter.MusicAdapter
 import com.theone.music.viewmodel.EventViewModel
+import com.theone.mvvm.core.app.widge.loadsir.callback.SuccessCallback
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 import com.theone.mvvm.ext.getAppViewModel
 
@@ -61,6 +62,22 @@ abstract class BaseMusicFragment<VM:BaseListViewModel<Music>>: BasePagerFragment
                 setRefreshLayoutEnabled(true)
                 getRecyclerView().scrollToPosition(0)
             }
+        }
+    }
+
+    override fun onAutoRefresh() {
+        if (getLoadSir()?.currentCallback is SuccessCallback) {
+            onRefresh()
+        } else {
+            onFirstLoading()
+        }
+    }
+
+    override fun requestNewData(){
+        mViewModel.run {
+            isFresh =false
+            isFirst = true
+            requestNewData()
         }
     }
 
