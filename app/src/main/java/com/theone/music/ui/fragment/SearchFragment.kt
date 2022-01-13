@@ -74,6 +74,7 @@ class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextCha
 
     override fun onLoadMoreComplete() {
         onLoadMoreEnd()
+        setRefreshLayoutEnabled(false)
     }
 
     override fun onSearchViewClick(content: String, empty: Boolean) {
