@@ -66,7 +66,7 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
 
         mProxy = new HttpProxyCacheServer.Builder(context1)
                 .fileNameGenerator(new PlayerFileNameGenerator())
-                .maxCacheSize(2147483648L) // 2GB
+                .maxCacheSize(2147483648L)
                 .build();
 
         //添加额外的音乐格式

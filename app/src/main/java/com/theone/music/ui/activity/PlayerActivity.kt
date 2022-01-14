@@ -22,11 +22,9 @@ import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.core.base.activity.BaseCoreActivity
 import com.theone.mvvm.core.data.entity.DownloadBean
 import com.theone.mvvm.core.app.ext.showErrorPage
-import com.theone.mvvm.core.app.ext.showLoading
 import com.theone.mvvm.core.app.ext.showSuccessPage
 import com.theone.mvvm.core.service.startDownloadService
 import com.theone.mvvm.core.app.util.FileDirectoryManager
-import com.theone.mvvm.core.base.callback.ICore
 import com.theone.mvvm.ext.addParams
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
@@ -79,7 +77,6 @@ class PlayerActivity :
     private val mMusic: Music? by getValue(BundleConstant.DATA)
 
     private var isTrackingTouch: Boolean = false
-    private var mTrackingProgress: Int = 0
 
     /**
      * 获取当前播放的
@@ -194,13 +191,13 @@ class PlayerActivity :
     }
 
     override fun SparseArray<Any>.applyBindingParams() {
-        addParams(BR.listener, ProxyListener())
+        addParams(BR.listener, ListenerProxy())
     }
 
     override fun getBindingClick(): Any = ClickProxy()
 
 
-    inner class ProxyListener : TheSelectImageView.OnSelectChangedListener,
+    inner class ListenerProxy : TheSelectImageView.OnSelectChangedListener,
         SeekBar.OnSeekBarChangeListener {
 
         override fun onSelectChanged(isSelected: Boolean) {
@@ -214,7 +211,6 @@ class PlayerActivity :
 
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             if (fromUser) {
-                mTrackingProgress = progress
                 mViewModel.nowTime.set(PlayerManager.getInstance().getTrackTime(progress))
             }
         }
@@ -225,7 +221,9 @@ class PlayerActivity :
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             isTrackingTouch = false
-            PlayerManager.getInstance().setSeek(mTrackingProgress)
+            seekBar?.let {
+                PlayerManager.getInstance().setSeek(it.progress)
+            }
         }
 
     }
