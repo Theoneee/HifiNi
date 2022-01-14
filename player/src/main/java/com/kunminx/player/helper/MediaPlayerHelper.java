@@ -27,9 +27,12 @@ import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
+import android.media.MediaTimestamp;
 import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -197,6 +200,7 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
 
     private boolean play(String path,boolean isAsset){
         if (!checkAvailable(path)) {
+            callBack(CallBackState.FORMATE_NOT_SURPORT, uiHolder.player);
             return false;
         }
         try {
@@ -258,7 +262,6 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
                 return true;
             }
         }
-        callBack(CallBackState.FORMATE_NOT_SURPORT, uiHolder.player);
         if (null == customCheckAvailable) {
             return false;
         }

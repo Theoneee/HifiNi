@@ -4,6 +4,7 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.theone.common.ext.getColor
 import com.theone.music.R
+import com.theone.music.app.ext.removeItem
 import com.theone.music.data.model.Music
 import com.theone.music.ui.activity.PlayerActivity
 import com.theone.music.ui.adapter.MusicAdapter
@@ -36,16 +37,16 @@ import com.theone.mvvm.ext.getAppViewModel
  * @email 625805189@qq.com
  * @remark
  */
-abstract class BaseMusicFragment<VM:BaseListViewModel<Music>>: BasePagerFragment<Music, VM>() {
+abstract class BaseMusicFragment<VM : BaseListViewModel<Music>> : BasePagerFragment<Music, VM>() {
 
     private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
 
     override fun getViewModelIndex(): Int = 0
 
-    override fun createAdapter(): BaseQuickAdapter<Music, *> =  MusicAdapter()
+    override fun createAdapter(): BaseQuickAdapter<Music, *> = MusicAdapter()
 
     override fun initView(root: View) {
-        root.setBackgroundColor(getColor(mActivity,R.color.white))
+        root.setBackgroundColor(getColor(mActivity, R.color.white))
         super.initView(root)
     }
 
@@ -55,13 +56,9 @@ abstract class BaseMusicFragment<VM:BaseListViewModel<Music>>: BasePagerFragment
     }
 
     override fun onRefreshSuccess(data: List<Music>) {
-        if (mViewModel.isFirst) {
-            super.onRefreshSuccess(data)
-        } else {
-            mAdapter.getDiffer().submitList(data.toMutableList()) {
-                setRefreshLayoutEnabled(true)
-                getRecyclerView().scrollToPosition(0)
-            }
+        mAdapter.getDiffer().submitList(data.toMutableList()) {
+            setRefreshLayoutEnabled(true)
+            getRecyclerView().scrollToPosition(0)
         }
     }
 
@@ -73,24 +70,22 @@ abstract class BaseMusicFragment<VM:BaseListViewModel<Music>>: BasePagerFragment
         }
     }
 
-    override fun requestNewData(){
-        mViewModel.run {
-            isFresh =false
-            isFirst = true
-            requestNewData()
-        }
+    override fun onFirstLoading() {
+        mViewModel.isFirst = true
+        super.onFirstLoading()
     }
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
         val music = adapter.getItem(position) as Music
-        PlayerActivity.startPlay(mActivity,music)
+        PlayerActivity.startPlay(mActivity, music)
     }
 
     override fun createObserver() {
         super.createObserver()
-        mEvent.getPlayMusicLiveData().observeInFragment(this){
+        mEvent.getPlayMusicLiveData().observeInFragment(this) {
             (mAdapter as MusicAdapter).currentMusic = it.shareUrl
         }
+
     }
 
 }

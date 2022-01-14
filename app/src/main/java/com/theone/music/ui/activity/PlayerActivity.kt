@@ -1,9 +1,11 @@
 package com.theone.music.ui.activity
 
 import android.app.Activity
+import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import android.widget.SeekBar
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.theone.common.constant.BundleConstant
@@ -19,12 +21,12 @@ import com.theone.music.player.PlayerManager
 import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
-import com.theone.mvvm.core.base.activity.BaseCoreActivity
-import com.theone.mvvm.core.data.entity.DownloadBean
 import com.theone.mvvm.core.app.ext.showErrorPage
 import com.theone.mvvm.core.app.ext.showSuccessPage
-import com.theone.mvvm.core.service.startDownloadService
 import com.theone.mvvm.core.app.util.FileDirectoryManager
+import com.theone.mvvm.core.base.activity.BaseCoreActivity
+import com.theone.mvvm.core.data.entity.DownloadBean
+import com.theone.mvvm.core.service.startDownloadService
 import com.theone.mvvm.ext.addParams
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
@@ -88,26 +90,29 @@ class PlayerActivity :
 
     override fun initView(root: View) {
         (mMusic ?: getCurrentMusic()).let { music ->
+            mViewModel.link = music.shareUrl
             with(PlayerManager.getInstance()) {
                 currentPlayingMusic?.run {
                     // 和当前播放的是同一个，直接拿当前的播放的数据显示
                     if (shareUrl == music.shareUrl) {
+                        mViewModel.isSetSuccess.set(true)
                         getCurrentMusic().setMusicInfo()
                         return
                     }
+                    // 不是同一个，就暂停上一个
+                    if (isPlaying) {
+                        pauseAudio()
+                    }
                 }
-                // 不是同一个，就暂停上一个，重置信息
-                if (isPlaying) {
-                    pauseAudio()
-                    reset()
-                }
-                // 是否有音频地址，有说明是收藏过来的，设置新的数据
+                // 重置所有信息
+                mViewModel.reset()
+                // 是否有音频地址，有说明是收藏过来的
                 if (music.getMusicUrl().isNotEmpty()) {
+                    //直接设置数据
                     setMediaSource(music)
                     return
                 }
             }
-            mViewModel.link = music.shareUrl
             onPageReLoad()
         }
     }
@@ -115,7 +120,12 @@ class PlayerActivity :
     override fun createObserver() {
         mViewModel.getResponseLiveData().observeInActivity(this) {
             showSuccessPage()
-            setMediaSource(it)
+            // 重新得到数据后，要刷新收藏里的数据
+            if(mViewModel.isReload){
+                mViewModel.isReload = false
+                mEvent.dispatchReloadMusic(it)
+            }
+            setMediaSource(it,true)
         }
         mViewModel.getErrorLiveData().observeInActivity(this) {
             showErrorPage(it)
@@ -133,6 +143,10 @@ class PlayerActivity :
                     return@observe
                 }
                 mViewModel.run {
+                    // 只有在设置了音乐数据后才能设置播放信息，避免被上一首的播放信息污染
+                    if (!isSetSuccess.get()) {
+                        return@observe
+                    }
                     max.set(it.duration)
                     progress.set(it.playerPosition)
                     nowTime.set(it.nowTime)
@@ -152,33 +166,35 @@ class PlayerActivity :
 
     }
 
-    private fun reset() {
-        mViewModel.run {
-            max.set(0)
-            progress.set(0)
-            nowTime.set("00:00")
-            allTime.set("00:00")
-            isCollection.set(false)
-        }
-    }
-
     private fun Music.setMusicInfo() {
         mViewModel.let {
             it.isSuccess.set(true)
             it.name.set(title)
             it.author.set(author)
             it.cover.set(pic)
-            reset()
             it.requestCollection(shareUrl)
         }
     }
 
-    private fun setMediaSource(data: Music) {
+    /**
+     * 设置播放资源
+     * @param data Music
+     * @param newData Boolean 是否为请求来的新数据
+     */
+    private fun setMediaSource(data: Music,newData:Boolean = false) {
         data.setMusicInfo()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
+                // 不是新数据才检查地址是否可行
+                if(!newData&&DataRepository.INSTANCE.checkUrl(data.getMusicUrl())){
+                    Log.e(TAG, "setMediaSource: ${Thread.currentThread().name}" )
+                        mViewModel.isReload = true
+                        mViewModel.requestServer()
+                    return@withContext
+                }
                 val album = DataRepository.INSTANCE.createAlbum(data)
                 PlayerManager.getInstance().loadAlbum(album, 0)
+                mViewModel.isSetSuccess.set(true)
             }
         }
     }

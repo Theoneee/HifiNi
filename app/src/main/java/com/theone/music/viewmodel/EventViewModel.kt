@@ -12,9 +12,13 @@ class EventViewModel : BaseViewModel() {
 
     private val playMusic = UnPeekLiveData<Music>()
 
+    private val reloadMusic = UnPeekLiveData<Music>()
+
     fun getCollectionLiveData(): ProtectedUnPeekLiveData<CollectionEvent> = collection
 
     fun getPlayMusicLiveData(): ProtectedUnPeekLiveData<Music> = playMusic
+
+    fun getReloadMusicLiveData(): ProtectedUnPeekLiveData<Music> = reloadMusic
 
     fun dispatchCollectionEvent(event: CollectionEvent){
         collection.value = event
@@ -22,6 +26,10 @@ class EventViewModel : BaseViewModel() {
 
     fun dispatchPlayMusic(music: Music){
         playMusic.value = music
+    }
+
+    fun dispatchReloadMusic(music: Music){
+        reloadMusic.value = music
     }
 
 }

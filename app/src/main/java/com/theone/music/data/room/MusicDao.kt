@@ -64,4 +64,11 @@ interface MusicDao {
         createDate: Long
     )
 
+    @Query("update MusicInfo set url = :url, realUrl =:realUrl  where shareUrl ==:shareUrl")
+    suspend fun updateDataBaseMusic(
+        shareUrl: String,
+        url: String,
+        realUrl: String
+    )
+
 }

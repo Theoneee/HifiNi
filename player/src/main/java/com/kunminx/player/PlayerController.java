@@ -18,6 +18,7 @@ package com.kunminx.player;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,12 +33,15 @@ import com.kunminx.player.contract.IPlayInfoManager;
 import com.kunminx.player.contract.IServiceNotifier;
 import com.kunminx.player.helper.MediaPlayerHelper;
 
+import java.net.URLDecoder;
 import java.util.List;
 
 /**
  * Create by KunMinX at 18/9/25
  */
 public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> implements ILiveDataNotifier, IPlayInfoManager {
+
+    private static final String TAG = "PlayerController";
 
     private PlayingInfoManager<B, M> mPlayingInfoManager = new PlayingInfoManager<>();
     private boolean mIsPaused;
@@ -126,13 +130,14 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
         M freeMusic = null;
         freeMusic = mPlayingInfoManager.getCurrentPlayingMusic();
         url = freeMusic.getUrl();
-
+        Log.e(TAG, "getUrlAndPlay: " + url);
         if (TextUtils.isEmpty(url)) {
             pauseAudio();
         } else {
             //涉及到网络请求，因而使用时 请在外部自行判断网络连接状态
             if ((url.contains("http:") || url.contains("ftp:") || url.contains("https:"))) {
-                MediaPlayerHelper.getInstance().play(mICacheProxy.getCacheUrl(url));
+                String cacheUrl = mICacheProxy.getCacheUrl(url);
+                MediaPlayerHelper.getInstance().play(cacheUrl);
             } else if (url.contains("storage")) {
                 MediaPlayerHelper.getInstance().play(url);
             } else {
@@ -155,6 +160,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
     private void bindProgressListener() {
         MediaPlayerHelper.getInstance().setProgressInterval(1000).setMediaPlayerHelperCallBack(
                 (state, mediaPlayerHelper, args) -> {
+                    Log.i(TAG, "bindProgressListener: " + state.toString());
                     if (state == MediaPlayerHelper.CallBackState.PROGRESS) {
                         int position = mediaPlayerHelper.getMediaPlayer().getCurrentPosition();
                         int duration = mediaPlayerHelper.getMediaPlayer().getDuration();
@@ -172,7 +178,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
                                 playNext();
                             }
                         }
-                    } else if (state == MediaPlayerHelper.CallBackState.ERROR) {
+                    } else if (state == MediaPlayerHelper.CallBackState.EXCEPTION) {
                         playErrorLiveData.postValue(state.toString());
                     }
                 });

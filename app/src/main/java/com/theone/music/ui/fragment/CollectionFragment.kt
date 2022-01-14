@@ -54,6 +54,18 @@ class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
                 }
             }
         }
+
+        mEvent.getReloadMusicLiveData().observeInFragment(this){
+            with(mAdapter){
+                for ((index,item) in data.withIndex()){
+                    if(item.shareUrl == it.shareUrl){
+                        item.url = it.url
+                        item.realUrl = it.realUrl
+                        break
+                    }
+                }
+            }
+        }
     }
 
     override fun onLoadMoreComplete() {

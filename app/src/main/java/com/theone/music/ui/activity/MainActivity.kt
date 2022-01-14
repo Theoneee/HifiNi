@@ -5,21 +5,17 @@ import android.os.Bundle
 import android.view.Gravity
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentContainerView
-import androidx.lifecycle.lifecycleScope
 import com.hjq.permissions.OnPermission
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.layout.QMUIConstraintLayout
-import com.qmuiteam.qmui.util.QMUIDeviceHelper
-import com.qmuiteam.qmui.util.QMUIPackageHelper
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout
 import com.theone.common.ext.*
 import com.theone.music.R
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
-import com.theone.music.data.repository.DataRepository
 import com.theone.music.databinding.MusicPlayerLayoutBinding
 import com.theone.music.player.PlayerManager
 import com.theone.music.ui.fragment.MainFragment
@@ -27,12 +23,8 @@ import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.base.activity.BaseFragmentActivity
-import com.theone.mvvm.core.app.util.MMKVUtil
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓

@@ -18,6 +18,7 @@ package com.theone.music.player;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -34,6 +35,7 @@ import com.theone.music.data.model.TestAlbum;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.theone.music.data.repository.DataRepository;
 import com.theone.music.player.helper.PlayerFileNameGenerator;
 import com.theone.music.player.notification.PlayerService;
 
@@ -87,6 +89,10 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
                 return true;
             }
         });
+    }
+
+    public String getCacheUrl(String url){
+        return mProxy.getProxyUrl(url);
     }
 
     @Override

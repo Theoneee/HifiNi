@@ -50,6 +50,7 @@
                 <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
                     app:imageUrl="@{vm.cover}" />
 
             </com.theone.mvvm.core.app.widge.layout.QMUISquareRelativeLayout>
@@ -106,6 +107,7 @@
                 app:progress="@{vm.progress}"
                 app:max="@{vm.max}"
                 app:changeListener="@{listener}"
+                enable="@{vm.isSetSuccess}"
                 android:layout_width="match_parent"
                 android:thumb="@null"
                 android:paddingStart="0dp"

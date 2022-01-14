@@ -1,11 +1,13 @@
 package com.theone.music.data.repository
 
+import android.util.Log
 import com.theone.common.ext.logI
 import com.theone.lover.data.room.AppDataBase
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
 import com.theone.music.data.room.MusicDao
 import com.theone.music.net.NetConstant
+import com.theone.music.player.PlayerManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -45,6 +47,9 @@ import java.util.*
 class DataRepository {
 
     companion object {
+
+        val TAG = "DataRepository"
+
         val INSTANCE: DataRepository by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             DataRepository()
         }
@@ -56,8 +61,6 @@ class DataRepository {
 
     suspend fun request(url: String, vararg formatArgs: Any): String {
         return RxHttp.get(url, *formatArgs)
-            .setCacheMode(CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK)
-            .setCacheValidTime(-1)
             .toStr()
             .await()
     }
@@ -154,26 +157,55 @@ class DataRepository {
         }
     }
 
+    /**
+     * 检查播放地址是否有效/已过期
+     * https://ws.stream.qqmusic.qq.com/C400000ka29V3B9e72.m4a?guid=68890724&vkey=6D57BD030F12173BB569CB9F28FAA32FD93AE71D8827D51FB08E4DC7FFB13ADAA29908780A276F19E58A539FC9EAB9F3B6ECB50B991282A1&uin=&fromtag=143
+     * 比如这种连接，过期了，403异常，而本地又没有缓存时，需要重新获取播放地址
+     * @param url String
+     * @return String
+     */
+    fun checkUrl(url: String): Boolean {
+        // 先判断本地有没有缓存，有缓存后续就会用
+        val cacheUrl = PlayerManager.getInstance().getCacheUrl(url)
+        if(cacheUrl.contains("storage/emulated")){
+            Log.e(TAG, "checkUrl: $cacheUrl" )
+            return false
+        }
+        val conn = URL(url).openConnection() as HttpURLConnection
+        val code = conn.responseCode
+        Log.e(TAG, "checkUrl: $code  ${conn.url}" )
+        conn.disconnect()
+        // 403的或者跳到了腾讯网了都算作废
+        return code == 403 || conn.url.toString().contains("https://www.qq.com/")
+    }
+
     suspend fun get(url: String, vararg formatArgs: Any): List<Music> {
         return parseMusicList(request(url, *formatArgs))
     }
 
-    suspend fun getMusicInfo(link: String): Music {
-        // 先从数据里查是否有
-        val list = MUSIC_DAO.findMusics(link)
-        if (list.isNotEmpty()) {
-            return list[0]
+    suspend fun getMusicInfo(link: String, isReload: Boolean): Music {
+        if (!isReload) {
+            // 先从数据里查是否有
+            val list = MUSIC_DAO.findMusics(link)
+            if (list.isNotEmpty()) {
+                return list[0]
+            }
         }
         val response = request(link)
         val music = parseMusicInfo(response).apply {
-            createDate = System.currentTimeMillis()
             shareUrl = link
             if (!url.startsWith("http")) {
                 // 然后得到重定向后的地址
                 realUrl = getRedirectUrl(url)
             }
         }
-        MUSIC_DAO.insert(music)
+        Log.e(TAG, "getMusicInfo: $music" )
+        if (isReload) {
+            MUSIC_DAO.updateDataBaseMusic(link, music.url, music.realUrl)
+        } else {
+            music.createDate = System.currentTimeMillis()
+            MUSIC_DAO.insert(music)
+        }
         return music
     }
 
