@@ -2,9 +2,7 @@ package com.theone.music.ui.fragment
 
 import com.theone.music.app.ext.removeItem
 import com.theone.music.viewmodel.CollectionViewModel
-import com.theone.music.viewmodel.EventViewModel
 import com.theone.mvvm.core.app.ext.showEmptyPage
-import com.theone.mvvm.ext.getAppViewModel
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -32,11 +30,11 @@ import com.theone.mvvm.ext.getAppViewModel
  */
 class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
 
-    private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
+    override fun isLazyLoadData(): Boolean = true
 
     override fun createObserver() {
         super.createObserver()
-        mEvent.getCollectionLiveData().observeInFragment(this){
+        mEvent.getCollectionLiveData().observe(this){
             if(it.collection){
                 onAutoRefresh()
             }else{
@@ -55,7 +53,7 @@ class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
             }
         }
 
-        mEvent.getReloadMusicLiveData().observeInFragment(this){
+        mEvent.getReloadMusicLiveData().observe(this){
             with(mAdapter){
                 for ((index,item) in data.withIndex()){
                     if(item.shareUrl == it.shareUrl){

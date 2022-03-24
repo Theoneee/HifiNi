@@ -1,15 +1,12 @@
 package com.theone.music.viewmodel
 
-import android.util.Log
-import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.viewModelScope
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
-import com.theone.music.data.model.TestAlbum
 import com.theone.music.data.repository.DataRepository
-import com.theone.mvvm.callback.databind.BooleanObservableField
-import com.theone.mvvm.callback.databind.IntObservableField
-import com.theone.mvvm.callback.databind.StringObservableField
+import com.theone.common.callback.databind.BooleanObservableField
+import com.theone.common.callback.databind.IntObservableField
+import com.theone.common.callback.databind.StringObservableField
 import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
 import kotlinx.coroutines.launch
 

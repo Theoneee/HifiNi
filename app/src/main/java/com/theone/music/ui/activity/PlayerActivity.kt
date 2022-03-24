@@ -13,6 +13,7 @@ import com.theone.common.ext.*
 import com.theone.music.BR
 import com.theone.music.R
 import com.theone.music.app.ext.showLoadingPage
+import com.theone.music.app.ext.toMusic
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
@@ -84,18 +85,18 @@ class PlayerActivity :
      * 获取当前播放的
      */
     private fun getCurrentMusic(): Music {
-        return mViewModel.getResponseLiveData().value
-            ?: Music(PlayerManager.getInstance().currentPlayingMusic)
+        return getViewModel().getResponseLiveData().value
+            ?: PlayerManager.getInstance().currentPlayingMusic.toMusic()
     }
 
     override fun initView(root: View) {
         (mMusic ?: getCurrentMusic()).let { music ->
-            mViewModel.link = music.shareUrl
+            getViewModel().link = music.shareUrl
             with(PlayerManager.getInstance()) {
                 currentPlayingMusic?.run {
                     // 和当前播放的是同一个，直接拿当前的播放的数据显示
                     if (shareUrl == music.shareUrl) {
-                        mViewModel.isSetSuccess.set(true)
+                        getViewModel().isSetSuccess.set(true)
                         getCurrentMusic().setMusicInfo()
                         return
                     }
@@ -105,7 +106,7 @@ class PlayerActivity :
                     }
                 }
                 // 重置所有信息
-                mViewModel.reset()
+                getViewModel().reset()
                 // 是否有音频地址，有说明是收藏过来的
                 if (music.getMusicUrl().isNotEmpty()) {
                     //直接设置数据
@@ -118,23 +119,23 @@ class PlayerActivity :
     }
 
     override fun createObserver() {
-        mViewModel.getResponseLiveData().observeInActivity(this) {
+        getViewModel().getResponseLiveData().observe(this) {
             showSuccessPage()
             // 重新得到数据后，要刷新收藏里的数据
-            if(mViewModel.isReload){
-                mViewModel.isReload = false
+            if(getViewModel().isReload){
+                getViewModel().isReload = false
                 mEvent.dispatchReloadMusic(it)
             }
             setMediaSource(it,true)
         }
-        mViewModel.getErrorLiveData().observeInActivity(this) {
+        getViewModel().getErrorLiveData().observe(this) {
             showErrorPage(it)
         }
 
         with(PlayerManager.getInstance()) {
 
             pauseEvent.observe(this@PlayerActivity) {
-                mViewModel.isPlaying.set(!it)
+                getViewModel().isPlaying.set(!it)
             }
 
             playingMusicEvent.observe(this@PlayerActivity) {
@@ -142,7 +143,7 @@ class PlayerActivity :
                 if (isTrackingTouch) {
                     return@observe
                 }
-                mViewModel.run {
+                getViewModel().run {
                     // 只有在设置了音乐数据后才能设置播放信息，避免被上一首的播放信息污染
                     if (!isSetSuccess.get()) {
                         return@observe
@@ -167,7 +168,7 @@ class PlayerActivity :
     }
 
     private fun Music.setMusicInfo() {
-        mViewModel.let {
+        getViewModel().let {
             it.isSuccess.set(true)
             it.name.set(title)
             it.author.set(author)
@@ -188,21 +189,21 @@ class PlayerActivity :
                 // 不是新数据才检查地址是否可行
                 if(!newData&&DataRepository.INSTANCE.checkUrl(data.getMusicUrl())){
                     Log.e(TAG, "setMediaSource: ${Thread.currentThread().name}" )
-                        mViewModel.isReload = true
-                        mViewModel.requestServer()
+                        getViewModel().isReload = true
+                        getViewModel().requestServer()
                     return@withContext
                 }
                 val album = DataRepository.INSTANCE.createAlbum(data)
                 PlayerManager.getInstance().loadAlbum(album, 0)
-                mViewModel.isSetSuccess.set(true)
+                getViewModel().isSetSuccess.set(true)
             }
         }
     }
 
     override fun onPageReLoad() {
-        getContentView().post {
+        getViewConstructor().getContentView().post {
             showLoadingPage()
-            mViewModel.requestServer()
+            getViewModel().requestServer()
         }
     }
 
@@ -219,7 +220,7 @@ class PlayerActivity :
         override fun onSelectChanged(isSelected: Boolean) {
             getCurrentMusic().let {
                 CollectionEvent(isSelected, it).let { event ->
-                    mViewModel.toggleCollection(event)
+                    getViewModel().toggleCollection(event)
                     mEvent.dispatchCollectionEvent(event)
                 }
             }
@@ -227,7 +228,7 @@ class PlayerActivity :
 
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             if (fromUser) {
-                mViewModel.nowTime.set(PlayerManager.getInstance().getTrackTime(progress))
+                getViewModel().nowTime.set(PlayerManager.getInstance().getTrackTime(progress))
             }
         }
 

@@ -13,6 +13,7 @@ import com.qmuiteam.qmui.layout.QMUIConstraintLayout
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout
 import com.theone.common.ext.*
 import com.theone.music.R
+import com.theone.music.app.ext.toMusic
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
@@ -86,7 +87,7 @@ class MainActivity : BaseFragmentActivity() {
 
             }
         }
-        mEvent.getCollectionLiveData().observeInActivity(this) {
+        mEvent.getCollectionLiveData().observe(this) {
             mMusicViewModel.isCollection.set(it.collection)
         }
     }
@@ -112,9 +113,7 @@ class MainActivity : BaseFragmentActivity() {
      * 获取当前播放的
      */
     private fun getCurrentMusic(): Music? {
-        return PlayerManager.getInstance().currentPlayingMusic?.let {
-            Music(it)
-        }
+        return PlayerManager.getInstance().currentPlayingMusic?.toMusic()
     }
 
     inner class ClickProxy : TheSelectImageView.OnSelectChangedListener {

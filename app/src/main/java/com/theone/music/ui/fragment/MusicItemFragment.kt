@@ -42,8 +42,8 @@ class MusicItemFragment private constructor() :
     val mType: Int by getValueNonNull(BundleConstant.TYPE)
 
     override fun initData() {
-        mViewModel.type = mType
-        mViewModel.url = NetConstant.FORUM
+        getViewModel().type = mType
+        getViewModel().url = NetConstant.FORUM
     }
 
 }

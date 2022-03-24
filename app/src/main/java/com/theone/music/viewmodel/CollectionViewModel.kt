@@ -1,5 +1,7 @@
 package com.theone.music.viewmodel
 
+import android.util.Log
+import com.theone.common.ext.logI
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
@@ -29,7 +31,6 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
  * @remark
  */
 class CollectionViewModel:BaseListViewModel<Music>() {
-
 
     override fun requestServer() {
        request({

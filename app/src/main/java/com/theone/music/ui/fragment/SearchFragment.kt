@@ -63,12 +63,12 @@ class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextCha
     }
 
     override fun onFirstLoading() {
-        if(mViewModel.keyWord.isEmpty()){
+        if(getViewModel().keyWord.isEmpty()){
             showEmptyPage("")
             return
         }
-        mViewModel.isFirst = true
-        mViewModel.isFresh = false
+        getViewModel().isFirst = true
+        getViewModel().isFresh = false
         super.onFirstLoading()
     }
 
@@ -82,7 +82,7 @@ class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextCha
     }
 
     override fun onSearchViewTextChanged(content: String, empty: Boolean) {
-        mViewModel.keyWord = content
+        getViewModel().keyWord = content
     }
 
 }

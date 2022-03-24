@@ -49,23 +49,23 @@ interface MusicDao {
     fun delete(shareUrl: String)
 
     @Query("select * from MusicInfo where collection = 1 order by createDate desc ")
-    suspend fun getCollectionMusicList(): List<Music>
+    fun getCollectionMusicList(): List<Music>
 
     @Query("select * from MusicInfo where shareUrl ==:shareUrl")
-    suspend fun findMusics(shareUrl: String): List<Music>
+    fun findMusics(shareUrl: String): List<Music>
 
     @Query("select * from MusicInfo where shareUrl ==:shareUrl and collection = 1")
-    suspend fun findCollectionMusics(shareUrl: String): List<Music>
+    fun findCollectionMusics(shareUrl: String): List<Music>
 
     @Query("update MusicInfo set collection = :collection, createDate =:createDate  where shareUrl ==:shareUrl")
-    suspend fun updateCollectionMusic(
+    fun updateCollectionMusic(
         shareUrl: String,
         collection: Int,
         createDate: Long
     )
 
     @Query("update MusicInfo set url = :url, realUrl =:realUrl  where shareUrl ==:shareUrl")
-    suspend fun updateDataBaseMusic(
+    fun updateDataBaseMusic(
         shareUrl: String,
         url: String,
         realUrl: String

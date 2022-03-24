@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.theone.common.ext.toHtml
 import com.theone.music.R
+import com.theone.music.data.model.Music
+import com.theone.music.data.model.TestAlbum
 import com.theone.mvvm.core.app.ext.showLoading
 import com.theone.mvvm.core.app.util.FileDirectoryUtil
 import com.theone.mvvm.core.app.widge.loadsir.callback.LoadingCallback
@@ -93,4 +95,8 @@ fun BaseQuickAdapter<*, *>.removeItem(position: Int){
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, data.size)
     }
+}
+
+fun TestAlbum.TestMusic.toMusic(): Music {
+    return Music(title = title,author = author,url = url,pic = coverImg,shareUrl = shareUrl)
 }

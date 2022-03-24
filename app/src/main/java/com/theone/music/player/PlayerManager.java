@@ -18,7 +18,6 @@ package com.theone.music.player;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -35,7 +34,6 @@ import com.theone.music.data.model.TestAlbum;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.theone.music.data.repository.DataRepository;
 import com.theone.music.player.helper.PlayerFileNameGenerator;
 import com.theone.music.player.notification.PlayerService;
 
@@ -46,7 +44,7 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
 
     private static final PlayerManager sManager = new PlayerManager();
 
-    private final PlayerController<TestAlbum, TestAlbum.TestMusic> mController;
+    private  PlayerController<TestAlbum, TestAlbum.TestMusic> mController;
 
     private PlayerManager() {
         mController = new PlayerController<>();

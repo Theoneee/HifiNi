@@ -24,42 +24,6 @@
         app:qmui_showBorderOnlyBeforeL="false"
         android:background="@color/white">
 
-        <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
-            android:id="@+id/cover"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            app:qmui_is_circle="true"
-            android:layout_marginStart="20dp"
-            app:imageUrl="@{vm.cover}"
-            android:src="@drawable/ic_launcher"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/cover"
-            app:layout_constraintStart_toEndOf="@id/cover"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            android:text="@{vm.name}"
-            android:layout_marginStart="12dp"
-            tools:text="天使"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/cover"
-            app:layout_constraintStart_toStartOf="@id/name"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            android:text="@{vm.author}"
-            android:textColor="@color/qmui_config_color_gray_3"
-            android:textSize="12sp"
-            tools:text="五月天"/>
-
 
         <com.theone.music.ui.view.PlayPauseView
             android:id="@+id/play_pause"
@@ -91,6 +55,45 @@
             android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toStartOf="@id/play_pause"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
+            android:id="@+id/cover"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:qmui_is_circle="true"
+            android:layout_marginStart="20dp"
+            app:imageUrl="@{vm.cover}"
+            android:src="@drawable/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/cover"
+            app:layout_constraintStart_toEndOf="@id/cover"
+            app:layout_constraintEnd_toStartOf="@id/collection"
+            android:layout_marginTop="4dp"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@{vm.name}"
+            android:layout_marginStart="12dp"
+            tools:text="天使"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/cover"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            android:text="@{vm.author}"
+            android:textColor="@color/qmui_config_color_gray_3"
+            android:textSize="12sp"
+            tools:text="五月天"/>
 
         <View
             android:layout_width="0dp"

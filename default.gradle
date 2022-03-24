@@ -5,14 +5,6 @@ android {
 
     defaultConfig {
         multiDexEnabled true
-
-        kapt {
-            arguments {
-                arg("rxhttp_rxjava", "3.1.1")
-                arg("rxhttp_package", "rxhttp.wrapper.param")  ////非必须，指定RxHttp类包名
-            }
-        }
-
     }
 
     applicationVariants.all { variant ->
@@ -54,6 +46,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.Theoneee:TheCore-MVVM:1.0.8.1'
-    kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:2.7.1" //生成RxHttp类
+    implementation 'com.github.Theoneee:QMUI-MVVM:1.0.0'
+    kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:2.8.5"
 }

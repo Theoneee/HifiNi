@@ -39,16 +39,11 @@ import com.theone.mvvm.ext.getAppViewModel
  */
 abstract class BaseMusicFragment<VM : BaseListViewModel<Music>> : BasePagerFragment<Music, VM>() {
 
-    private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
+    protected val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
 
     override fun getViewModelIndex(): Int = 0
 
     override fun createAdapter(): BaseQuickAdapter<Music, *> = MusicAdapter()
-
-    override fun initView(root: View) {
-        root.setBackgroundColor(getColor(mActivity, R.color.white))
-        super.initView(root)
-    }
 
     override fun initAdapter() {
         super.initAdapter()
@@ -62,19 +57,6 @@ abstract class BaseMusicFragment<VM : BaseListViewModel<Music>> : BasePagerFragm
         }
     }
 
-    override fun onAutoRefresh() {
-        if (getLoadSir()?.currentCallback is SuccessCallback) {
-            onRefresh()
-        } else {
-            onFirstLoading()
-        }
-    }
-
-    override fun onFirstLoading() {
-        mViewModel.isFirst = true
-        super.onFirstLoading()
-    }
-
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int) {
         val music = adapter.getItem(position) as Music
         PlayerActivity.startPlay(mActivity, music)
@@ -82,7 +64,7 @@ abstract class BaseMusicFragment<VM : BaseListViewModel<Music>> : BasePagerFragm
 
     override fun createObserver() {
         super.createObserver()
-        mEvent.getPlayMusicLiveData().observeInFragment(this) {
+        mEvent.getPlayMusicLiveData().observe(this) {
             (mAdapter as MusicAdapter).currentMusic = it.shareUrl
         }
 
