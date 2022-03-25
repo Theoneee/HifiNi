@@ -30,7 +30,13 @@ import com.theone.mvvm.core.app.ext.showEmptyPage
  */
 class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
 
-    override fun isLazyLoadData(): Boolean = true
+    override fun setRefreshLayoutEnabled(enabled: Boolean) {
+        super.setRefreshLayoutEnabled(false)
+    }
+
+    override fun onLoadMoreComplete() {
+        onLoadMoreEnd()
+    }
 
     override fun createObserver() {
         super.createObserver()
@@ -64,10 +70,6 @@ class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
                 }
             }
         }
-    }
-
-    override fun onLoadMoreComplete() {
-        onLoadMoreEnd()
     }
 
 }

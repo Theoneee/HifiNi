@@ -67,7 +67,6 @@ abstract class BaseMusicFragment<VM : BaseListViewModel<Music>> : BasePagerFragm
         mEvent.getPlayMusicLiveData().observe(this) {
             (mAdapter as MusicAdapter).currentMusic = it.shareUrl
         }
-
     }
 
 }

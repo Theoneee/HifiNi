@@ -85,7 +85,6 @@
             isPlaying="@{vm.isPlaying}"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginBottom="50dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
@@ -98,9 +97,10 @@
 
 
         <!-- 用minHeight控制高度，paddingVertical增加高度，高度太低了不容易触摸到进行滑动操作-->
+        <!-- SeekBar默认有两边的Padding-->
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/seek_bar"
-            enable="@{vm.isSetSuccess}"
+            app:enable="@{vm.isSetSuccess}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:duplicateParentState="true"

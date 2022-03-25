@@ -46,6 +46,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.Theoneee:QMUI-MVVM:1.0.0'
+    implementation 'com.github.Theoneee:QMUI-MVVM:1.0.1'
     kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:2.8.5"
 }
