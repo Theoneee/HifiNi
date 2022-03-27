@@ -2,6 +2,7 @@ package com.theone.music.data.model
 
 import android.os.Parcelable
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.theone.music.app.ext.getHtmlString
@@ -43,19 +44,12 @@ data class Music(
     var pic: String = "",
     var shareUrl: String = "",
     var realUrl: String = "",
-    var createDate: Long = 0
+    var createDate: Long = 0,
+    var collection:Int = 0
 ) : Parcelable {
 
-    constructor(music: TestAlbum.TestMusic?):this(){
-        music?.run {
-            this@Music.title = title
-            this@Music.author = author
-            this@Music.pic = coverImg
-            this@Music.url = url
-            this@Music.shareUrl = shareUrl
-            this@Music.author = author
-        }
-    }
+    @Ignore
+    constructor() : this(0) {}
 
     fun getMusicUrl(): String = if (realUrl.isEmpty()) url else realUrl
 
@@ -68,8 +62,7 @@ data class Music(
     }
 
     override fun toString(): String {
-        return "MusicInfo(id=$id, title='$title', author='$author', url='$url', pic='$pic', shareUrl='$shareUrl', realUrl='$realUrl', createDate=$createDate)"
+        return "Music(id=$id, title='$title', author='$author', url='$url', pic='$pic', shareUrl='$shareUrl', realUrl='$realUrl', createDate=$createDate, collection=$collection)"
     }
-
 
 }

@@ -1,10 +1,17 @@
 package com.theone.music.app.ext
 
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.theone.common.ext.toHtml
+import com.theone.music.R
+import com.theone.music.data.model.Music
+import com.theone.music.data.model.TestAlbum
 import com.theone.mvvm.core.app.ext.showLoading
 import com.theone.mvvm.core.app.util.FileDirectoryUtil
+import com.theone.mvvm.core.app.widge.loadsir.callback.LoadingCallback
+import com.theone.mvvm.core.app.widge.loadsir.core.LoadService
 import com.theone.mvvm.core.base.callback.ICore
 import java.io.File
 import java.io.FileWriter
@@ -40,6 +47,15 @@ import java.io.PrintWriter
 fun ICore.showLoadingPage() {
     loadSirRegisterView()?.post {
         getLoadSir()?.showLoading()
+    }
+}
+
+/**
+ * 设置加载中内容
+ */
+fun LoadService<*>.showLoadingPage(msg:String) {
+    this.setCallBack(LoadingCallback::class.java){ _, view ->
+        view.findViewById<TextView>(R.id.loading_tips).text = msg
     }
 }
 
@@ -79,4 +95,8 @@ fun BaseQuickAdapter<*, *>.removeItem(position: Int){
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, data.size)
     }
+}
+
+fun TestAlbum.TestMusic.toMusic(): Music {
+    return Music(title = title,author = author,url = url,pic = coverImg,shareUrl = shareUrl)
 }

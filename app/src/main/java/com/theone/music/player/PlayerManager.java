@@ -44,7 +44,7 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
 
     private static final PlayerManager sManager = new PlayerManager();
 
-    private final PlayerController<TestAlbum, TestAlbum.TestMusic> mController;
+    private  PlayerController<TestAlbum, TestAlbum.TestMusic> mController;
 
     private PlayerManager() {
         mController = new PlayerController<>();
@@ -66,7 +66,7 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
 
         mProxy = new HttpProxyCacheServer.Builder(context1)
                 .fileNameGenerator(new PlayerFileNameGenerator())
-                .maxCacheSize(2147483648L) // 2GB
+                .maxCacheSize(2147483648L)
                 .build();
 
         //添加额外的音乐格式
@@ -87,6 +87,10 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
                 return true;
             }
         });
+    }
+
+    public String getCacheUrl(String url){
+        return mProxy.getProxyUrl(url);
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.qmuiteam.qmui.layout.QMUIConstraintLayout
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout
 import com.theone.common.ext.*
 import com.theone.music.R
+import com.theone.music.app.ext.toMusic
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
@@ -62,7 +63,7 @@ class MainActivity : BaseFragmentActivity() {
         createObserve()
     }
 
-    private fun createObserve(){
+    private fun createObserve() {
         with(PlayerManager.getInstance()) {
 
             pauseEvent.observe(this@MainActivity) {
@@ -80,13 +81,13 @@ class MainActivity : BaseFragmentActivity() {
                     }
                 }
 
-                playErrorEvent.observe(this@MainActivity){
+                playErrorEvent.observe(this@MainActivity) {
                     showFailTipsDialog(it)
                 }
 
             }
         }
-        mEvent.getCollectionLiveData().observeInActivity(this){
+        mEvent.getCollectionLiveData().observe(this) {
             mMusicViewModel.isCollection.set(it.collection)
         }
     }
@@ -101,7 +102,6 @@ class MainActivity : BaseFragmentActivity() {
             .request(object : OnPermission {
 
                 override fun hasPermission(granted: MutableList<String>?, all: Boolean) {
-
                 }
 
                 override fun noPermission(denied: MutableList<String>?, quick: Boolean) {
@@ -113,9 +113,7 @@ class MainActivity : BaseFragmentActivity() {
      * 获取当前播放的
      */
     private fun getCurrentMusic(): Music? {
-        return PlayerManager.getInstance().currentPlayingMusic?.let {
-            Music(it)
-        }
+        return PlayerManager.getInstance().currentPlayingMusic?.toMusic()
     }
 
     inner class ClickProxy : TheSelectImageView.OnSelectChangedListener {
@@ -160,16 +158,16 @@ class MainActivity : BaseFragmentActivity() {
                 (root as QMUIConstraintLayout).run {
 //                    val radius = dp2px(20)
 //                    setRadius(radius,QMUILayoutHelper.HIDE_RADIUS_SIDE_BOTTOM)
-                    updateTopDivider(0,0,1,getColor(R.color.qmui_config_color_separator))
+                    updateTopDivider(0, 0, 1, getColor(R.color.qmui_config_color_separator))
                 }
             }
 
             val insetLayout = QMUIWindowInsetLayout(context).apply {
                 val playerLayoutHeight = dp2px(60)
                 addView(fragmentContainer, LayoutParams(matchParent, matchParent).apply {
-                    setMargins(0,0,0,playerLayoutHeight)
+                    setMargins(0, 0, 0, playerLayoutHeight)
                 })
-                addView(mBinding.root, LayoutParams(matchParent,playerLayoutHeight).apply {
+                addView(mBinding.root, LayoutParams(matchParent, playerLayoutHeight).apply {
                     gravity = Gravity.BOTTOM
                 })
             }

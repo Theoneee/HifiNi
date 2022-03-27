@@ -1,9 +1,11 @@
 package com.theone.music.ui.activity
 
 import android.app.Activity
+import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import android.widget.SeekBar
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
 import com.theone.common.constant.BundleConstant
@@ -11,6 +13,7 @@ import com.theone.common.ext.*
 import com.theone.music.BR
 import com.theone.music.R
 import com.theone.music.app.ext.showLoadingPage
+import com.theone.music.app.ext.toMusic
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
@@ -19,14 +22,12 @@ import com.theone.music.player.PlayerManager
 import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
+import com.theone.mvvm.core.app.ext.showErrorPage
+import com.theone.mvvm.core.app.ext.showSuccessPage
+import com.theone.mvvm.core.app.util.FileDirectoryManager
 import com.theone.mvvm.core.base.activity.BaseCoreActivity
 import com.theone.mvvm.core.data.entity.DownloadBean
-import com.theone.mvvm.core.app.ext.showErrorPage
-import com.theone.mvvm.core.app.ext.showLoading
-import com.theone.mvvm.core.app.ext.showSuccessPage
 import com.theone.mvvm.core.service.startDownloadService
-import com.theone.mvvm.core.app.util.FileDirectoryManager
-import com.theone.mvvm.core.base.callback.ICore
 import com.theone.mvvm.ext.addParams
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
@@ -79,55 +80,62 @@ class PlayerActivity :
     private val mMusic: Music? by getValue(BundleConstant.DATA)
 
     private var isTrackingTouch: Boolean = false
-    private var mTrackingProgress: Int = 0
 
     /**
      * 获取当前播放的
      */
     private fun getCurrentMusic(): Music {
-        return mViewModel.getResponseLiveData().value
-            ?: Music(PlayerManager.getInstance().currentPlayingMusic)
+        return getViewModel().getResponseLiveData().value
+            ?: PlayerManager.getInstance().currentPlayingMusic.toMusic()
     }
 
     override fun initView(root: View) {
         (mMusic ?: getCurrentMusic()).let { music ->
+            getViewModel().link = music.shareUrl
             with(PlayerManager.getInstance()) {
                 currentPlayingMusic?.run {
                     // 和当前播放的是同一个，直接拿当前的播放的数据显示
                     if (shareUrl == music.shareUrl) {
+                        getViewModel().isSetSuccess.set(true)
                         getCurrentMusic().setMusicInfo()
                         return
                     }
+                    // 不是同一个，就暂停上一个
+                    if (isPlaying) {
+                        pauseAudio()
+                    }
                 }
-                // 不是同一个，就暂停上一个，重置信息
-                if (isPlaying) {
-                    pauseAudio()
-                    reset()
-                }
-                // 是否有音频地址，有说明是收藏过来的，设置新的数据
+                // 重置所有信息
+                getViewModel().reset()
+                // 是否有音频地址，有说明是收藏过来的
                 if (music.getMusicUrl().isNotEmpty()) {
+                    //直接设置数据
                     setMediaSource(music)
                     return
                 }
             }
-            mViewModel.link = music.shareUrl
             onPageReLoad()
         }
     }
 
     override fun createObserver() {
-        mViewModel.getResponseLiveData().observeInActivity(this) {
+        getViewModel().getResponseLiveData().observe(this) {
             showSuccessPage()
-            setMediaSource(it)
+            // 重新得到数据后，要刷新收藏里的数据
+            if(getViewModel().isReload){
+                getViewModel().isReload = false
+                mEvent.dispatchReloadMusic(it)
+            }
+            setMediaSource(it,true)
         }
-        mViewModel.getErrorLiveData().observeInActivity(this) {
+        getViewModel().getErrorLiveData().observe(this) {
             showErrorPage(it)
         }
 
         with(PlayerManager.getInstance()) {
 
             pauseEvent.observe(this@PlayerActivity) {
-                mViewModel.isPlaying.set(!it)
+                getViewModel().isPlaying.set(!it)
             }
 
             playingMusicEvent.observe(this@PlayerActivity) {
@@ -135,7 +143,11 @@ class PlayerActivity :
                 if (isTrackingTouch) {
                     return@observe
                 }
-                mViewModel.run {
+                getViewModel().run {
+                    // 只有在设置了音乐数据后才能设置播放信息，避免被上一首的播放信息污染
+                    if (!isSetSuccess.get()) {
+                        return@observe
+                    }
                     max.set(it.duration)
                     progress.set(it.playerPosition)
                     nowTime.set(it.nowTime)
@@ -155,56 +167,60 @@ class PlayerActivity :
 
     }
 
-    private fun reset() {
-        mViewModel.run {
-            max.set(0)
-            progress.set(0)
-            nowTime.set("00:00")
-            allTime.set("00:00")
-            isCollection.set(false)
-        }
-    }
-
     private fun Music.setMusicInfo() {
-        mViewModel.let {
+        getViewModel().let {
             it.isSuccess.set(true)
             it.name.set(title)
             it.author.set(author)
             it.cover.set(pic)
-            reset()
             it.requestCollection(shareUrl)
         }
     }
 
-    private fun setMediaSource(data: Music) {
+    /**
+     * 设置播放资源
+     * @param data Music
+     * @param newData Boolean 是否为请求来的新数据
+     */
+    private fun setMediaSource(data: Music,newData:Boolean = false) {
         data.setMusicInfo()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
+                // 不是新数据才检查地址是否可行
+                if(!newData&&DataRepository.INSTANCE.checkUrl(data.getMusicUrl())){
+                    Log.e(TAG, "setMediaSource: ${Thread.currentThread().name}" )
+                        getViewModel().isReload = true
+                        getViewModel().requestServer()
+                    return@withContext
+                }
                 val album = DataRepository.INSTANCE.createAlbum(data)
                 PlayerManager.getInstance().loadAlbum(album, 0)
+                getViewModel().isSetSuccess.set(true)
             }
         }
     }
 
     override fun onPageReLoad() {
-        showLoadingPage()
-        mViewModel.requestServer()
+        getViewConstructor().getContentView().post {
+            showLoadingPage()
+            getViewModel().requestServer()
+        }
     }
 
     override fun SparseArray<Any>.applyBindingParams() {
-        addParams(BR.listener, ProxyListener())
+        addParams(BR.listener, ListenerProxy())
     }
 
     override fun getBindingClick(): Any = ClickProxy()
 
 
-    inner class ProxyListener : TheSelectImageView.OnSelectChangedListener,
+    inner class ListenerProxy : TheSelectImageView.OnSelectChangedListener,
         SeekBar.OnSeekBarChangeListener {
 
         override fun onSelectChanged(isSelected: Boolean) {
             getCurrentMusic().let {
                 CollectionEvent(isSelected, it).let { event ->
-                    mViewModel.toggleCollection(event)
+                    getViewModel().toggleCollection(event)
                     mEvent.dispatchCollectionEvent(event)
                 }
             }
@@ -212,8 +228,7 @@ class PlayerActivity :
 
         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             if (fromUser) {
-                mTrackingProgress = progress
-                mViewModel.nowTime.set(PlayerManager.getInstance().getTrackTime(progress))
+                getViewModel().nowTime.set(PlayerManager.getInstance().getTrackTime(progress))
             }
         }
 
@@ -223,7 +238,9 @@ class PlayerActivity :
 
         override fun onStopTrackingTouch(seekBar: SeekBar?) {
             isTrackingTouch = false
-            PlayerManager.getInstance().setSeek(mTrackingProgress)
+            seekBar?.let {
+                PlayerManager.getInstance().setSeek(it.progress)
+            }
         }
 
     }

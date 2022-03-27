@@ -31,21 +31,44 @@ import com.theone.music.data.model.Music
 interface MusicDao {
 
     @Insert
-    fun insert(backgrounds: List<Music>)
+    fun insert(music: Music)
+
+    @Insert
+    fun insert(musics: List<Music>)
 
     @Update
-    fun update(backgrounds: List<Music>):Int
+    fun update(music: Music): Int
+
+    @Update
+    fun update(musics: List<Music>): Int
 
     @Delete
-    fun delete(backgrounds: List<Music>):Int
+    fun delete(musics: List<Music>): Int
 
     @Query("DELETE FROM MusicInfo WHERE shareUrl ==:shareUrl")
-    fun delete(shareUrl:String)
+    fun delete(shareUrl: String)
 
-    @Query("select * from MusicInfo order by createDate desc ")
-    suspend fun getMusicList():List<Music>
+    @Query("select * from MusicInfo where collection = 1 order by createDate desc ")
+    fun getCollectionMusicList(): List<Music>
 
     @Query("select * from MusicInfo where shareUrl ==:shareUrl")
-    suspend fun findMusics(shareUrl: String):List<Music>
+    fun findMusics(shareUrl: String): List<Music>
+
+    @Query("select * from MusicInfo where shareUrl ==:shareUrl and collection = 1")
+    fun findCollectionMusics(shareUrl: String): List<Music>
+
+    @Query("update MusicInfo set collection = :collection, createDate =:createDate  where shareUrl ==:shareUrl")
+    fun updateCollectionMusic(
+        shareUrl: String,
+        collection: Int,
+        createDate: Long
+    )
+
+    @Query("update MusicInfo set url = :url, realUrl =:realUrl  where shareUrl ==:shareUrl")
+    fun updateDataBaseMusic(
+        shareUrl: String,
+        url: String,
+        realUrl: String
+    )
 
 }

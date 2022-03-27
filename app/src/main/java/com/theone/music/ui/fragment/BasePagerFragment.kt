@@ -32,10 +32,10 @@ import com.theone.mvvm.core.app.widge.pullrefresh.PullRefreshLayout
  */
 abstract class BasePagerFragment<T, VM : BaseListViewModel<T>> :BasePagerPullRefreshFragment<T,VM,BasePullFreshFragmentBinding>() {
 
-    override fun getDataBindingClass(): Class<*> = BasePullFreshFragmentBinding::class.java
+    override fun getDataBindingClass(): Class<BasePullFreshFragmentBinding> = BasePullFreshFragmentBinding::class.java
 
-    override fun getRecyclerView(): RecyclerView = mBinding.recyclerView
+    override fun getRecyclerView(): RecyclerView = getDataBinding().recyclerView
 
-    override fun getRefreshLayout(): PullRefreshLayout = mBinding.refreshLayout
+    override fun getRefreshLayout(): PullRefreshLayout = getDataBinding().refreshLayout
 
 }
