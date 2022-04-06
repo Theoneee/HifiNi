@@ -8,6 +8,8 @@ import com.theone.common.widget.TheSearchView
 import com.theone.music.R
 import com.theone.music.viewmodel.MainViewModel
 import com.theone.mvvm.core.app.ext.showEmptyPage
+import com.theone.mvvm.ext.qmui.addLeftCloseImageBtn
+import com.theone.mvvm.ext.qmui.setTitleWithBackBtn
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -53,12 +55,13 @@ class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextCha
     override fun initView(root: View) {
         super.initView(root)
         getTopBar()?.run {
-            addLeftBackImageButton()
+            addLeftCloseImageBtn()
             addRightTextButton("搜索", R.id.topbar_right_view).setOnClickListener {
                 onFirstLoading()
             }
             setCenterView(mSearchView)
         }
+        showEmptyPage("")
         QMUIKeyboardHelper.showKeyboard(mSearchView.mEditText,200)
     }
 
@@ -67,8 +70,6 @@ class SearchFragment: BaseMusicFragment<MainViewModel>(),TheSearchView.OnTextCha
             showEmptyPage("")
             return
         }
-        getViewModel().isFirst = true
-        getViewModel().isFresh = false
         super.onFirstLoading()
     }
 

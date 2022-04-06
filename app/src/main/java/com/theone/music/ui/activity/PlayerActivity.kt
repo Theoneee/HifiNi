@@ -5,14 +5,15 @@ import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import android.widget.SeekBar
-import androidx.appcompat.widget.AppCompatImageButton
 import androidx.lifecycle.lifecycleScope
 import com.hjq.toast.ToastUtils
+import com.qmuiteam.qmui.arch.SwipeBackLayout
+import com.qmuiteam.qmui.arch.SwipeBackLayout.DRAG_DIRECTION_NONE
+import com.qmuiteam.qmui.arch.SwipeBackLayout.DRAG_DIRECTION_TOP_TO_BOTTOM
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.*
 import com.theone.music.BR
 import com.theone.music.R
-import com.theone.music.app.ext.showLoadingPage
 import com.theone.music.app.ext.toMusic
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
@@ -23,6 +24,7 @@ import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.core.app.ext.showErrorPage
+import com.theone.mvvm.core.app.ext.showLoadingPage
 import com.theone.mvvm.core.app.ext.showSuccessPage
 import com.theone.mvvm.core.app.util.FileDirectoryManager
 import com.theone.mvvm.core.base.activity.BaseCoreActivity
@@ -81,6 +83,22 @@ class PlayerActivity :
 
     private var isTrackingTouch: Boolean = false
 
+    override fun loaderRegisterView(): View = getRootView()
+
+    override fun getDragDirection(
+        swipeBackLayout: SwipeBackLayout,
+        viewMoveAction: SwipeBackLayout.ViewMoveAction,
+        downX: Float,
+        downY: Float,
+        dx: Float,
+        dy: Float,
+        slopTouch: Float
+    ): Int {
+        return if (downY < dp2px(500) && dy >= slopTouch) {
+            DRAG_DIRECTION_TOP_TO_BOTTOM
+        } else DRAG_DIRECTION_NONE
+    }
+
     /**
      * 获取当前播放的
      */
@@ -122,11 +140,11 @@ class PlayerActivity :
         getViewModel().getResponseLiveData().observe(this) {
             showSuccessPage()
             // 重新得到数据后，要刷新收藏里的数据
-            if(getViewModel().isReload){
+            if (getViewModel().isReload) {
                 getViewModel().isReload = false
                 mEvent.dispatchReloadMusic(it)
             }
-            setMediaSource(it,true)
+            setMediaSource(it, true)
         }
         getViewModel().getErrorLiveData().observe(this) {
             showErrorPage(it)
@@ -182,15 +200,15 @@ class PlayerActivity :
      * @param data Music
      * @param newData Boolean 是否为请求来的新数据
      */
-    private fun setMediaSource(data: Music,newData:Boolean = false) {
+    private fun setMediaSource(data: Music, newData: Boolean = false) {
         data.setMusicInfo()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 // 不是新数据才检查地址是否可行
-                if(!newData&&DataRepository.INSTANCE.checkUrl(data.getMusicUrl())){
-                    Log.e(TAG, "setMediaSource: ${Thread.currentThread().name}" )
-                        getViewModel().isReload = true
-                        getViewModel().requestServer()
+                if (!newData && DataRepository.INSTANCE.checkUrl(data.getMusicUrl())) {
+                    Log.e(TAG, "setMediaSource: ${Thread.currentThread().name}")
+                    getViewModel().isReload = true
+                    getViewModel().requestServer()
                     return@withContext
                 }
                 val album = DataRepository.INSTANCE.createAlbum(data)
@@ -201,10 +219,8 @@ class PlayerActivity :
     }
 
     override fun onPageReLoad() {
-        getViewConstructor().getContentView().post {
-            showLoadingPage()
-            getViewModel().requestServer()
-        }
+        showLoadingPage()
+        getViewModel().requestServer()
     }
 
     override fun SparseArray<Any>.applyBindingParams() {

@@ -26,9 +26,10 @@
         </activity>
 
         <activity android:name=".ui.activity.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+            android:screenOrientation="fullSensor"/>
 
         <activity android:name=".ui.activity.PlayerActivity"
+            android:screenOrientation="fullSensor"
             android:launchMode="singleTop"
             android:theme="@style/TranslucentTheme"/>
 
