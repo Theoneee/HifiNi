@@ -7,10 +7,9 @@ import com.theone.common.ext.bundle
 import com.theone.common.ext.getColor
 import com.theone.common.ext.getValueNonNull
 import com.theone.music.R
-import com.theone.music.app.util.CacheUtil
 import com.theone.music.viewmodel.LoginRegisterViewModel
 import com.theone.music.databinding.FragmentLoginRegisterBinding
-import com.theone.music.viewmodel.AppViewModel
+import com.theone.music.viewmodel.EventViewModel
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
@@ -27,7 +26,7 @@ class LoginRegisterItemFragment private constructor() :
         }
     }
 
-    private val mAppVm: AppViewModel by lazy { getAppViewModel<AppViewModel>() }
+    private val mAppVm: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
 
     private val isRegister: Boolean by getValueNonNull(TYPE)
 
@@ -41,9 +40,8 @@ class LoginRegisterItemFragment private constructor() :
     override fun createObserver() {
         getViewModel().run {
             getResponseLiveData().observe(this@LoginRegisterItemFragment, Observer {
-                mAppVm.userInfo.value = it
-                CacheUtil.setUser(it)
-                showSuccessTipsExitDialog(if (isRegister.get()) "注册" else "登录" + "成功")
+                mAppVm.setUserInfo(it)
+                showSuccessTipsExitDialog(if (isRegister.get()) "注册成功" else "登录成功")
             })
             getErrorLiveData().observe(this@LoginRegisterItemFragment, Observer {
                 showFailTipsDialog(it)

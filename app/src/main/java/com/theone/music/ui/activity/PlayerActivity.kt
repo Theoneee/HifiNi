@@ -234,10 +234,12 @@ class PlayerActivity :
         SeekBar.OnSeekBarChangeListener {
 
         override fun onSelectChanged(isSelected: Boolean) {
-            getCurrentMusic().let {
-                CollectionEvent(isSelected, it).let { event ->
-                    getViewModel().toggleCollection(event)
-                    mEvent.dispatchCollectionEvent(event)
+            mEvent.getUserInfoLiveData().value?.let { user ->
+                getCurrentMusic().let {
+                    CollectionEvent(isSelected, it).let { event ->
+                        getViewModel().toggleCollection(user.id, event)
+                        mEvent.dispatchCollectionEvent(event)
+                    }
                 }
             }
         }

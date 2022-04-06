@@ -73,10 +73,10 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
         })
     }
 
-    fun toggleCollection(collectionEvent: CollectionEvent) {
+    fun toggleCollection(userId:Int,collectionEvent: CollectionEvent) {
         with(collectionEvent) {
             viewModelScope.launch {
-                DataRepository.MUSIC_DAO.updateCollectionMusic(music.shareUrl,if (collection) 1 else  0,System.currentTimeMillis())
+                DataRepository.MUSIC_DAO.updateCollectionMusic(userId,music.shareUrl,if (collection) 1 else  0,System.currentTimeMillis())
             }
         }
     }

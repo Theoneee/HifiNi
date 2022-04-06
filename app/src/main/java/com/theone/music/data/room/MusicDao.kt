@@ -57,8 +57,9 @@ interface MusicDao {
     @Query("select * from MusicInfo where shareUrl ==:shareUrl and collection = 1")
     fun findCollectionMusics(shareUrl: String): List<Music>
 
-    @Query("update MusicInfo set collection = :collection, createDate =:createDate  where shareUrl ==:shareUrl")
+    @Query("update MusicInfo set userId = :userId,collection = :collection, createDate =:createDate  where shareUrl ==:shareUrl ")
     fun updateCollectionMusic(
+        userId: Int,
         shareUrl: String,
         collection: Int,
         createDate: Long

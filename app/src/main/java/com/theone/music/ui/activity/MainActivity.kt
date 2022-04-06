@@ -130,10 +130,12 @@ class MainActivity : BaseFragmentActivity() {
         }
 
         override fun onSelectChanged(isSelected: Boolean) {
-            getCurrentMusic()?.let {
-                CollectionEvent(isSelected, it).let { event ->
-                    mMusicViewModel.toggleCollection(event)
-                    mEvent.dispatchCollectionEvent(event)
+            mEvent.getUserInfoLiveData().value?.let { user ->
+                getCurrentMusic()?.let {
+                    CollectionEvent(isSelected, it).let { event ->
+                        mMusicViewModel.toggleCollection(user.id,event)
+                        mEvent.dispatchCollectionEvent(event)
+                    }
                 }
             }
         }

@@ -38,6 +38,7 @@ import kotlinx.android.parcel.Parcelize
 data class Music(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
+    var userId: Int = 0,
     var title: String = "",
     var author: String = "",
     var url: String = "",
