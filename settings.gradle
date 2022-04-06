@@ -11,4 +11,4 @@ dependencyResolutionManagement {
 
 include ':app'
 include ':player'
-rootProject.name = "TheMusic"
+rootProject.name = "HiFiNi"

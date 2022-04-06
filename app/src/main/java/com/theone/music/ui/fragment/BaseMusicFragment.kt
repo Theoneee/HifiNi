@@ -2,14 +2,10 @@ package com.theone.music.ui.fragment
 
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.theone.common.ext.getColor
-import com.theone.music.R
-import com.theone.music.app.ext.removeItem
 import com.theone.music.data.model.Music
 import com.theone.music.ui.activity.PlayerActivity
 import com.theone.music.ui.adapter.MusicAdapter
 import com.theone.music.viewmodel.EventViewModel
-import com.theone.mvvm.core.app.widge.loadsir.callback.SuccessCallback
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 import com.theone.mvvm.ext.getAppViewModel
 
@@ -67,7 +63,6 @@ abstract class BaseMusicFragment<VM : BaseListViewModel<Music>> : BasePagerFragm
         mEvent.getPlayMusicLiveData().observe(this) {
             (mAdapter as MusicAdapter).currentMusic = it.shareUrl
         }
-
     }
 
 }

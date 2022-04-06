@@ -6,9 +6,15 @@ import androidx.databinding.BindingAdapter;
 import com.theone.music.ui.view.PlayPauseView;
 import com.theone.music.ui.view.TheSelectImageView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
 public class AppBindingAdapter {
+
+    @BindingAdapter(value = {"res"}, requireAll = false)
+    public static void setResource(ImageView imageView, int res) {
+        imageView.setImageResource(res);
+    }
 
     @BindingAdapter(value = {"isPlaying"}, requireAll = false)
     public static void isPlaying(PlayPauseView pauseView, boolean isPlaying) {

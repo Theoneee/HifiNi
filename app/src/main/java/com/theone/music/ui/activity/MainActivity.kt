@@ -19,6 +19,7 @@ import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
 import com.theone.music.databinding.MusicPlayerLayoutBinding
 import com.theone.music.player.PlayerManager
+import com.theone.music.ui.fragment.IndexFragment
 import com.theone.music.ui.fragment.MainFragment
 import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
@@ -51,7 +52,7 @@ import com.theone.mvvm.ext.qmui.showFailTipsDialog
  * @email 625805189@qq.com
  * @remark
  */
-@DefaultFirstFragment(MainFragment::class)
+@DefaultFirstFragment(IndexFragment::class)
 class MainActivity : BaseFragmentActivity() {
 
     private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }

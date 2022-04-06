@@ -5,6 +5,10 @@ import com.theone.music.BuildConfig
 import com.theone.music.player.PlayerManager
 import com.theone.mvvm.core.app.CoreApplication
 import com.theone.mvvm.core.app.util.RxHttpManager
+import com.theone.mvvm.core.base.loader.Loader
+import com.theone.mvvm.core.base.loader.callback.ErrorCallback
+import com.theone.mvvm.core.base.loader.callback.LoadingCallback
+import com.theone.mvvm.core.base.loader.callback.SuccessCallback
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -37,6 +41,11 @@ class App:CoreApplication() {
     override fun init(application: Application) {
         PlayerManager.getInstance().init(application)
         super.init(application)
+        Loader.beginBuilder()
+            .addCallback(LoadingCallback::class.java)
+            .addCallback(ErrorCallback::class.java)
+            .defaultCallback(SuccessCallback::class.java)
+            .commit()
         RxHttpManager.init().setDebug(BuildConfig.DEBUG).setOnParamAssembly {
             //添加公共请求头
             it.addHeader(
