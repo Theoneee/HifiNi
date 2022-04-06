@@ -2,9 +2,13 @@ package com.theone.music.app.ext
 
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.theone.common.ext.startActivity
 import com.theone.common.ext.toHtml
+import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
+import com.theone.music.ui.activity.LoginRegisterActivity
+import com.theone.mvvm.base.fragment.BaseQMUIFragment
 import com.theone.mvvm.core.app.util.FileDirectoryUtil
 import java.io.File
 import java.io.FileWriter
@@ -35,6 +39,14 @@ import java.io.PrintWriter
  * @email 625805189@qq.com
  * @remark
  */
+
+fun BaseQMUIFragment.checkLogin(action: () -> Unit = {}){
+    if(CacheUtil.isLogin()){
+        action.invoke()
+    }else{
+        mActivity.startActivity(LoginRegisterActivity::class.java)
+    }
+}
 
 
 fun writeStringToFile(path: String = FileDirectoryUtil.getCachePath()+ File.separator+"temp.txt", content: String) {

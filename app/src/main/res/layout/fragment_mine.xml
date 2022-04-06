@@ -8,6 +8,10 @@
         <variable
             name="vm"
             type="com.theone.music.viewmodel.MineViewModel" />
+
+        <variable
+            name="click"
+            type="com.theone.music.ui.fragment.MineFragment.ClickProxy" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +26,7 @@
             app:imageUrl="@{vm.icon}"
             android:scaleType="centerCrop"
             app:qmui_is_circle="true"
+            app:noRepeatClick="@{()-> click.icon()}"
             android:layout_marginTop="15dp"
             android:src="@mipmap/ic_launcher_round"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +42,7 @@
             app:layout_constraintBottom_toBottomOf="@id/icon"
             android:textSize="17sp"
             android:textStyle="bold"
+            app:noRepeatClick="@{()-> click.login()}"
             app:layout_constraintStart_toEndOf="@id/icon"
             app:layout_constraintTop_toTopOf="@id/icon" />
 
@@ -44,6 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/mz_titlebar_ic_setting_dark"
+            app:noRepeatClick="@{()-> click.setting()}"
             app:layout_constraintBottom_toBottomOf="@id/icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

@@ -11,4 +11,10 @@
     <string name="play_shuffle">随机播放</string>
     <string name="search_hint">输入歌名/歌手名</string>
 
+    <string name="login">登  录</string>
+    <string name="register">注  册</string>
+    <string name="login_input_account">请输入账号</string>
+    <string name="login_input_password">请输入密码</string>
+    <string name="login_input_repassword">请确认密码</string>
+
 </resources>

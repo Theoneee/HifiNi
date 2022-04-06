@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.theone.music.viewmodel.LoginRegisterViewModel" />
+
+        <variable
+            name="click"
+            type="com.theone.music.ui.fragment.user.LoginRegisterItemFragment.ProxyClick" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:paddingHorizontal="40dp"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:orientation="vertical">
+
+            <EditText
+                style="@style/login_edittext_style"
+                android:hint="@string/login_input_account"
+                android:inputType="text"
+                android:text="@={vm.account}" />
+
+            <EditText
+                style="@style/login_edittext_style"
+                android:layout_marginTop="20dp"
+                android:hint="@string/login_input_password"
+                android:inputType="textPassword"
+                android:text="@={vm.password}" />
+
+
+            <EditText
+                style="@style/login_edittext_style"
+                android:layout_marginTop="20dp"
+                android:hint="@string/login_input_repassword"
+                android:inputType="textPassword"
+                app:visible="@{vm.isRegister()}"
+                android:text="@={vm.repassword}" />
+
+
+            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                app:noRepeatClick="@{()-> click.login()}"
+                android:padding="12dp"
+                android:text="@{vm.isRegister()? @string/register: @string/login}"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:qmui_backgroundColor="?attr/app_skin_primary_color"
+                app:qmui_borderWidth="0dp"
+                app:qmui_isRadiusAdjustBounds="true" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

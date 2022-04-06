@@ -6,6 +6,7 @@ import com.theone.lover.data.room.AppDataBase
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
 import com.theone.music.data.room.MusicDao
+import com.theone.music.data.room.UserDao
 import com.theone.music.net.NetConstant
 import com.theone.music.player.PlayerManager
 import kotlinx.coroutines.Dispatchers
@@ -57,6 +58,11 @@ class DataRepository {
         val MUSIC_DAO: MusicDao by lazy {
             AppDataBase.INSTANCE.musicDao()
         }
+
+        val USER_DAO:UserDao by lazy {
+            AppDataBase.INSTANCE.userDao()
+        }
+
     }
 
     suspend fun request(url: String, vararg formatArgs: Any): String {

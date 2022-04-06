@@ -28,6 +28,10 @@
         <activity android:name=".ui.activity.MainActivity"
             android:screenOrientation="fullSensor"/>
 
+
+        <activity android:name=".ui.activity.LoginRegisterActivity"
+            android:screenOrientation="fullSensor"/>
+
         <activity android:name=".ui.activity.PlayerActivity"
             android:screenOrientation="fullSensor"
             android:launchMode="singleTop"

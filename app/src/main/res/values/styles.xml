@@ -18,4 +18,17 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="login_edittext_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:textCursorDrawable">@drawable/common_edit_text_cursor</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textColor">@color/qmui_config_color_gray_2</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@drawable/login_edittext_bg</item>
+    </style>
+
 </resources>
