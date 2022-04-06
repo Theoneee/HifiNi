@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="item"
+            type="com.theone.music.data.model.Banner" />
+    </data>
+
+    <com.qmuiteam.qmui.layout.QMUIFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
+            android:id="@+id/banner_image"
+            android:layout_width="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_margin="20dp"
+            app:imageUrl="@{item.url}"
+            app:qmui_corner_radius="6dp"
+            android:layout_height="match_parent" />
+
+    </com.qmuiteam.qmui.layout.QMUIFrameLayout>
+</layout>

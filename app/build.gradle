@@ -15,6 +15,7 @@ dependencies {
     implementation project(path: ':player')
 //    implementation "com.kunminx.player:player:3.1.0"
     implementation 'com.danikula:videocache:2.7.1'
+    implementation 'com.github.zhpanvip:BannerViewPager:3.5.5'
 
     def room_version = "2.3.0"
     implementation "androidx.room:room-ktx:$room_version"

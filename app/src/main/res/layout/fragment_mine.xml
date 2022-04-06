@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.theone.music.viewmodel.MineViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
+
+        <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
+            android:id="@+id/icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:imageUrl="@{vm.icon}"
+            android:scaleType="centerCrop"
+            app:qmui_is_circle="true"
+            android:layout_marginTop="15dp"
+            android:src="@mipmap/ic_launcher_round"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{vm.nickName}"
+            tools:text="未登录"
+            android:layout_marginStart="15dp"
+            app:layout_constraintBottom_toBottomOf="@id/icon"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toTopOf="@id/icon" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mz_titlebar_ic_setting_dark"
+            app:layout_constraintBottom_toBottomOf="@id/icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <com.qmuiteam.qmui.layout.QMUILinearLayout
+            android:id="@+id/ll_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingVertical="15dp"
+            app:layout_constraintTop_toBottomOf="@id/icon"
+            app:qmui_borderColor="@color/qmui_config_color_background"
+            app:qmui_general_shadow_alpha="1"
+            app:qmui_radius="10dp"
+            app:qmui_shadowElevation="20dp"
+            app:qmui_showBorderOnlyBeforeL="false">
+
+            <TextView
+                style="@style/mine_tips_style"
+                android:text="我的喜欢"
+                app:drawableTopCompat="@drawable/svg_collection_selected" />
+
+            <TextView
+                style="@style/mine_tips_style"
+                android:text="最近播放"
+                app:drawableTopCompat="@drawable/ic_svg_history" />
+
+            <TextView
+                style="@style/mine_tips_style"
+                android:text="下载"
+                app:drawableTopCompat="@drawable/picture_icon_wechat_down" />
+
+        </com.qmuiteam.qmui.layout.QMUILinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
