@@ -1,9 +1,11 @@
 package com.theone.music.data.repository
 
 import android.util.Log
-import com.theone.common.ext.logI
+import com.theone.common.ext.getNumbers
 import com.theone.lover.data.room.AppDataBase
 import com.theone.music.data.model.Music
+import com.theone.music.data.model.ResponseList
+import com.theone.music.data.model.Singer
 import com.theone.music.data.model.TestAlbum
 import com.theone.music.data.room.MusicDao
 import com.theone.music.data.room.UserDao
@@ -12,6 +14,7 @@ import com.theone.music.player.PlayerManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import rxhttp.toStr
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
@@ -59,7 +62,7 @@ class DataRepository {
             AppDataBase.INSTANCE.musicDao()
         }
 
-        val USER_DAO:UserDao by lazy {
+        val USER_DAO: UserDao by lazy {
             AppDataBase.INSTANCE.userDao()
         }
 
@@ -67,21 +70,105 @@ class DataRepository {
 
     suspend fun request(url: String, vararg formatArgs: Any): String {
         return RxHttp.get(url, *formatArgs)
+            .setCacheMode(CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK)
+            .setCacheValidTime(-1)
             .toStr()
             .await()
     }
+
+    suspend fun getSingerList(url: String): List<Singer> {
+        val response = request(url)
+        return withContext(Dispatchers.IO) {
+            val list = mutableListOf<Singer>()
+            Jsoup.parse(response).run {
+                val elements = getElementById("taghot").select("a")
+                for (element in elements) {
+                    val name = element.html()
+                    val url = element.attr("href")
+                    list.add(Singer(name, url))
+                }
+            }
+            list
+        }
+    }
+
+    private fun Document.parseTotalPage(): Int {
+        return try {
+            val elements = select("li.page-item").select("a")
+            val pageInfo = elements[elements.size - 2]
+            var page = pageInfo.html()
+            if (page.contains("...")) {
+                page = page.replace("...", "")
+            }
+            page.toInt()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            1
+        }
+    }
+
+
+    /**
+     * 解析歌手搜索
+     * @param response String
+     * @return List<Music>
+     */
+    private suspend fun parsesSingerMusicList(response: String): ResponseList<Music> {
+        return withContext(Dispatchers.IO) {
+            Jsoup.parse(response).run {
+                val list = mutableListOf<Music>()
+                val elements = select("li.media.thread.tap")
+                val totalPage = parseTotalPage()
+                for (element in elements) {
+                    with(element) {
+                        val avatar = select("img.avatar-3").attr("src")
+                        val body = select("div.subject.break-all").select("a").first()
+                        val link = body.attr("href")
+                        val info = body.html()
+                        var author = ""
+                        var name = info
+
+                        with(info) {
+                            if (contains("《") && contains("》")) {
+                                val index = indexOf("《")
+                                author = substring(0, index)
+                                name = substring(index + 1, indexOf("》"))
+                            }
+                            if (author.isEmpty())
+                                if (contains("「") && contains("」")) {
+                                    val index = indexOf("「")
+                                    author = substring(0, index)
+                                    name = substring(index + 1, indexOf("」"))
+                                }
+                        }
+
+                        list.add(
+                            Music(
+                                author = author,
+                                pic = NetConstant.BASE_URL + avatar,
+                                title = name,
+                                shareUrl = link
+                            )
+                        )
+                    }
+                }
+                ResponseList(list, totalPage)
+            }
+        }
+    }
+
 
     /**
      * 解析搜索
      * @param response String
      * @return List<Music>
      */
-    private suspend fun parseMusicList(response: String): List<Music> {
+    private suspend fun parseMusicList(response: String): ResponseList<Music> {
         return withContext(Dispatchers.IO) {
-            val list = mutableListOf<Music>()
             Jsoup.parse(response).run {
+                val list = mutableListOf<Music>()
                 val elements = select("li.media.thread.tap")
-                val pageInfo = select("ul.pagination")
+                val totalPage = parseTotalPage()
 
                 for (element in elements) {
                     val author = element.select("span.haya-post-info-username").first().toString()
@@ -120,8 +207,8 @@ class DataRepository {
                         )
                     }
                 }
+                ResponseList(list, totalPage)
             }
-            list
         }
     }
 
@@ -173,27 +260,38 @@ class DataRepository {
     fun checkUrl(url: String): Boolean {
         // 先判断本地有没有缓存，有缓存后续就会用
         val cacheUrl = PlayerManager.getInstance().getCacheUrl(url)
-        if(cacheUrl.contains("storage/emulated")){
-            Log.e(TAG, "checkUrl: $cacheUrl" )
+        if (cacheUrl.contains("storage/emulated")) {
             return false
         }
         val conn = URL(url).openConnection() as HttpURLConnection
         val code = conn.responseCode
-        Log.e(TAG, "checkUrl: $code  ${conn.url}" )
         conn.disconnect()
         // 403的或者跳到了腾讯网了都算作废
         return code == 403 || conn.url.toString().contains("https://www.qq.com/")
     }
 
-    suspend fun get(url: String, vararg formatArgs: Any): List<Music> {
+    suspend fun get(url: String, vararg formatArgs: Any): ResponseList<Music> {
         return parseMusicList(request(url, *formatArgs))
+    }
+
+    suspend fun getSingerList(url: String, vararg formatArgs: Any): ResponseList<Music> {
+        return parsesSingerMusicList(request(url, *formatArgs))
+    }
+
+    fun getDbMusicInfo(link: String): Music? {
+        val list = MUSIC_DAO.findMusics(link)
+        return if (list.isNotEmpty() && list[0].getMusicUrl().isNotEmpty()) {
+            list[0]
+        } else {
+            null
+        }
     }
 
     suspend fun getMusicInfo(link: String, isReload: Boolean): Music {
         if (!isReload) {
             // 先从数据里查是否有
             val list = MUSIC_DAO.findMusics(link)
-            if (list.isNotEmpty()) {
+            if (list.isNotEmpty() && list[0].getMusicUrl().isNotEmpty()) {
                 return list[0]
             }
         }
@@ -205,7 +303,6 @@ class DataRepository {
                 realUrl = getRedirectUrl(url)
             }
         }
-        Log.e(TAG, "getMusicInfo: $music" )
         if (isReload) {
             MUSIC_DAO.updateDataBaseMusic(link, music.url, music.realUrl)
         } else {

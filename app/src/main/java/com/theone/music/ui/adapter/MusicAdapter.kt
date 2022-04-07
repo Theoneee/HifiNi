@@ -68,7 +68,7 @@ class MusicAdapter : TheBaseQuickAdapter<Music, ItemMusicBinding>(R.layout.item_
     private fun notifyItem(vararg values: Int){
         for (index in values){
             if (index != -1)
-                notifyItemChanged(index)
+                notifyItemChanged(index+headerLayoutCount)
         }
     }
 

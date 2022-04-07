@@ -2,6 +2,7 @@ package com.theone.music.viewmodel
 
 import com.kunminx.architecture.ui.callback.ProtectedUnPeekLiveData
 import com.kunminx.architecture.ui.callback.UnPeekLiveData
+import com.theone.common.ext.notNull
 import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
@@ -19,7 +20,7 @@ class EventViewModel : BaseViewModel() {
 
     private val reloadMusic = UnPeekLiveData<Music>()
 
-    fun getUserInfoLiveData():ProtectedUnPeekLiveData<User> = userInfo
+    fun getUserInfoLiveData(): ProtectedUnPeekLiveData<User> = userInfo
 
     fun getCollectionLiveData(): ProtectedUnPeekLiveData<CollectionEvent> = collection
 
@@ -27,21 +28,19 @@ class EventViewModel : BaseViewModel() {
 
     fun getReloadMusicLiveData(): ProtectedUnPeekLiveData<Music> = reloadMusic
 
-
-    fun setUserInfo(user: User){
+    fun setUserInfo(user: User?) {
         userInfo.value = user
-        CacheUtil.setUser(user)
     }
 
-    fun dispatchCollectionEvent(event: CollectionEvent){
+    fun dispatchCollectionEvent(event: CollectionEvent) {
         collection.value = event
     }
 
-    fun dispatchPlayMusic(music: Music){
+    fun dispatchPlayMusic(music: Music) {
         playMusic.value = music
     }
 
-    fun dispatchReloadMusic(music: Music){
+    fun dispatchReloadMusic(music: Music) {
         reloadMusic.value = music
     }
 

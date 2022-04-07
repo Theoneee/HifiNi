@@ -48,14 +48,14 @@ interface MusicDao {
     @Query("DELETE FROM MusicInfo WHERE shareUrl ==:shareUrl")
     fun delete(shareUrl: String)
 
-    @Query("select * from MusicInfo where collection = 1 order by createDate desc ")
-    fun getCollectionMusicList(): List<Music>
+    @Query("select * from MusicInfo where userId ==:userId and collection = 1 order by createDate desc ")
+    fun getCollectionMusicList(userId: Int): List<Music>
 
     @Query("select * from MusicInfo where shareUrl ==:shareUrl")
     fun findMusics(shareUrl: String): List<Music>
 
-    @Query("select * from MusicInfo where shareUrl ==:shareUrl and collection = 1")
-    fun findCollectionMusics(shareUrl: String): List<Music>
+    @Query("select * from MusicInfo where userId ==:userId and shareUrl ==:shareUrl and collection = 1")
+    fun findCollectionMusics(userId: Int,shareUrl: String): List<Music>
 
     @Query("update MusicInfo set userId = :userId,collection = :collection, createDate =:createDate  where shareUrl ==:shareUrl ")
     fun updateCollectionMusic(

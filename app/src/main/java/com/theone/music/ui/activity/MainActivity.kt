@@ -78,7 +78,9 @@ class MainActivity : BaseFragmentActivity() {
                         name.set(music.title)
                         author.set(music.author)
                         isSuccess.set(true)
-                        requestCollection(music.shareUrl)
+                        mEvent.getUserInfoLiveData().value?.let { user ->
+                            requestCollection(user.id, music.shareUrl)
+                        }
                     }
                 }
 
@@ -90,6 +92,20 @@ class MainActivity : BaseFragmentActivity() {
         }
         mEvent.getCollectionLiveData().observe(this) {
             mMusicViewModel.isCollection.set(it.collection)
+        }
+        mEvent.getUserInfoLiveData().observe(this) {
+            // 用户登录、退出后
+            // 登录时才能进行点击
+            mMusicViewModel.isCollectionEnable.set(it != null)
+            if (null == it) {
+                // 退出后直接设置为false
+                mMusicViewModel.isCollection.set(false)
+            } else {
+                // 登录后如果当前有播放，查询请求一次是否当前账户已收藏当前播放的歌曲
+                getCurrentMusic()?.let { music ->
+                    mMusicViewModel.requestCollection(it.id, music.shareUrl)
+                }
+            }
         }
     }
 
@@ -133,7 +149,7 @@ class MainActivity : BaseFragmentActivity() {
             mEvent.getUserInfoLiveData().value?.let { user ->
                 getCurrentMusic()?.let {
                     CollectionEvent(isSelected, it).let { event ->
-                        mMusicViewModel.toggleCollection(user.id,event)
+                        mMusicViewModel.toggleCollection(user.id, event)
                         mEvent.dispatchCollectionEvent(event)
                     }
                 }

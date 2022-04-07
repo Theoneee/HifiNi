@@ -1,10 +1,6 @@
-package com.theone.music.viewmodel
+package com.theone.music.data.model
 
-import com.theone.music.data.model.Music
-import com.theone.music.data.model.PageInfo
-import com.theone.music.data.repository.DataRepository
-import com.theone.music.net.NetConstant
-import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
+import com.theone.mvvm.core.data.net.IPageInfo
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -25,22 +21,18 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-04 11:25
+ * @date 2022-04-07 08:55
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class MusicViewModel:BaseListViewModel<Music>() {
+class PageInfo(private val curPage:Int = 1,private val totalPage:Int = 1):IPageInfo {
 
-    var type:Int = 1
-    var url:String = ""
+    override fun getPage(): Int = curPage
 
-    override fun requestServer() {
-        request({
-            DataRepository.INSTANCE.get(url, type, page).run {
-                onSuccess(list, PageInfo(page,totalPage))
-            }
-        })
-    }
+    override fun getPageSize(): Int = 1
 
+    override fun getPageTotalCount(): Int = totalPage
+
+    override fun getTotalCount(): Int  = 1
 }

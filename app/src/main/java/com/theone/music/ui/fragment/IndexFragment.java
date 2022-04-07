@@ -60,6 +60,12 @@ public class IndexFragment extends BaseTabInTitleFragment<BaseViewModel> {
     }
 
     @Override
+    public void initView(@NonNull View root) {
+        super.initView(root);
+        getViewPager().setCurrentItem(1);
+    }
+
+    @Override
     public void initTabAndFragments(@NonNull List<QMUITabBean> tabs, @NonNull List<QMUIFragment> fragments) {
         tabs.add(new QMUITabBean("我的", -1, -1));
         tabs.add(new QMUITabBean("乐库", -1, -1));

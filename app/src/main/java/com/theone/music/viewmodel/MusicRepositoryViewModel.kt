@@ -1,7 +1,9 @@
 package com.theone.music.viewmodel
 
 import com.theone.music.data.model.Music
+import com.theone.music.data.model.PageInfo
 import com.theone.music.data.repository.DataRepository
+import com.theone.music.net.NetConstant
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 
 //  ┏┓　　　┏┓
@@ -32,7 +34,9 @@ class MusicRepositoryViewModel:BaseListViewModel<Music>() {
 
     override fun requestServer() {
         request({
-            onSuccess(DataRepository.INSTANCE.get("https://www.hifini.com/index.htm"))
+            DataRepository.INSTANCE.get(NetConstant.INDEX,page).run {
+                onSuccess(list, PageInfo(page,totalPage))
+            }
         })
     }
 

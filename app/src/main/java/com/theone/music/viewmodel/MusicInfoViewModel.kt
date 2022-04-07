@@ -1,5 +1,6 @@
 package com.theone.music.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
@@ -7,6 +8,7 @@ import com.theone.music.data.repository.DataRepository
 import com.theone.common.callback.databind.BooleanObservableField
 import com.theone.common.callback.databind.IntObservableField
 import com.theone.common.callback.databind.StringObservableField
+import com.theone.music.app.util.CacheUtil
 import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
 import kotlinx.coroutines.launch
 
@@ -55,21 +57,31 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
     val nowTime = StringObservableField("00:00")
     val allTime = StringObservableField("00:00")
     val isCollection = BooleanObservableField()
+    val isCollectionEnable = BooleanObservableField()
     val isPlaying = BooleanObservableField()
     var cover: StringObservableField = StringObservableField()
     var link: String = ""
+
+    init {
+        isCollectionEnable.set(CacheUtil.isLogin())
+    }
 
     var isReload = false
 
     override fun requestServer() {
         request({
-            onSuccess(DataRepository.INSTANCE.getMusicInfo(link,isReload))
+            val music = DataRepository.INSTANCE.getMusicInfo(link,isReload)
+            onSuccess(music)
         })
     }
 
-    fun requestCollection(url: String) {
+    fun requestDbMusic():Music?{
+       return DataRepository.INSTANCE.getDbMusicInfo(link)
+    }
+
+    fun requestCollection(userId:Int,url: String) {
         request({
-            isCollection.set(DataRepository.MUSIC_DAO.findCollectionMusics(url).isNotEmpty())
+            isCollection.set(DataRepository.MUSIC_DAO.findCollectionMusics(userId,url).isNotEmpty())
         })
     }
 
@@ -85,6 +97,7 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
         isSuccess.set(false)
         isSetSuccess.set(false)
         isCollection.set(false)
+        isCollectionEnable.set(false)
         isPlaying.set(false)
         max.set(0)
         progress.set(0)

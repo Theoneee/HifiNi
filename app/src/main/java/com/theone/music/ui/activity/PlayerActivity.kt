@@ -15,6 +15,7 @@ import com.theone.common.ext.*
 import com.theone.music.BR
 import com.theone.music.R
 import com.theone.music.app.ext.toMusic
+import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
@@ -37,7 +38,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -131,8 +131,16 @@ class PlayerActivity :
                     setMediaSource(music)
                     return
                 }
+                // 查询DB
+                getViewModel().requestDbMusic()?.let {
+                    val cacheUrl = getCacheUrl(it.getMusicUrl())
+                    setMediaSource(it,cacheUrl.isNotEmpty())
+                    return
+                }
             }
-            onPageReLoad()
+            getRootView().post {
+                onPageReLoad()
+            }
         }
     }
 
@@ -147,7 +155,9 @@ class PlayerActivity :
             setMediaSource(it, true)
         }
         getViewModel().getErrorLiveData().observe(this) {
-            showErrorPage(it)
+            showErrorPage(it){
+                onPageReLoad()
+            }
         }
 
         with(PlayerManager.getInstance()) {
@@ -182,16 +192,18 @@ class PlayerActivity :
             }
 
         }
-
     }
 
     private fun Music.setMusicInfo() {
         getViewModel().let {
             it.isSuccess.set(true)
+            it.isCollectionEnable.set(CacheUtil.isLogin())
             it.name.set(title)
             it.author.set(author)
             it.cover.set(pic)
-            it.requestCollection(shareUrl)
+            mEvent.getUserInfoLiveData().value?.let { user ->
+                it.requestCollection(user.id,shareUrl)
+            }
         }
     }
 
@@ -206,7 +218,6 @@ class PlayerActivity :
             withContext(Dispatchers.IO) {
                 // 不是新数据才检查地址是否可行
                 if (!newData && DataRepository.INSTANCE.checkUrl(data.getMusicUrl())) {
-                    Log.e(TAG, "setMediaSource: ${Thread.currentThread().name}")
                     getViewModel().isReload = true
                     getViewModel().requestServer()
                     return@withContext

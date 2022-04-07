@@ -52,7 +52,7 @@ data class Music(
     @Ignore
     constructor() : this(0) {}
 
-    fun getMusicUrl(): String = if (realUrl.isEmpty()) url else realUrl
+    fun getMusicUrl(): String = realUrl.ifEmpty { url }
 
     fun getAuthorHtml(): CharSequence{
         return author.getHtmlString()

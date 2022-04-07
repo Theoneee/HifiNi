@@ -56,14 +56,13 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
 
     @Override
     public void initView(@NonNull View root) {
-        mEvent = ((BaseApplication)getActivity().getApplication()).getAppViewModelProvider().get(EventViewModel.class);
+        mEvent = ((BaseApplication)mActivity.getApplication()).getAppViewModelProvider().get(EventViewModel.class);
         super.initView(root);
         setCurrentMusic( mEvent.getPlayMusicLiveData().getValue());
     }
 
     @Override
     public void onRefreshSuccess(@NonNull List<? extends Music> data) {
-        super.onRefreshSuccess(data);
         getMAdapter().getDiffer().submitList((List<Music>) data, () -> {
             setRefreshLayoutEnabled(true);
             getRecyclerView().scrollToPosition(0);

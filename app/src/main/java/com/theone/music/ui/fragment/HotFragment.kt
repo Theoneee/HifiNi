@@ -1,10 +1,8 @@
-package com.theone.music.viewmodel
+package com.theone.music.ui.fragment
 
-import com.theone.music.data.model.Music
-import com.theone.music.data.model.PageInfo
-import com.theone.music.data.repository.DataRepository
-import com.theone.music.net.NetConstant
-import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
+import android.view.View
+import com.theone.music.viewmodel.HotViewModel
+import com.theone.mvvm.ext.qmui.setTitleWitchBackBtn
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -25,22 +23,17 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-04 11:25
- * @describe TODO
+ * @date 2022-04-07 08:41
+ * @describe 热门
  * @email 625805189@qq.com
  * @remark
  */
-class MusicViewModel:BaseListViewModel<Music>() {
+class HotFragment:BaseMusicFragment<HotViewModel>() {
 
-    var type:Int = 1
-    var url:String = ""
-
-    override fun requestServer() {
-        request({
-            DataRepository.INSTANCE.get(url, type, page).run {
-                onSuccess(list, PageInfo(page,totalPage))
-            }
-        })
+    override fun initView(root: View) {
+        setTitleWitchBackBtn("热门")
+        super.initView(root)
     }
+
 
 }

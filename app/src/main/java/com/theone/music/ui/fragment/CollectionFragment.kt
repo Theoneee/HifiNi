@@ -1,8 +1,10 @@
 package com.theone.music.ui.fragment
 
+import android.view.View
 import com.theone.music.app.ext.removeItem
 import com.theone.music.viewmodel.CollectionViewModel
 import com.theone.mvvm.core.app.ext.showEmptyPage
+import com.theone.mvvm.ext.qmui.setTitleWitchBackBtn
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -29,6 +31,18 @@ import com.theone.mvvm.core.app.ext.showEmptyPage
  * @remark
  */
 class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
+
+    override fun initView(root: View) {
+        setTitleWitchBackBtn("我的收藏")
+        super.initView(root)
+    }
+
+    override fun initData() {
+        super.initData()
+        mEvent.getUserInfoLiveData().value?.let {
+            getViewModel().userId = it.id
+        }
+    }
 
     override fun setRefreshLayoutEnabled(enabled: Boolean) {
         super.setRefreshLayoutEnabled(false)

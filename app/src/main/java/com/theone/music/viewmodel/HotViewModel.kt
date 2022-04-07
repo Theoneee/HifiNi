@@ -25,19 +25,16 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-04 11:25
+ * @date 2022-04-07 08:42
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class MusicViewModel:BaseListViewModel<Music>() {
-
-    var type:Int = 1
-    var url:String = ""
+class HotViewModel:BaseListViewModel<Music>() {
 
     override fun requestServer() {
         request({
-            DataRepository.INSTANCE.get(url, type, page).run {
+            DataRepository.INSTANCE.get(NetConstant.HOT,page).run {
                 onSuccess(list, PageInfo(page,totalPage))
             }
         })

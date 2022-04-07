@@ -1,6 +1,7 @@
 package com.theone.music.ui.fragment
 
 import android.view.View
+import com.theone.common.ext.notNull
 import com.theone.music.app.ext.checkLogin
 import com.theone.music.data.model.User
 import com.theone.music.databinding.FragmentMineBinding
@@ -37,12 +38,15 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
 
     private val mAppVm: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
 
-    private fun User.setUserInfo(){
-        getViewModel().nickName.set(account)
+    private fun User?.setUserInfo(){
+        this.notNull({
+            getViewModel().nickName.set(it.account)
+        },{
+            getViewModel().nickName.set("未登录")
+        })
     }
 
     override fun initView(root: View) {
-
        mAppVm.getUserInfoLiveData().value?.setUserInfo()
     }
 
@@ -67,6 +71,20 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
         }
 
         fun setting() {
+            startFragment(SettingFragment())
+        }
+
+        fun collection(){
+            checkLogin {
+                startFragment(CollectionFragment())
+            }
+        }
+
+        fun history(){
+
+        }
+
+        fun download(){
 
         }
 

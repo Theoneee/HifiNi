@@ -1,10 +1,11 @@
-package com.theone.music.ui.fragment
+package com.theone.music.ui.fragment.rank
 
 import android.content.Context
 import android.widget.RelativeLayout
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.theone.music.R
 import com.theone.music.net.NetConstant
+import com.theone.music.ui.fragment.MusicItemFragment
 import com.theone.mvvm.base.viewmodel.BaseViewModel
 import com.theone.mvvm.core.base.fragment.BaseTabInTitleFragment
 import com.theone.mvvm.core.data.entity.QMUITabBean
@@ -14,7 +15,7 @@ import com.theone.mvvm.ext.qmui.addLeftCloseImageBtn
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView
 
-class MainFragment:BaseTabInTitleFragment<BaseViewModel>() {
+class RankFragment:BaseTabInTitleFragment<BaseViewModel>() {
 
     override fun generateMagicIndicatorLayoutParams(): RelativeLayout.LayoutParams {
         return super.generateMagicIndicatorLayoutParams().apply {
@@ -39,9 +40,9 @@ class MainFragment:BaseTabInTitleFragment<BaseViewModel>() {
         tabs: MutableList<QMUITabBean>,
         fragments: MutableList<QMUIFragment>
     ) {
-        for ((k,v) in NetConstant.CATEGORY){
+        for ((k,v) in NetConstant.RANK_TYPES){
             tabs.addTab(k)
-            fragments.add(MusicItemFragment.newInstance(v))
+            fragments.add(RankItemFragment.newInstance(v))
         }
     }
 

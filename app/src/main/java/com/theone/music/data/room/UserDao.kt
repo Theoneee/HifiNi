@@ -40,7 +40,7 @@ interface UserDao {
     @Delete
     fun delete(user: User): Int
 
-    @Query("select * from user where account = :account")
+    @Query("select * from user where account == :account")
     fun getUserList(account:String): List<User>
 
 }

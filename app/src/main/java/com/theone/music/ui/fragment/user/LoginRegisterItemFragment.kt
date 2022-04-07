@@ -7,6 +7,7 @@ import com.theone.common.ext.bundle
 import com.theone.common.ext.getColor
 import com.theone.common.ext.getValueNonNull
 import com.theone.music.R
+import com.theone.music.app.util.CacheUtil
 import com.theone.music.viewmodel.LoginRegisterViewModel
 import com.theone.music.databinding.FragmentLoginRegisterBinding
 import com.theone.music.viewmodel.EventViewModel
@@ -41,6 +42,7 @@ class LoginRegisterItemFragment private constructor() :
         getViewModel().run {
             getResponseLiveData().observe(this@LoginRegisterItemFragment, Observer {
                 mAppVm.setUserInfo(it)
+                CacheUtil.setUser(it)
                 showSuccessTipsExitDialog(if (isRegister.get()) "注册成功" else "登录成功")
             })
             getErrorLiveData().observe(this@LoginRegisterItemFragment, Observer {

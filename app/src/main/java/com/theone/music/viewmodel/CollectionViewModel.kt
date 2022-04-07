@@ -2,6 +2,7 @@ package com.theone.music.viewmodel
 
 import android.util.Log
 import com.theone.common.ext.logI
+import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
@@ -32,9 +33,11 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
  */
 class CollectionViewModel:BaseListViewModel<Music>() {
 
+    var userId:Int = 0
+
     override fun requestServer() {
        request({
-           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList())
+           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList(userId))
        })
     }
 }

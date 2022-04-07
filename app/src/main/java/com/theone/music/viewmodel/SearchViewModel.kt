@@ -2,6 +2,7 @@ package com.theone.music.viewmodel
 
 import com.theone.music.app.ext.URLEncode
 import com.theone.music.data.model.Music
+import com.theone.music.data.model.PageInfo
 import com.theone.music.data.repository.DataRepository
 import com.theone.music.net.NetConstant
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
@@ -37,12 +38,9 @@ class SearchViewModel : BaseListViewModel<Music>() {
 
     override fun requestServer() {
         request({
-            onSuccess(
-                DataRepository.INSTANCE.get(
-                    NetConstant.SEARCH,
-                    keyWord.URLEncode()
-                )
-            )
+            DataRepository.INSTANCE.get(NetConstant.SEARCH,keyWord.URLEncode()).run {
+                onSuccess(list, PageInfo(page,totalPage))
+            }
         })
     }
 

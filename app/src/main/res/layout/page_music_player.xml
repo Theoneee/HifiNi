@@ -26,8 +26,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="50dp"
-        app:visible="@{vm.isSuccess}">
+        android:padding="50dp">
 
         <com.theone.mvvm.core.app.widge.layout.QMUISquareRelativeLayout
             android:id="@+id/cover_layout"
@@ -82,7 +81,7 @@
 
         <com.theone.music.ui.view.PlayPauseView
             android:id="@+id/player_pause"
-            isPlaying="@{vm.isPlaying}"
+            app:isPlaying="@{vm.isPlaying}"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:clickable="true"
@@ -135,7 +134,7 @@
         <com.theone.music.ui.view.TheSelectImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:enable="@{vm.isSuccess}"
+            app:enable="@{vm.isCollectionEnable()}"
             app:img_normal="@drawable/svg_collection_normal"
             app:img_selected="@drawable/svg_collection_selected"
             app:layout_constraintBottom_toBottomOf="@id/player_pause"
