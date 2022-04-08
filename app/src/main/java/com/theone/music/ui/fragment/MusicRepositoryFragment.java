@@ -49,7 +49,22 @@ import java.util.List;
  * @email 625805189@qq.com
  * @remark
  */
-public class MusicRepositoryFragment extends BaseMusicFragment<MusicRepositoryViewModel> {
+public class MusicRepositoryFragment extends BaseMusicFragment2<MusicRepositoryViewModel> {
+
+    @Override
+    public boolean isNeedChangeStatusBarMode() {
+        return true;
+    }
+
+    @Override
+    public boolean isStatusBarLightMode() {
+        return true;
+    }
+
+    @Override
+    public boolean showTopBar() {
+        return true;
+    }
 
     private void initBannerView(BannerViewPager banner) {
         List<Banner> datas = new ArrayList<>();

@@ -35,4 +35,17 @@
         <attr name="isSelected" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="DouYinLoadingView">
+        <!--进度条初始颜色-->
+        <attr name="progressColor" format="string"/>
+        <!--速度-->
+        <attr name="speed" format="integer"/>
+        <!--进度条最小宽度即初始宽度-->
+        <attr name="minProgressWidth" format="dimension"/>
+        <!--view最小宽度-->
+        <attr name="minWidth" format="dimension"/>
+        <!--view最小高度-->
+        <attr name="minHeight" format="dimension"/>
+    </declare-styleable>
+
 </resources>

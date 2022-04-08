@@ -2,6 +2,7 @@ package com.theone.music.ui.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.chad.library.adapter.base.viewholder.BaseDataBindingHolder
+import com.theone.common.ext.gone
 import com.theone.common.ext.invisible
 import com.theone.common.ext.visible
 import com.theone.music.R
@@ -78,7 +79,7 @@ class MusicAdapter : TheBaseQuickAdapter<Music, ItemMusicBinding>(R.layout.item_
             if (currentMusic == item.shareUrl) {
                 visible()
             } else {
-                invisible()
+                gone()
             }
         }
     }

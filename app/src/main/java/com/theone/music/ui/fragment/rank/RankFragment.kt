@@ -17,12 +17,12 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.Simple
 
 class RankFragment:BaseTabInTitleFragment<BaseViewModel>() {
 
-    override fun generateMagicIndicatorLayoutParams(): RelativeLayout.LayoutParams {
-        return super.generateMagicIndicatorLayoutParams().apply {
-            addRule(RelativeLayout.CENTER_IN_PARENT)
-            addRule(RelativeLayout.RIGHT_OF,R.id.qmui_topbar_item_left_back)
-        }
-    }
+//    override fun generateMagicIndicatorLayoutParams(): RelativeLayout.LayoutParams {
+//        return super.generateMagicIndicatorLayoutParams().apply {
+//            addRule(RelativeLayout.CENTER_IN_PARENT)
+//            addRule(RelativeLayout.RIGHT_OF,R.id.qmui_topbar_item_left_back)
+//        }
+//    }
 
     override fun initTopBar() {
         getTopBar()?.run {
@@ -30,11 +30,11 @@ class RankFragment:BaseTabInTitleFragment<BaseViewModel>() {
         }
     }
 
-    override fun getNavIndicator(context: Context): IPagerIndicator? = null
+//    override fun getNavIndicator(context: Context): IPagerIndicator? = null
 
-    override fun getPagerTitleView(context: Context): SimplePagerTitleView {
-        return SkinScaleTransitionPagerTitleView(context)
-    }
+//    override fun getPagerTitleView(context: Context): SimplePagerTitleView {
+//        return SkinScaleTransitionPagerTitleView(context)
+//    }
 
     override fun initTabAndFragments(
         tabs: MutableList<QMUITabBean>,

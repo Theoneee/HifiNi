@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="seek_thumb_size">6dp</dimen>
     <dimen name="seek_bar_progress_radius">6dp</dimen>
 
 </resources>

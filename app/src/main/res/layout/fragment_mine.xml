@@ -75,19 +75,19 @@
                 style="@style/mine_tips_style"
                 android:text="我的喜欢"
                 app:noRepeatClick="@{()-> click.collection()}"
-                app:drawableTopCompat="@drawable/svg_collection_selected" />
+                app:drawableTopCompat="@drawable/ic_mine_collection" />
 
             <TextView
                 style="@style/mine_tips_style"
                 android:text="最近播放"
                 app:noRepeatClick="@{()-> click.history()}"
-                app:drawableTopCompat="@drawable/ic_svg_history" />
+                app:drawableTopCompat="@drawable/ic_mine_history" />
 
             <TextView
                 style="@style/mine_tips_style"
                 android:text="下载"
                 app:noRepeatClick="@{()-> click.download()}"
-                app:drawableTopCompat="@drawable/picture_icon_wechat_down" />
+                app:drawableTopCompat="@drawable/ic_mine_download2" />
 
         </com.qmuiteam.qmui.layout.QMUILinearLayout>
 

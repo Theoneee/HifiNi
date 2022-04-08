@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:textColor="@color/qmui_config_color_gray_2"
             android:textSize="14sp"
             android:text="@{item.title}"
             tools:text="每日推荐" />

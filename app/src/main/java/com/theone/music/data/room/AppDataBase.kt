@@ -5,8 +5,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.theone.music.data.model.Download
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.User
+import com.theone.music.data.room.DownloadDao
 import com.theone.music.data.room.MusicDao
 import com.theone.music.data.room.UserDao
 import com.theone.mvvm.base.appContext
@@ -44,12 +46,14 @@ import com.theone.mvvm.base.appContext
  *              因为大部分情况，操作数据库都还算是比较耗时的动作。
  *              如果需要在主线程调用则使用allowMainThreadQueries进行说明。
  */
-@Database(entities = [Music::class,User::class], version = 4, exportSchema = false)
+@Database(entities = [Music::class,User::class, Download::class], version = 2, exportSchema = false)
 abstract class AppDataBase:RoomDatabase() {
 
     abstract fun musicDao(): MusicDao
 
     abstract fun userDao(): UserDao
+
+    abstract fun downloadDao(): DownloadDao
 
     companion object{
         private const val DB_NAME = "HifiNi.db"

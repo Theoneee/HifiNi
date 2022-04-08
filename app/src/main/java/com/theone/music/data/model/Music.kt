@@ -46,6 +46,7 @@ data class Music(
     var shareUrl: String = "",
     var realUrl: String = "",
     var createDate: Long = 0,
+    var lastPlayDate: Long = 0,
     var collection:Int = 0
 ) : Parcelable {
 

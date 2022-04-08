@@ -1,11 +1,5 @@
-package com.theone.music.viewmodel
-
-import android.util.Log
-import com.theone.common.ext.logI
-import com.theone.music.app.util.CacheUtil
-import com.theone.music.data.model.Music
-import com.theone.music.data.repository.DataRepository
-import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
+package com.theone.music.ui.view;
+import android.view.View;
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -24,22 +18,20 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 //    ┗┓┓┏━┳┓┏┛
 //      ┃┫┫　┃┫┫
 //      ┗┻┛　┗┻┛
+
 /**
  * @author The one
- * @date 2022-01-06 13:43
+ * @date 2021-06-28 15:22
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class CollectionViewModel:BaseListViewModel<Music>() {
 
-    private val pageSize = 10
+public interface OnViewPagerListener {
 
-    var userId:Int = 0
+    void onInitComplete(View view);
 
-    override fun requestServer() {
-       request({
-           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList(userId,page,pageSize))
-       })
-    }
+    void onPageRelease(boolean isNext, int position, View view);
+
+    void onPageSelected(int position, boolean isBottom, View view);
 }

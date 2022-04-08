@@ -59,10 +59,11 @@
             android:text="@{vm.name}"
             android:textColor="@color/we_chat_black"
             android:textSize="20sp"
+            android:gravity="center_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cover_layout"
-            tools:text="天使" />
+            tools:text="天使天使天使天使天使天使天使天使天使天使天使天使天使" />
 
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -1,11 +1,10 @@
-package com.theone.music.viewmodel
+package com.theone.music.ui.adapter
 
-import android.util.Log
-import com.theone.common.ext.logI
-import com.theone.music.app.util.CacheUtil
-import com.theone.music.data.model.Music
-import com.theone.music.data.repository.DataRepository
-import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
+import com.theone.music.R
+import com.theone.music.data.model.Download
+import com.theone.music.databinding.ItemActionBinding
+import com.theone.music.databinding.ItemDownloadBinding
+import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -26,20 +25,10 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-06 13:43
+ * @date 2022-04-08 17:07
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class CollectionViewModel:BaseListViewModel<Music>() {
-
-    private val pageSize = 10
-
-    var userId:Int = 0
-
-    override fun requestServer() {
-       request({
-           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList(userId,page,pageSize))
-       })
-    }
+class DownloadAdapter:TheBaseQuickAdapter<Download,ItemDownloadBinding>(R.layout.item_download) {
 }

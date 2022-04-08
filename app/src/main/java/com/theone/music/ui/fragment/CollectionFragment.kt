@@ -48,9 +48,9 @@ class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
         super.setRefreshLayoutEnabled(false)
     }
 
-    override fun onLoadMoreComplete() {
-        onLoadMoreEnd()
-    }
+//    override fun onLoadMoreComplete() {
+//        onLoadMoreEnd()
+//    }
 
     override fun createObserver() {
         super.createObserver()

@@ -48,8 +48,11 @@ interface MusicDao {
     @Query("DELETE FROM MusicInfo WHERE shareUrl ==:shareUrl")
     fun delete(shareUrl: String)
 
-    @Query("select * from MusicInfo where userId ==:userId and collection = 1 order by createDate desc ")
-    fun getCollectionMusicList(userId: Int): List<Music>
+    @Query("select * from MusicInfo where userId ==:userId and collection = 1 order by createDate desc limit :pageSize offset (:page -1)*:pageSize")
+    fun getCollectionMusicList(userId: Int,page:Int,pageSize:Int): List<Music>
+
+    @Query("select * from MusicInfo order by lastPlayDate desc limit :pageSize offset (:page -1)*:pageSize")
+    fun getHistoryMusicList(page:Int,pageSize:Int): List<Music>
 
     @Query("select * from MusicInfo where shareUrl ==:shareUrl")
     fun findMusics(shareUrl: String): List<Music>
@@ -71,5 +74,12 @@ interface MusicDao {
         url: String,
         realUrl: String
     )
+
+    @Query("update MusicInfo set lastPlayDate = :date where shareUrl ==:shareUrl")
+    fun updateMusicLastPlayDate(
+        date: Long,
+        shareUrl: String
+    )
+
 
 }

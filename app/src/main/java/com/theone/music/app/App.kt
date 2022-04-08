@@ -1,6 +1,8 @@
 package com.theone.music.app
 
 import android.app.Application
+import com.shuyu.gsyvideoplayer.cache.CacheFactory
+import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.theone.music.BuildConfig
 import com.theone.music.player.PlayerManager
 import com.theone.mvvm.core.app.CoreApplication
@@ -9,6 +11,10 @@ import com.theone.mvvm.core.base.loader.Loader
 import com.theone.mvvm.core.base.loader.callback.ErrorCallback
 import com.theone.mvvm.core.base.loader.callback.LoadingCallback
 import com.theone.mvvm.core.base.loader.callback.SuccessCallback
+import com.theone.mvvm.core.data.entity.RxHttpBuilder
+import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
+import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager
+import java.io.File
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -46,13 +52,17 @@ class App:CoreApplication() {
             .addCallback(ErrorCallback::class.java)
             .defaultCallback(SuccessCallback::class.java)
             .commit()
-        RxHttpManager.init().setDebug(BuildConfig.DEBUG).setOnParamAssembly {
+        RxHttpManager.init(RxHttpBuilder().apply {
+            cacheFilePath = app.cacheDir.absolutePath
+        }).setDebug(BuildConfig.DEBUG).setOnParamAssembly {
             //添加公共请求头
             it.addHeader(
                 "User-Agent",
                 "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Mobile Safari/537.36"
             )
         }
+        PlayerFactory.setPlayManager(Exo2PlayerManager::class.java) //EXO模式
+        CacheFactory.setCacheManager(ExoPlayerCacheManager::class.java) //exo缓存模式，支持m3u8，只支持exo
     }
 
 }

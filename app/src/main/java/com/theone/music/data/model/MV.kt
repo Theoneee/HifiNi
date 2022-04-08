@@ -1,11 +1,4 @@
-package com.theone.music.viewmodel
-
-import android.util.Log
-import com.theone.common.ext.logI
-import com.theone.music.app.util.CacheUtil
-import com.theone.music.data.model.Music
-import com.theone.music.data.repository.DataRepository
-import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
+package com.theone.music.data.model
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -26,20 +19,14 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-06 13:43
+ * @date 2022-04-08 09:21
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class CollectionViewModel:BaseListViewModel<Music>() {
+data class MV(val cover:String,val url:String,val name: String,val singer:String) {
 
-    private val pageSize = 10
-
-    var userId:Int = 0
-
-    override fun requestServer() {
-       request({
-           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList(userId,page,pageSize))
-       })
+    fun fullName(): String {
+        return "$singer - $name"
     }
 }

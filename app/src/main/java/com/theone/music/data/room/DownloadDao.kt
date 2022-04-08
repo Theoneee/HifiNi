@@ -1,11 +1,7 @@
-package com.theone.music.viewmodel
+package com.theone.music.data.room
 
-import android.util.Log
-import com.theone.common.ext.logI
-import com.theone.music.app.util.CacheUtil
-import com.theone.music.data.model.Music
-import com.theone.music.data.repository.DataRepository
-import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
+import androidx.room.*
+import com.theone.music.data.model.Download
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -26,20 +22,24 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2022-01-06 13:43
+ * @date 2021-10-08 09:31
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class CollectionViewModel:BaseListViewModel<Music>() {
+@Dao
+interface DownloadDao {
 
-    private val pageSize = 10
+    @Insert
+    fun insert(bean: Download)
 
-    var userId:Int = 0
+    @Update
+    fun update(bean: Download): Int
 
-    override fun requestServer() {
-       request({
-           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList(userId,page,pageSize))
-       })
-    }
+    @Delete
+    fun delete(bean: Download): Int
+
+    @Query("select * from download order by time desc limit :pageSize offset (:page -1)*:pageSize")
+    fun getDownloadList(page:Int,pageSize:Int): List<Download>
+
 }

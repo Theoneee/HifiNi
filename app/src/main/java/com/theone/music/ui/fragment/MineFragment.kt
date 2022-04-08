@@ -38,20 +38,26 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
 
     private val mAppVm: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
 
-    private fun User?.setUserInfo(){
-        this.notNull({
-            getViewModel().nickName.set(it.account)
-        },{
-            getViewModel().nickName.set("未登录")
-        })
+    override fun isNeedChangeStatusBarMode(): Boolean = true
+
+    override fun isStatusBarLightMode(): Boolean {
+        return true
+    }
+
+    override fun showTopBar(): Boolean {
+        return true
+    }
+
+    private fun User?.setUserInfo() {
+        getViewModel().nickName.set(this?.account?:"未登录")
     }
 
     override fun initView(root: View) {
-       mAppVm.getUserInfoLiveData().value?.setUserInfo()
+        mAppVm.getUserInfoLiveData().value.setUserInfo()
     }
 
     override fun createObserver() {
-        mAppVm.getUserInfoLiveData().observe(this){
+        mAppVm.getUserInfoLiveData().observe(this) {
             it.setUserInfo()
         }
     }
@@ -74,18 +80,18 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
             startFragment(SettingFragment())
         }
 
-        fun collection(){
+        fun collection() {
             checkLogin {
                 startFragment(CollectionFragment())
             }
         }
 
-        fun history(){
-
+        fun history() {
+            startFragment(HistoryFragment())
         }
 
-        fun download(){
-
+        fun download() {
+            startFragment(DownloadFragment())
         }
 
     }

@@ -1,16 +1,19 @@
 package com.theone.music.ui.activity
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+import androidx.core.view.children
 import androidx.fragment.app.FragmentContainerView
-import com.hjq.permissions.OnPermission
-import com.hjq.permissions.Permission
-import com.hjq.permissions.XXPermissions
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.layout.QMUIConstraintLayout
-import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout
+import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout2
 import com.theone.common.ext.*
 import com.theone.music.R
 import com.theone.music.app.ext.toMusic
@@ -20,7 +23,6 @@ import com.theone.music.data.model.TestAlbum
 import com.theone.music.databinding.MusicPlayerLayoutBinding
 import com.theone.music.player.PlayerManager
 import com.theone.music.ui.fragment.IndexFragment
-import com.theone.music.ui.fragment.MainFragment
 import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
@@ -57,10 +59,13 @@ class MainActivity : BaseFragmentActivity() {
 
     private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
     private val mMusicViewModel: MusicInfoViewModel by viewModels<MusicInfoViewModel>()
+    private val playerLayoutHeight by lazy {
+        dp2px(60)
+    }
+    private var mPlayLayout: MusicPlayerLayoutBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermission()
         createObserve()
     }
 
@@ -107,23 +112,43 @@ class MainActivity : BaseFragmentActivity() {
                 }
             }
         }
-    }
-
-    /**
-     * 请求权限
-     */
-    private fun requestPermission() {
-        XXPermissions.with(this)
-            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-            .constantRequest()
-            .request(object : OnPermission {
-
-                override fun hasPermission(granted: MutableList<String>?, all: Boolean) {
+        mEvent.getPlayWidgetLiveData().observe(this) {
+            Log.e(TAG, "createObserve: getPlayWidgetLiveData $it" )
+            mPlayLayout?.musicPlayerLayout?.run {
+                visible(it)
+                val height = if(it) playerLayoutHeight else 0
+                if(layoutParams.height == height){
+                    return@run
                 }
-
-                override fun noPermission(denied: MutableList<String>?, quick: Boolean) {
+                layoutParams =
+                    ConstraintLayout.LayoutParams(matchParent,height)
+                        .apply {
+                            startToStart = PARENT_ID
+                            endToEnd = PARENT_ID
+                            bottomToBottom = PARENT_ID
+                        }
+            }
+        }
+        mEvent.getPlayWidgetAlphaLiveData().observe(this) {
+            mPlayLayout?.run {
+                val height = (playerLayoutHeight * (1 - it)).toInt()
+                if(musicPlayerLayout.layoutParams.height == height){
+                    return@run
                 }
-            })
+                Log.e(TAG, "createObserve: getPlayWidgetAlphaLiveData $height" )
+                if (height == 0) {
+                    root.gone()
+                    return@run
+                }
+                root.visible()
+                musicPlayerLayout.layoutParams =
+                    ConstraintLayout.LayoutParams(matchParent, height).apply {
+                        startToStart = PARENT_ID
+                        endToEnd = PARENT_ID
+                        bottomToBottom = PARENT_ID
+                    }
+            }
+        }
     }
 
     /**
@@ -170,25 +195,32 @@ class MainActivity : BaseFragmentActivity() {
             }
 
         init {
-            val mBinding = MusicPlayerLayoutBinding.inflate(layoutInflater).apply {
+            mPlayLayout = MusicPlayerLayoutBinding.inflate(layoutInflater).apply {
                 lifecycleOwner = this@MainActivity
                 vm = mMusicViewModel
                 proxy = ClickProxy()
                 (root as QMUIConstraintLayout).run {
-//                    val radius = dp2px(20)
-//                    setRadius(radius,QMUILayoutHelper.HIDE_RADIUS_SIDE_BOTTOM)
                     updateTopDivider(0, 0, 1, getColor(R.color.qmui_config_color_separator))
                 }
             }
+            val playerLayoutParams =
+                ConstraintLayout.LayoutParams(matchParent, playerLayoutHeight).apply {
+                    startToStart = PARENT_ID
+                    endToEnd = PARENT_ID
+                    bottomToBottom = PARENT_ID
+                }
 
-            val insetLayout = QMUIWindowInsetLayout(context).apply {
-                val playerLayoutHeight = dp2px(60)
-                addView(fragmentContainer, LayoutParams(matchParent, matchParent).apply {
-                    setMargins(0, 0, 0, playerLayoutHeight)
-                })
-                addView(mBinding.root, LayoutParams(matchParent, playerLayoutHeight).apply {
-                    gravity = Gravity.BOTTOM
-                })
+            val contentLayoutParams =
+                ConstraintLayout.LayoutParams(matchParent, 0).apply {
+                    startToStart = PARENT_ID
+                    endToEnd = PARENT_ID
+                    topToTop = PARENT_ID
+                    bottomToTop = R.id.music_player_layout
+                }
+
+            val insetLayout = QMUIWindowInsetLayout2(context).apply {
+                addView(fragmentContainer, contentLayoutParams)
+                addView(mPlayLayout?.root, playerLayoutParams)
             }
             addView(insetLayout, match_match)
         }

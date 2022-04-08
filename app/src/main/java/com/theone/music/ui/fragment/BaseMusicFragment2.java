@@ -43,6 +43,13 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
 
     protected EventViewModel mEvent;
 
+    private EventViewModel getEventVm(){
+        if(null == mEvent){
+            mEvent = ((BaseApplication)mActivity.getApplication()).getAppViewModelProvider().get(EventViewModel.class);
+        }
+        return mEvent;
+    }
+
     private void setCurrentMusic(Music music){
         if(null != music){
             ((MusicAdapter)getMAdapter()).setCurrentMusic(music.getShareUrl());
@@ -56,7 +63,6 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
 
     @Override
     public void initView(@NonNull View root) {
-        mEvent = ((BaseApplication)mActivity.getApplication()).getAppViewModelProvider().get(EventViewModel.class);
         super.initView(root);
         setCurrentMusic( mEvent.getPlayMusicLiveData().getValue());
     }
@@ -78,7 +84,7 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
     @Override
     public void createObserver() {
         super.createObserver();
-        mEvent.getPlayMusicLiveData().observe(this, new Observer<Music>() {
+        getEventVm().getPlayMusicLiveData().observe(this, new Observer<Music>() {
             @Override
             public void onChanged(Music music) {
                 setCurrentMusic(music);

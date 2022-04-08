@@ -1,15 +1,19 @@
 package com.theone.music.ui.activity
 
 import android.app.Activity
-import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import android.widget.SeekBar
 import androidx.lifecycle.lifecycleScope
+import com.hjq.permissions.OnPermission
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.hjq.toast.ToastUtils
 import com.qmuiteam.qmui.arch.SwipeBackLayout
 import com.qmuiteam.qmui.arch.SwipeBackLayout.DRAG_DIRECTION_NONE
 import com.qmuiteam.qmui.arch.SwipeBackLayout.DRAG_DIRECTION_TOP_TO_BOTTOM
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction
+import com.theone.common.callback.OnKeyBackClickListener
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.*
 import com.theone.music.BR
@@ -34,6 +38,7 @@ import com.theone.mvvm.core.service.startDownloadService
 import com.theone.mvvm.ext.addParams
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
+import com.theone.mvvm.ext.qmui.showMsgDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -224,7 +229,10 @@ class PlayerActivity :
                 }
                 val album = DataRepository.INSTANCE.createAlbum(data)
                 PlayerManager.getInstance().loadAlbum(album, 0)
-                getViewModel().isSetSuccess.set(true)
+                getViewModel().run {
+                    isSetSuccess.set(true)
+                    updateMusicLastPlayDate()
+                }
             }
         }
     }
@@ -274,6 +282,66 @@ class PlayerActivity :
 
     }
 
+
+    private fun showFailDialog(
+        tips: String,
+        actionString: String,
+        callback: (() -> Unit?)? = null
+    ) {
+        showMsgDialog(
+            "提示",
+            tips,
+            rightAction = actionString,
+            listener = QMUIDialogAction.ActionListener { dialog, index ->
+                dialog.dismiss()
+                callback?.invoke()
+            },
+            prop = QMUIDialogAction.ACTION_PROP_NEGATIVE
+        ).run {
+            setCanceledOnTouchOutside(false)
+            setOnKeyListener(OnKeyBackClickListener())
+        }
+    }
+
+    /**
+     * 请求权限
+     */
+    private fun requestPermission() {
+        XXPermissions.with(this)
+            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .constantRequest()
+            .request(object : OnPermission {
+
+                override fun hasPermission(granted: MutableList<String>?, all: Boolean) {
+                    startDownload()
+                }
+
+                override fun noPermission(denied: MutableList<String>?, quick: Boolean) {
+                    if (quick) {
+                        showFailDialog(
+                            "权限被禁止，请在设置里打开权限",
+                            "打开权限"
+                        ) {
+                            XXPermissions.startPermissionActivity(this@PlayerActivity, denied)
+                        }
+                    }
+                }
+            })
+    }
+
+    private fun startDownload(){
+        getCurrentMusic().let {
+            val type = if (it.url.contains("mp3")) "mp3" else "m4a"
+            val download = DownloadBean(
+                it.getMusicUrl(),
+                FileDirectoryManager.getDownloadPath() + File.separator + "Music",
+                it.author + "-" + it.title + ".$type"
+            )
+            ToastUtils.show("开始下载")
+            startDownloadService(download)
+        }
+    }
+
     inner class ClickProxy {
 
         fun togglePlayPause() {
@@ -281,16 +349,7 @@ class PlayerActivity :
         }
 
         fun download() {
-            getCurrentMusic().let {
-                val type = if (it.url.contains("mp3")) "mp3" else "m4a"
-                val download = DownloadBean(
-                    it.getMusicUrl(),
-                    FileDirectoryManager.getDownloadPath() + File.separator + "Music",
-                    it.author + "-" + it.title + ".$type"
-                )
-                ToastUtils.show("开始下载")
-                startDownloadService(download)
-            }
+            requestPermission()
         }
 
     }

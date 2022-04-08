@@ -16,6 +16,7 @@
     </data>
 
     <com.qmuiteam.qmui.layout.QMUIConstraintLayout
+        android:id="@+id/music_player_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:qmui_borderColor="@color/qmui_config_color_separator"
@@ -85,6 +86,7 @@
             tools:text="天使"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/cover"
