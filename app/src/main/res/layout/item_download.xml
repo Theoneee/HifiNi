@@ -4,18 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="item"
+            type="com.theone.music.data.model.DownloadResult" />
     </data>
 
-    <com.qmuiteam.qmui.layout.QMUIFrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="15dp">
 
-        <TextView
-            android:id="@+id/video_player"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="1561516516"/>
+        <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
+            android:id="@+id/avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:imageUrl="@{item.music.pic}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:qmui_corner_radius="5dp"
+            tools:src="@mipmap/logo" />
 
-    </com.qmuiteam.qmui.layout.QMUIFrameLayout>
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="10dp"
+            android:text="已下载"
+            app:download="@{item}"
+            android:textSize="12sp"
+            app:qmui_borderWidth="0dp"
+            android:textColor="@color/white"
+            app:qmui_backgroundColor="@color/qmui_config_color_blue"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/avatar" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{item.music.getTitleHtml()}"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/singer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/status"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="离歌" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.music.getAuthorHtml()}"
+            android:textColor="@color/qmui_config_color_gray_3"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="信乐团" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -21,10 +21,12 @@ import com.theone.music.R
 import com.theone.music.app.ext.toMusic
 import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.CollectionEvent
+import com.theone.music.data.model.Download
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
 import com.theone.music.databinding.PageMusicPlayerBinding
 import com.theone.music.player.PlayerManager
+import com.theone.music.startMusicDownloadService
 import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
@@ -331,14 +333,8 @@ class PlayerActivity :
 
     private fun startDownload(){
         getCurrentMusic().let {
-            val type = if (it.url.contains("mp3")) "mp3" else "m4a"
-            val download = DownloadBean(
-                it.getMusicUrl(),
-                FileDirectoryManager.getDownloadPath() + File.separator + "Music",
-                it.author + "-" + it.title + ".$type"
-            )
             ToastUtils.show("开始下载")
-            startDownloadService(download)
+            startMusicDownloadService(it)
         }
     }
 

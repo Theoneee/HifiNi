@@ -42,4 +42,7 @@ interface DownloadDao {
     @Query("select * from download order by time desc limit :pageSize offset (:page -1)*:pageSize")
     fun getDownloadList(page:Int,pageSize:Int): List<Download>
 
+    @Query("update download set status =:status where musicId = :musicId ")
+    fun updateDownloadStatus(status:Int,musicId:Int):Int
+
 }

@@ -1,6 +1,7 @@
 package com.theone.music.data.model
 
 import androidx.room.*
+import com.theone.music.data.constant.DownloadStatus
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -30,13 +31,16 @@ import androidx.room.*
 @Entity(tableName = "download", indices = [Index(value = ["localPath"], unique = true)])
 data class Download(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     val musicId: Int = 0,
     val localPath: String = "",
+    var status: Int = DownloadStatus.DOWNLOADING,
     val time: Long = 0
 ) {
 
     @Ignore
-    constructor() : this(0) {}
+    constructor() : this(0) {
+    }
+
 
 }

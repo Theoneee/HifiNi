@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="item"
             type="com.theone.music.data.model.Music" />
@@ -11,58 +12,58 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:padding="15dp"
-        android:layout_height="wrap_content">
+        android:padding="15dp">
 
         <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
             android:id="@+id/avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:imageUrl="@{item.pic}"
-            app:qmui_corner_radius="5dp"
-            tools:src="@mipmap/ic_launcher"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:qmui_corner_radius="5dp"
+            tools:src="@mipmap/ic_launcher" />
 
         <ImageView
             android:id="@+id/playing"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/svg_music_logo"
-            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+            app:layout_constraintTop_toTopOf="@id/avatar" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            tools:text="离歌"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            app:layout_constraintEnd_toStartOf="@id/playing"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{item.getTitleHtml()}"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/singer"
-            android:layout_marginStart="15dp"
-            android:text="@{item.getTitleHtml()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/playing"
             app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="离歌" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/singer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="信乐团"
-            android:textSize="12sp"
             android:text="@{item.getAuthorHtml()}"
             android:textColor="@color/qmui_config_color_gray_3"
-            app:layout_constraintTop_toBottomOf="@id/name"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/avatar"
-            app:layout_constraintStart_toStartOf="@id/name"/>
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="信乐团" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

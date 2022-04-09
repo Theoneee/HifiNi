@@ -48,6 +48,9 @@ interface MusicDao {
     @Query("DELETE FROM MusicInfo WHERE shareUrl ==:shareUrl")
     fun delete(shareUrl: String)
 
+    @Query("select * from MusicInfo where id =:id")
+    fun getMusicById(id:Int): List<Music>
+
     @Query("select * from MusicInfo where userId ==:userId and collection = 1 order by createDate desc limit :pageSize offset (:page -1)*:pageSize")
     fun getCollectionMusicList(userId: Int,page:Int,pageSize:Int): List<Music>
 

@@ -39,6 +39,8 @@
 
         <service android:name=".player.notification.PlayerService" />
 
+        <service android:name=".DownloadMusicService"/>
+
         <receiver
             android:name=".player.notification.PlayerReceiver"
             android:exported="false"

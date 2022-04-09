@@ -46,7 +46,7 @@ import com.theone.mvvm.base.appContext
  *              因为大部分情况，操作数据库都还算是比较耗时的动作。
  *              如果需要在主线程调用则使用allowMainThreadQueries进行说明。
  */
-@Database(entities = [Music::class,User::class, Download::class], version = 2, exportSchema = false)
+@Database(entities = [Music::class,User::class, Download::class], version = 1, exportSchema = false)
 abstract class AppDataBase:RoomDatabase() {
 
     abstract fun musicDao(): MusicDao
