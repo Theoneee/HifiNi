@@ -34,6 +34,8 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class PagerLayoutManager extends LinearLayoutManager {
+
+    //
     private PagerSnapHelper mPagerSnapHelper;
     private OnViewPagerListener mOnViewPagerListener;
 

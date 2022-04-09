@@ -70,9 +70,15 @@ class DataRepository {
 
     }
 
+    /**
+     * https://hifini.com/
+     * url = forum-15.htm
+     */
     suspend fun request(url: String, vararg formatArgs: Any): String {
         return RxHttp.get(url, *formatArgs)
+                // 设置缓存模式： 先从缓存获取，如果缓存没有再请求网络
             .setCacheMode(CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK)
+                // 这是缓存时间
             .setCacheValidTime(-1)
             .toStr()
             .await()
@@ -215,9 +221,11 @@ class DataRepository {
     }
 
     /**
-     * 解析音乐信息
+     * 解析音乐播放信息
      * @param response String
      * @return MusicInfo
+     *
+     * 用Jsoup工具解析html信息
      */
     private suspend fun parseMusicInfo(response: String): Music {
         return withContext(Dispatchers.IO) {
@@ -297,7 +305,11 @@ class DataRepository {
                 return list[0]
             }
         }
+        // 请求 https://hifini.com/thread-35837.htm
+        // response 其实一个html 信息
+        // 我们最后想要拿到的是一个ListBean
         val response = request(link)
+        // 解析
         val music = parseMusicInfo(response).apply {
             shareUrl = link
             if (!url.startsWith("http")) {
@@ -305,6 +317,7 @@ class DataRepository {
                 realUrl = getRedirectUrl(url)
             }
         }
+        // 重新加载的播放地址，更新数据库
         if (isReload) {
             MUSIC_DAO.updateDataBaseMusic(link, music.url, music.realUrl)
         } else {
@@ -340,6 +353,15 @@ class DataRepository {
         }
     }
 
+    /**
+     * 快手、抖音 搜 MV
+     *
+     * 分享- 复制连接
+     *
+     * 微信小程序 - 快速去水印
+     *
+     * 视频封面、播放地址
+     */
     fun getMvList(): List<MV> {
         return listOf(
             MV(
@@ -356,6 +378,11 @@ class DataRepository {
                 "https://txmov2.a.kwimgs.com/upic/2021/12/21/10/BMjAyMTEyMjExMDE3MjlfMTY3NzUyNDAzXzYzMjEwODg4NjcwXzJfMw==_b_B738e41a16c925a9901596995228d9880.mp4",
                 "https://txmov2.a.kwimgs.com/upic/2021/12/21/10/BMjAyMTEyMjExMDE3MjlfMTY3NzUyNDAzXzYzMjEwODg4NjcwXzJfMw==_b_B738e41a16c925a9901596995228d9880.mp4",
                 "相思", "毛阿敏"
+            ),
+            MV(
+                "http://tx2.a.kwimgs.com/upic/2022/01/17/00/BMjAyMjAxMTcwMDE4NDdfMTQzNjU5OTY5MV82NTA0MDU1MDUxMF8xXzM=_B22e69f52692cbbd31c865b1ee3c74d3e.jpg?tag=1-1649396559-std-0-fcr6ceoh1h-7a923886ee61a21f&clientCacheKey=3xs7pazsdsvk93g.jpg&di=79c43beb&bp=12681",
+                "https://txmov2.a.kwimgs.com/upic/2022/01/17/00/BMjAyMjAxMTcwMDE4NDdfMTQzNjU5OTY5MV82NTA0MDU1MDUxMF8xXzM=_b_B43b19cec0f504b6d89438917f1dc168d.mp4?tag=1-1649396559-std-1-tifdlurm9q-4bd7f2845742773f&clientCacheKey=3xs7pazsdsvk93g_b.mp4&tt=b&di=79c43beb&bp=12681",
+                "后来-万人合唱版", "刘若英"
             )
         )
     }

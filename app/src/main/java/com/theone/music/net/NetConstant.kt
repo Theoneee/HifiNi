@@ -29,6 +29,7 @@ import rxhttp.wrapper.annotation.DefaultDomain
 object NetConstant {
 
     @DefaultDomain
+    // RxHttp
     const val BASE_URL = "https://www.hifini.com/"
 
     const val INDEX = "index-%d.htm"

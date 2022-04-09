@@ -50,6 +50,10 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
         return mEvent;
     }
 
+    /**
+     * 更改适配里的当前播放
+     * @param music
+     */
     private void setCurrentMusic(Music music){
         if(null != music){
             ((MusicAdapter)getMAdapter()).setCurrentMusic(music.getShareUrl());
@@ -69,6 +73,7 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
 
     @Override
     public void onRefreshSuccess(@NonNull List<? extends Music> data) {
+        // 这是数据请求成功后的回调
         getMAdapter().getDiffer().submitList((List<Music>) data, () -> {
             setRefreshLayoutEnabled(true);
             getRecyclerView().scrollToPosition(0);
@@ -84,9 +89,11 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
     @Override
     public void createObserver() {
         super.createObserver();
+        // 播放通知监听
         getEventVm().getPlayMusicLiveData().observe(this, new Observer<Music>() {
             @Override
             public void onChanged(Music music) {
+                //
                 setCurrentMusic(music);
             }
         });

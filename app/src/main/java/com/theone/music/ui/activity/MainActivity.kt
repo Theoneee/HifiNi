@@ -53,10 +53,21 @@ import com.theone.mvvm.ext.qmui.showFailTipsDialog
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
+ *
+ *  框架采用的是  单Activity+多 Fragment模式
+ *
+ *
+ *
+ *
+ *  Activity + Activity +
+ *
+ *  Activity 一个相框   Fragment 里面的照片  碎片
+ *
  */
 @DefaultFirstFragment(IndexFragment::class)
 class MainActivity : BaseFragmentActivity() {
 
+    // 利用Jetpack Application 级别的 ViewModel+LiveData 进行一个消息分发
     private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
     private val mMusicViewModel: MusicInfoViewModel by viewModels<MusicInfoViewModel>()
     private val playerLayoutHeight by lazy {
@@ -72,6 +83,7 @@ class MainActivity : BaseFragmentActivity() {
     private fun createObserve() {
         with(PlayerManager.getInstance()) {
 
+            // 暂停事件
             pauseEvent.observe(this@MainActivity) {
                 mMusicViewModel.isPlaying.set(!it)
             }
@@ -112,8 +124,8 @@ class MainActivity : BaseFragmentActivity() {
                 }
             }
         }
+        // 播放组件是否显示
         mEvent.getPlayWidgetLiveData().observe(this) {
-            Log.e(TAG, "createObserve: getPlayWidgetLiveData $it" )
             mPlayLayout?.musicPlayerLayout?.run {
                 visible(it)
                 val height = if(it) playerLayoutHeight else 0
@@ -131,6 +143,7 @@ class MainActivity : BaseFragmentActivity() {
         }
         mEvent.getPlayWidgetAlphaLiveData().observe(this) {
             mPlayLayout?.run {
+                // 拿到滑动变量然后算出他的高度
                 val height = (playerLayoutHeight * (1 - it)).toInt()
                 if(musicPlayerLayout.layoutParams.height == height){
                     return@run
@@ -195,6 +208,7 @@ class MainActivity : BaseFragmentActivity() {
             }
 
         init {
+            // DataBinding  这个 Jetpack
             mPlayLayout = MusicPlayerLayoutBinding.inflate(layoutInflater).apply {
                 lifecycleOwner = this@MainActivity
                 vm = mMusicViewModel
@@ -203,6 +217,7 @@ class MainActivity : BaseFragmentActivity() {
                     updateTopDivider(0, 0, 1, getColor(R.color.qmui_config_color_separator))
                 }
             }
+            // 播放层的布局
             val playerLayoutParams =
                 ConstraintLayout.LayoutParams(matchParent, playerLayoutHeight).apply {
                     startToStart = PARENT_ID
@@ -210,6 +225,7 @@ class MainActivity : BaseFragmentActivity() {
                     bottomToBottom = PARENT_ID
                 }
 
+            // 内容层的
             val contentLayoutParams =
                 ConstraintLayout.LayoutParams(matchParent, 0).apply {
                     startToStart = PARENT_ID

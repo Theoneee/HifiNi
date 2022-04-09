@@ -52,10 +52,15 @@ class MusicAdapter : TheBaseQuickAdapter<Music, ItemMusicBinding>(R.layout.item_
 
     var currentMusic: String? = null
         set(value) {
+            // 记录旧的播放位置
             var old = -1
+            // 这里是现在播放的位置
             var new = -1
+            // 遍历当前所有的数据
             for ((index, item) in data.withIndex()) {
+                // 和当前播放的数据做比较
                 if (item.shareUrl == currentMusic) {
+                    // 如果相同的
                     old = index
                 }
                 if (item.shareUrl == value) {
@@ -66,9 +71,15 @@ class MusicAdapter : TheBaseQuickAdapter<Music, ItemMusicBinding>(R.layout.item_
             notifyItem(old,new)
         }
 
+    /**
+     * 改变Item
+     */
     private fun notifyItem(vararg values: Int){
+        // 这个方法改变的是所有的数据
+        // notifyDataSetChanged()
         for (index in values){
             if (index != -1)
+                // 只刷新一条
                 notifyItemChanged(index+headerLayoutCount)
         }
     }

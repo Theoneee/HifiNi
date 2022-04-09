@@ -23,6 +23,8 @@ import com.theone.mvvm.core.app.util.FileDirectoryManager;
 import java.io.File;
 
 /**
+ *
+ * 自定义播放器
  * @author theone
  */
 public class LoverVideoPlayer extends StandardGSYVideoPlayer {

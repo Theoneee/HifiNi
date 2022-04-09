@@ -66,6 +66,7 @@ class MVFragment : BasePagerFragment<MV, MvViewModel>() {
 
     }
 
+    // 这个是让一个Item充满父布局的
     override fun getLayoutManager(): RecyclerView.LayoutManager =
         PagerLayoutManager(context, LinearLayoutManager.VERTICAL).apply {
             setOnViewPagerListener(object : OnViewPagerListener {
@@ -106,9 +107,11 @@ class MVFragment : BasePagerFragment<MV, MvViewModel>() {
 
     private var isPlaying = false
 
+    // 当界面显示的时候
     override fun onLazyResume() {
         super.onLazyResume()
         isPageVisible = true
+        // 发一个通知
         mEvent.dispatchPlayWidgetEvent(false)
         (mAdapter as MvAdapter).onResume()
         if (PlayerManager.getInstance().isPlaying) {
@@ -117,6 +120,7 @@ class MVFragment : BasePagerFragment<MV, MvViewModel>() {
         }
     }
 
+    // 当界面不可见的时候
     override fun onPause() {
         if (isPlaying) {
             PlayerManager.getInstance().resumeAudio()

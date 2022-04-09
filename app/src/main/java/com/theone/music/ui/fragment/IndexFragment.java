@@ -103,9 +103,11 @@ public class IndexFragment extends BaseTabInTitleFragment<BaseViewModel> {
     public void initView(@NonNull View root) {
         super.initView(root);
         getViewPager().setCurrentItem(1);
+        // 处理滑动的
         getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // 当是第二个滑动的时候才进行处理
                 if (position == 1) {
                     getEventVm().dispatchPlayWidgetAlphaEvent(positionOffset);
                 }

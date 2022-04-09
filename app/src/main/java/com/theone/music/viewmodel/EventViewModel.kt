@@ -53,6 +53,9 @@ class EventViewModel : BaseViewModel() {
         collection.value = event
     }
 
+    /**
+     * 分发当前播放的音乐的通知
+     */
     fun dispatchPlayMusic(music: Music) {
         playMusic.value = music
     }

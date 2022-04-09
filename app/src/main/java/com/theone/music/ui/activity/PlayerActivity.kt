@@ -115,7 +115,9 @@ class PlayerActivity :
     }
 
     override fun initView(root: View) {
+        // 首先就是拿到传递过来的数据
         (mMusic ?: getCurrentMusic()).let { music ->
+            // 赋值请求地址 https://hifini.com/thread-35837.htm
             getViewModel().link = music.shareUrl
             with(PlayerManager.getInstance()) {
                 currentPlayingMusic?.run {
@@ -152,7 +154,9 @@ class PlayerActivity :
     }
 
     override fun createObserver() {
+        // 获取播放信息成功
         getViewModel().getResponseLiveData().observe(this) {
+            // 显示成功界面
             showSuccessPage()
             // 重新得到数据后，要刷新收藏里的数据
             if (getViewModel().isReload) {
@@ -169,10 +173,19 @@ class PlayerActivity :
 
         with(PlayerManager.getInstance()) {
 
+            // 暂停事件
             pauseEvent.observe(this@PlayerActivity) {
+                // 等同于
+//                if(it){
+//                    getDataBinding().playerPause.pause()
+//                }else{
+//                    getDataBinding().playerPause.play()
+//                }
+                // AppBindingAdapter.isPlaying
                 getViewModel().isPlaying.set(!it)
             }
 
+            // 当前播放的音乐
             playingMusicEvent.observe(this@PlayerActivity) {
                 // 拖动进度条时不再进行设值
                 if (isTrackingTouch) {
@@ -190,10 +203,12 @@ class PlayerActivity :
                 }
             }
 
+            // 更改播放音乐
             changeMusicEvent.observe(this@PlayerActivity) {
                 mEvent.dispatchPlayMusic(getCurrentMusic())
             }
 
+            // 播放错误
             playErrorEvent.observe(this@PlayerActivity) {
                 showFailTipsDialog(it)
             }
@@ -233,6 +248,7 @@ class PlayerActivity :
                 PlayerManager.getInstance().loadAlbum(album, 0)
                 getViewModel().run {
                     isSetSuccess.set(true)
+                    // 更新音乐信息 最后播放时间
                     updateMusicLastPlayDate()
                 }
             }
@@ -255,10 +271,16 @@ class PlayerActivity :
         SeekBar.OnSeekBarChangeListener {
 
         override fun onSelectChanged(isSelected: Boolean) {
+            // 收藏、添加到喜欢、取消
+            // 当前是否有用户登录
             mEvent.getUserInfoLiveData().value?.let { user ->
+                // 获取当前播放的数据
                 getCurrentMusic().let {
+                    // 一个收藏的事件
                     CollectionEvent(isSelected, it).let { event ->
+                        // 数据库更新收藏状态
                         getViewModel().toggleCollection(user.id, event)
+                        // 分发一个收藏的状态
                         mEvent.dispatchCollectionEvent(event)
                     }
                 }
@@ -307,6 +329,10 @@ class PlayerActivity :
 
     /**
      * 请求权限
+     *  网络请求的缓存，是放在APP/data目录下的，这个地址是不需要权限申请的
+     *
+     *
+     *
      */
     private fun requestPermission() {
         XXPermissions.with(this)
@@ -331,6 +357,12 @@ class PlayerActivity :
             })
     }
 
+    /**
+     * 下载：
+     *
+     *  缺点：
+     *  由于时间原因，下载没有做是否已经下载判断，这个是系统的bug
+     */
     private fun startDownload(){
         getCurrentMusic().let {
             ToastUtils.show("开始下载")

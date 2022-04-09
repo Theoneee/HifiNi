@@ -32,7 +32,7 @@ import com.theone.music.data.constant.DownloadStatus
 data class Download(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val musicId: Int = 0,
+    val musicId: Int = 0,// 音乐id
     val localPath: String = "",
     var status: Int = DownloadStatus.DOWNLOADING,
     val time: Long = 0

@@ -9,7 +9,7 @@ android {
 
         ndk {
             //设置支持的SO库架构
-            abiFilters 'arm64-v8a'
+            abiFilters 'arm64-v8a','x86'
         }
     }
 }
@@ -17,7 +17,9 @@ android {
 dependencies {
     // html解析
     implementation "org.jsoup:jsoup:1.11.3"
+    // 播放器
     implementation project(path: ':player')
+    // 轮播图
     implementation 'com.github.zhpanvip:BannerViewPager:3.5.5'
 
     // 播放器
@@ -25,6 +27,7 @@ dependencies {
     implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.1.6-jitpack'
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:v8.1.6-jitpack'
 
+    // 数据库
     def room_version = "2.3.0"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"

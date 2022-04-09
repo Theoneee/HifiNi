@@ -65,17 +65,19 @@ class DownloadMusicService : Service() {
     private fun startDown() {
         mDownload?.run {
             val type = if (getMusicUrl().contains("mp3")) "mp3" else "m4a"
-            val name = "$author-$title.$type"
+            val name = "$author-$title.$type" // 五月天-天使.mp3
+            // 保存的地址  APP名字/Download/Music
             val downloadPath = FileDirectoryManager.getDownloadPath() + File.separator + "Music"
             val musics = DataRepository.MUSIC_DAO.findMusics(shareUrl)
             musicId = musics[0].id
             val download = Download(
                 musicId = musicId,
+                // APP名字/Download/Music/五月天-天使.mp3
                 localPath = downloadPath + File.separator + name,
                 time = System.currentTimeMillis(),
                 status = DownloadStatus.DOWNLOADING
-
             )
+            // 数据库插入一条下载信息
             DataRepository.DOWNLOAD_DAO.insert(download)
             OkHttpUtils.get()
                 .url(getMusicUrl())
@@ -84,6 +86,7 @@ class DownloadMusicService : Service() {
                 .execute(object : FileCallBack(downloadPath, name) {
 
                     override fun inProgress(progress: Float, total: Long, id: Int) {
+                        // 下载中  通知栏进度的变化
                         val percent = (progress * 100).toInt()
                         if (percent != mOldPercent) {
                             mOldPercent = percent
@@ -92,12 +95,14 @@ class DownloadMusicService : Service() {
                     }
 
                     override fun onResponse(response: File, id: Int) {
+                        // 下载完成
                         updateDownloadDB(DownloadStatus.SUCCESS)
                         updateLocationFile(response)
                         updateNotification("下载完成", true)
                     }
 
                     override fun onError(call: Call?, e: Exception?, id: Int) {
+                        // 下载失败
                         updateDownloadDB(DownloadStatus.FAIL)
                         val error = e?.localizedMessage
                         updateNotification("下载失败", false)
@@ -138,6 +143,9 @@ class DownloadMusicService : Service() {
         NotificationManager.getInstance().notify(NOTIFICATION_ID, mNotificationBuilder)
     }
 
+    /**
+     * 更新数据库里面下载的状态
+     */
     private fun updateDownloadDB(status:Int) {
         DataRepository.DOWNLOAD_DAO.updateDownloadStatus(status,musicId)
     }

@@ -85,8 +85,8 @@ class SettingFragment :BaseCoreFragment<BaseViewModel,FragmentSettingBinding>(),
                 if (index > 0) {
                     mEvent.setUserInfo(null)
                     CacheUtil.loginOut()
+                    showSuccessTipsExitDialog("退出成功")
                 }
-                showSuccessTipsExitDialog("退出成功")
             }, prop = QMUIDialogAction.ACTION_PROP_NEGATIVE
         )
     }
