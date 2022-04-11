@@ -69,10 +69,10 @@ public class MainActivity extends BaseFragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mEvent = ((BaseApplication) getApplication()).getAppViewModelProvider().get(EventViewModel.class);
         mMusicViewModel = new ViewModelProvider(this).get(MusicInfoViewModel.class);
         playerLayoutHeight = QMUIDisplayHelper.dp2px(this, 60);
+        super.onCreate(savedInstanceState);
         createEventObserve();
         createPlayerObserve();
     }
@@ -98,7 +98,7 @@ public class MainActivity extends BaseFragmentActivity {
                 if (isLogin) {
                     Music music = getCurrentMusic();
                     if (null != music) {
-                        mMusicViewModel.requestCollection(user.getId(), music.getShareUrl());
+                        mMusicViewModel.requestCollection(user, music.getShareUrl());
                     }
                 }
             }
@@ -124,12 +124,12 @@ public class MainActivity extends BaseFragmentActivity {
             public void onChanged(Float percent) {
                 QMUIConstraintLayout playerLayout = mPlayLayout.musicPlayerLayout;
                 // 根据百分比计算出高度
-                int height = (int)(playerLayoutHeight * (1 - percent));
+                int height = (int) (playerLayoutHeight * (1 - percent));
                 // 如果和当前的高度相同就不做任何改变
-                if(height == playerLayout.getLayoutParams().height){
+                if (height == playerLayout.getLayoutParams().height) {
                     return;
                 }
-                if(height == 0){
+                if (height == 0) {
                     playerLayout.setVisibility(View.GONE);
                     return;
                 }
@@ -139,7 +139,7 @@ public class MainActivity extends BaseFragmentActivity {
         });
     }
 
-    private void createPlayerObserve(){
+    private void createPlayerObserve() {
         PlayerManager playerManager = PlayerManager.getInstance();
         // 暂停事件
         playerManager.getPauseEvent().observe(this, new Observer<Boolean>() {
@@ -162,9 +162,7 @@ public class MainActivity extends BaseFragmentActivity {
 
                 // 如果是登录的，查询当前用户是否已收藏当前的播放
                 User user = mEvent.getUserInfoLiveData().getValue();
-                if(null != user){
-                    mMusicViewModel.requestCollection(user.getId(),music.getShareUrl());
-                }
+                mMusicViewModel.requestCollection(user, music.getShareUrl());
             }
         });
 
@@ -172,13 +170,14 @@ public class MainActivity extends BaseFragmentActivity {
         playerManager.getPlayErrorEvent().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String msg) {
-                QMUITipsDialogExtKt.showFailTipsDialog(getBaseContext(),msg,1000,null);
+                QMUITipsDialogExtKt.showFailTipsDialog(getBaseContext(), msg, 1000, null);
             }
         });
     }
 
     /**
      * 生成播放组件的LayoutParams
+     *
      * @param height 高度
      * @return LayoutParams
      */
@@ -207,15 +206,15 @@ public class MainActivity extends BaseFragmentActivity {
         }
     }
 
-    public class ClickProxy implements TheSelectImageView.OnSelectChangedListener{
+    public class ClickProxy implements TheSelectImageView.OnSelectChangedListener {
 
-        public void togglePlayPause(){
+        public void togglePlayPause() {
             PlayerManager.getInstance().togglePlay();
         }
 
-        public void jumpPlayerActivity(){
+        public void jumpPlayerActivity() {
             Music curMusic = getCurrentMusic();
-            if(null != curMusic){
+            if (null != curMusic) {
 
             }
         }
@@ -224,9 +223,9 @@ public class MainActivity extends BaseFragmentActivity {
         public void onSelectChanged(boolean select) {
             User user = mEvent.getUserInfoLiveData().getValue();
             Music curMusic = getCurrentMusic();
-            if(null != user && null != curMusic){
-                CollectionEvent event = new CollectionEvent(select,curMusic);
-                mMusicViewModel.toggleCollection(user.getId(),event);
+            if (null != user && null != curMusic) {
+                CollectionEvent event = new CollectionEvent(select, curMusic);
+                mMusicViewModel.toggleCollection(user.getId(), event);
                 mEvent.dispatchCollectionEvent(event);
             }
         }
@@ -235,13 +234,13 @@ public class MainActivity extends BaseFragmentActivity {
 
     @Override
     protected RootView onCreateRootView(int fragmentContainerId) {
-        return new CustomRootView(this,fragmentContainerId);
+        return new CustomRootView(this, fragmentContainerId);
     }
 
     /**
      * 自定义RootView
      */
-    private class CustomRootView extends RootView{
+    private class CustomRootView extends RootView {
 
         private FragmentContainerView fragmentContainer;
 
@@ -255,19 +254,19 @@ public class MainActivity extends BaseFragmentActivity {
             mPlayLayout.setVm(mMusicViewModel);
             mPlayLayout.setProxy(new ClickProxy());
             QMUIConstraintLayout root = (QMUIConstraintLayout) mPlayLayout.getRoot();
-            root.updateTopDivider(0,0,1, ContextCompat.getColor(context, R.color.qmui_config_color_separator));
+            root.updateTopDivider(0, 0, 1, ContextCompat.getColor(context, R.color.qmui_config_color_separator));
 
-            ConstraintLayout.LayoutParams contentLP = new ConstraintLayout.LayoutParams(MATCH_PARENT,0);
+            ConstraintLayout.LayoutParams contentLP = new ConstraintLayout.LayoutParams(MATCH_PARENT, 0);
             contentLP.startToStart = PARENT_ID;
             contentLP.endToEnd = PARENT_ID;
             contentLP.topToTop = PARENT_ID;
             contentLP.bottomToTop = R.id.music_player_layout;
 
             QMUIWindowInsetLayout2 insetLayout = new QMUIWindowInsetLayout2(context);
-            insetLayout.addView(fragmentContainer,contentLP);
-            insetLayout.addView(root,generatePlayLayoutParams(playerLayoutHeight));
+            insetLayout.addView(fragmentContainer, contentLP);
+            insetLayout.addView(root, generatePlayLayoutParams(playerLayoutHeight));
 
-            addView(insetLayout,new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+            addView(insetLayout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         }
 
         @Override

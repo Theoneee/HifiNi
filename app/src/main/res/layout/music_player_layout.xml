@@ -42,7 +42,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <com.theone.music.ui.view.TheSelectImageView
+        <com.theone.common.widget.TheSelectImageView
             android:id="@+id/collection"
             android:layout_width="24dp"
             android:layout_height="24dp"

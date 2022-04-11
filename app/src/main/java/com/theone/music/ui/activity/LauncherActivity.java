@@ -32,8 +32,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LauncherActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        if(getIntent().getFlags() != 0 && Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT != 0){
+    protected void onCreate(Bundle savedInstanceState) {
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }

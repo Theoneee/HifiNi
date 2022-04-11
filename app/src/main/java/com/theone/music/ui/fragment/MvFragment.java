@@ -42,7 +42,7 @@ import com.theone.mvvm.base.BaseApplication;
  * @email 625805189@qq.com
  * @remark
  */
-public class MVFragment extends BasePagerFragment<MV, MvViewModel> {
+public class MvFragment extends BasePagerFragment<MV, MvViewModel> {
 
     private int mPlayPosition = 0;
     private boolean isPageVisible = false;

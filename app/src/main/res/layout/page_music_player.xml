@@ -132,7 +132,7 @@
             tools:text="01:00" />
 
 
-        <com.theone.music.ui.view.TheSelectImageView
+        <com.theone.common.widget.TheSelectImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:enable="@{vm.isCollectionEnable()}"

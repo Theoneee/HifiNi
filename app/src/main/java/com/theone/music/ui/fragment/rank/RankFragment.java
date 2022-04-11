@@ -19,7 +19,7 @@ package com.theone.music.ui.fragment.rank;//  ┏┓　　　┏┓
 import androidx.annotation.NonNull;
 
 import com.qmuiteam.qmui.arch.QMUIFragment;
-import com.theone.music.net.NetConstant2;
+import com.theone.music.data.constant.NetConstant;
 import com.theone.mvvm.base.viewmodel.BaseViewModel;
 import com.theone.mvvm.core.base.fragment.BaseTabInTitleFragment;
 import com.theone.mvvm.core.data.entity.QMUITabBean;
@@ -44,7 +44,7 @@ public class RankFragment extends BaseTabInTitleFragment<BaseViewModel> {
 
     @Override
     public void initTabAndFragments(@NonNull List<QMUITabBean> tabs, @NonNull List<QMUIFragment> fragments) {
-        for (Map.Entry<String, Integer> entry : NetConstant2.getRankTypes().entrySet()) {
+        for (Map.Entry<String, Integer> entry : NetConstant.getRankTypes().entrySet()) {
             tabs.add(new QMUITabBean(entry.getKey(), -1, -1));
             fragments.add(RankItemFragment.newInstance(entry.getValue()));
         }

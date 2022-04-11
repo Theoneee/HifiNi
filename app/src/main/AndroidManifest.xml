@@ -14,7 +14,6 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.activity.LauncherActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/StartAppTheme"
             android:exported="true">
 
@@ -40,7 +39,8 @@
 
         <service android:name=".player.notification.PlayerService" />
 
-        <service android:name=".DownloadMusicService"/>
+        <service android:name=".service.DownloadService"
+            android:exported="false"/>
 
         <receiver
             android:name=".player.notification.PlayerReceiver"

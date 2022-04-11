@@ -16,34 +16,21 @@ package com.theone.music.ui.fragment;//  ┏┓　　　┏┓
 //      ┃┫┫　┃┫┫
 //      ┗┻┛　┗┻┛
 
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.arch.QMUIFragment;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
-import com.qmuiteam.qmui.util.QMUIResHelper;
 import com.theone.music.R;
 import com.theone.music.viewmodel.EventViewModel;
 import com.theone.mvvm.base.BaseApplication;
 import com.theone.mvvm.base.viewmodel.BaseViewModel;
-import com.theone.mvvm.core.app.widge.indicator.SkinLinePagerIndicator;
-import com.theone.mvvm.core.app.widge.indicator.SkinPagerTitleView;
 import com.theone.mvvm.core.base.fragment.BaseTabInTitleFragment;
 import com.theone.mvvm.core.data.entity.QMUITabBean;
-
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.badge.BadgePagerTitleView;
 
 import java.util.List;
 
@@ -133,7 +120,7 @@ public class IndexFragment extends BaseTabInTitleFragment<BaseViewModel> {
 
         fragments.add(new MineFragment());
         fragments.add(new MusicRepositoryFragment());
-        fragments.add(new MVFragment());
+        fragments.add(new MvFragment());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.theone.music.net;//  ┏┓　　　┏┓
+package com.theone.music.data.constant;//  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
 //┃　　　　　　　┃
 //┃　　　━　　　┃
@@ -19,6 +19,8 @@ package com.theone.music.net;//  ┏┓　　　┏┓
 import java.util.HashMap;
 import java.util.Map;
 
+import rxhttp.wrapper.annotation.DefaultDomain;
+
 /**
  * @author The one
  * @date 2022-04-11 11:05
@@ -26,8 +28,9 @@ import java.util.Map;
  * @email 625805189@qq.com
  * @remark
  */
-public class NetConstant2 {
+public class NetConstant {
 
+    @DefaultDomain
     public static final String BASE_URL = "https://www.hifini.com/";
 
     public static final String INDEX = "index-%d.htm";

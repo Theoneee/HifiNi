@@ -42,7 +42,7 @@ import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager;
  * @email 625805189@qq.com
  * @remark
  */
-public class App2 extends CoreApplication {
+public class App extends CoreApplication {
 
     @Override
     public boolean isDebug() {
@@ -51,8 +51,8 @@ public class App2 extends CoreApplication {
 
     @Override
     public void init(@NonNull Application application) {
-        super.init(application);
         PlayerManager.getInstance().init(application);
+        super.init(application);
         // 这个是框架里面的
         Loader.Companion.beginBuilder()
                 .addCallback(LoadingCallback.class)

@@ -20,8 +20,6 @@
             android:id="@+id/float_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:singers="@{vm.responseLiveData}"
-            app:host="@{host}"
             android:layout_margin="20dp" />
 
     </com.qmuiteam.qmui.widget.QMUIWrapContentScrollView>

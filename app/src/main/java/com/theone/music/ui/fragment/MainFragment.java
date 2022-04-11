@@ -24,7 +24,7 @@ import androidx.annotation.Nullable;
 
 import com.qmuiteam.qmui.arch.QMUIFragment;
 import com.theone.music.R;
-import com.theone.music.net.NetConstant2;
+import com.theone.music.data.constant.NetConstant;
 import com.theone.mvvm.base.viewmodel.BaseViewModel;
 import com.theone.mvvm.core.app.widge.indicator.SkinScaleTransitionPagerTitleView;
 import com.theone.mvvm.core.base.fragment.BaseTabInTitleFragment;
@@ -74,7 +74,7 @@ public class MainFragment extends BaseTabInTitleFragment<BaseViewModel> {
 
     @Override
     public void initTabAndFragments(@NonNull List<QMUITabBean> tabs, @NonNull List<QMUIFragment> fragments) {
-        for (Map.Entry<String, Integer> entry : NetConstant2.getCategoryList().entrySet()) {
+        for (Map.Entry<String, Integer> entry : NetConstant.getCategoryList().entrySet()) {
             tabs.add(new QMUITabBean(entry.getKey(), -1, -1));
             fragments.add(MusicItemFragment.newInstance(entry.getValue()));
         }

@@ -19,7 +19,7 @@ package com.theone.music.ui.fragment;//  ┏┓　　　┏┓
 import android.os.Bundle;
 
 import com.theone.common.constant.BundleConstant;
-import com.theone.music.net.NetConstant2;
+import com.theone.music.data.constant.NetConstant;
 import com.theone.music.viewmodel.MusicViewModel;
 
 /**
@@ -45,6 +45,6 @@ public class MusicItemFragment extends BaseMusicFragment<MusicViewModel> {
     public void initData() {
         int type = getArguments().getInt(BundleConstant.TYPE);
         getViewModel().setType(type);
-        getViewModel().setUrl(NetConstant2.FORUM);
+        getViewModel().setUrl(NetConstant.FORUM);
     }
 }

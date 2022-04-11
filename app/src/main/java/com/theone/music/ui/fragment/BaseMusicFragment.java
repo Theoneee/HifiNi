@@ -104,6 +104,6 @@ public class BaseMusicFragment<VM extends BaseListViewModel<Music>> extends Base
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
         Music music = (Music) adapter.getItem(position);
-        PlayerActivity.Companion.startPlay(mActivity, music);
+        PlayerActivity.startPlay(mActivity, music);
     }
 }

@@ -32,7 +32,7 @@ import com.theone.mvvm.ext.qmui.QMUITopBarLayoutExtKt;
 /**
  * @author The one
  * @date 2022-04-11 11:40
- * @describe TODO
+ * @describe 搜索
  * @email 625805189@qq.com
  * @remark
  */
@@ -64,7 +64,7 @@ public class SearchFragment extends BaseMusicFragment<SearchViewModel> implement
         });
 
         showEmptyPage();
-        QMUIKeyboardHelper.showKeyboard(mSearchView.getMEditText(),1000);
+        QMUIKeyboardHelper.showKeyboard(mSearchView.getMEditText(),500);
 
     }
 

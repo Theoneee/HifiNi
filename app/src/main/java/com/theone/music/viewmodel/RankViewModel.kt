@@ -3,9 +3,8 @@ package com.theone.music.viewmodel
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.PageInfo
 import com.theone.music.data.repository.DataRepository
-import com.theone.music.net.NetConstant
+import com.theone.music.data.constant.NetConstant
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
-import com.theone.mvvm.core.data.net.IPageInfo
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
