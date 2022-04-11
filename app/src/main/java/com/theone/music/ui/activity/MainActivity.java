@@ -215,7 +215,7 @@ public class MainActivity extends BaseFragmentActivity {
         public void jumpPlayerActivity() {
             Music curMusic = getCurrentMusic();
             if (null != curMusic) {
-                PlayerActivity.startPlay(this,curMusic);
+                PlayerActivity.startPlay(MainActivity.this,curMusic);
             }
         }
 
