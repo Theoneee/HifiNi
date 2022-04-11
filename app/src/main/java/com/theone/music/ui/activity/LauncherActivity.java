@@ -1,11 +1,4 @@
-package com.theone.music.ui.activity
-
-import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.theone.common.ext.startActivity
-
-//  ┏┓　　　┏┓
+package com.theone.music.ui.activity;//  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
 //┃　　　　　　　┃
 //┃　　　━　　　┃
@@ -22,22 +15,30 @@ import com.theone.common.ext.startActivity
 //    ┗┓┓┏━┳┓┏┛
 //      ┃┫┫　┃┫┫
 //      ┗┻┛　┗┻┛
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 /**
  * @author The one
- * @date 2022-01-07 15:22
+ * @date 2022-04-11 08:47
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class LauncherActivity:AppCompatActivity() {
+public class LauncherActivity extends AppCompatActivity {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        if (intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT != 0) {
-            finish()
-            return
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if(getIntent().getFlags() != 0 && Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT != 0){
+            finish();
+            return;
         }
-        super.onCreate(savedInstanceState)
-        startActivity(MainActivity::class.java,true)
+        super.onCreate(savedInstanceState);
+        startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
-
 }

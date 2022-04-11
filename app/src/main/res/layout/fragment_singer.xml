@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="vm"
+            type="com.theone.music.viewmodel.SingerViewModel" />
+        <variable
+            name="host"
+            type="com.theone.music.ui.fragment.signer.SingerFragment" />
     </data>
 
     <com.qmuiteam.qmui.widget.QMUIWrapContentScrollView
@@ -15,6 +20,8 @@
             android:id="@+id/float_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:singers="@{vm.responseLiveData}"
+            app:host="@{host}"
             android:layout_margin="20dp" />
 
     </com.qmuiteam.qmui.widget.QMUIWrapContentScrollView>

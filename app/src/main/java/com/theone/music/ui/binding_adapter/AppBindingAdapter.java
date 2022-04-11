@@ -4,16 +4,29 @@ import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.BindingAdapter;
 
+import com.qmuiteam.qmui.arch.QMUIFragment;
+import com.qmuiteam.qmui.layout.QMUIFrameLayout;
+import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.widget.QMUIFloatLayout;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 import com.theone.music.R;
+import com.theone.music.app.util.ColorUtil;
 import com.theone.music.data.constant.DownloadStatus;
 import com.theone.music.data.model.DownloadResult;
+import com.theone.music.data.model.Singer;
+import com.theone.music.ui.fragment.signer.SignerSearchFragment;
 import com.theone.music.ui.view.PlayPauseView;
 import com.theone.music.ui.view.TheSelectImageView;
 
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
+
+import java.util.List;
 
 public class AppBindingAdapter {
 
@@ -41,6 +54,38 @@ public class AppBindingAdapter {
         btn.setText(status);
         btn.setBackgroundColor(ContextCompat.getColor(btn
                 .getContext(), color));
+    }
+
+
+    @BindingAdapter(value = {"singers","host"}, requireAll = false)
+    public static void layoutSingers(QMUIFloatLayout floatLayout, List<Singer> singers, QMUIFragment host) {
+        Context context = floatLayout.getContext();
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        floatLayout.removeAllViews();
+
+        for (Singer singer : singers) {
+            QMUIFrameLayout container = new QMUIFrameLayout(context);
+            int space = QMUIDisplayHelper.dp2px(context,10);
+            container.setPadding(0,0,space,space);
+            TextView tag = new TextView(context);
+            int padding = QMUIDisplayHelper.dp2px(context,4);
+            int padding2 = padding*2;
+            tag.setPadding(padding2,padding,padding2,padding);
+            tag.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f);
+            tag.setMaxLines(1);
+            tag.setTextColor(ColorUtil.INSTANCE.randomColor());
+            tag.setText(singer.getName());
+            tag.setBackground(ContextCompat.getDrawable(context,R.drawable.tree_tag_bg));
+            container.addView(tag,layoutParams);
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    host.startFragment(SignerSearchFragment.newInstance(singer));
+                }
+            });
+            floatLayout.addView(container,layoutParams);
+        }
+
     }
 
     @BindingAdapter(value = {"res"}, requireAll = false)

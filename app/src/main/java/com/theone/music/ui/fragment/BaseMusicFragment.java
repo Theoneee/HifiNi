@@ -29,6 +29,7 @@ import com.theone.music.ui.adapter.MusicAdapter;
 import com.theone.music.viewmodel.EventViewModel;
 import com.theone.mvvm.base.BaseApplication;
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel;
+import com.theone.mvvm.ext.qmui.QMUITopBarLayoutExtKt;
 
 import java.util.List;
 
@@ -39,24 +40,25 @@ import java.util.List;
  * @email 625805189@qq.com
  * @remark
  */
-public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends BasePagerFragment<Music,VM>{
+public class BaseMusicFragment<VM extends BaseListViewModel<Music>> extends BasePagerFragment<Music, VM> {
 
-    protected EventViewModel mEvent;
+    private EventViewModel mEvent;
 
-    private EventViewModel getEventVm(){
-        if(null == mEvent){
-            mEvent = ((BaseApplication)mActivity.getApplication()).getAppViewModelProvider().get(EventViewModel.class);
+    protected EventViewModel getEventVm() {
+        if (null == mEvent) {
+            mEvent = ((BaseApplication) mActivity.getApplication()).getAppViewModelProvider().get(EventViewModel.class);
         }
         return mEvent;
     }
 
     /**
      * 更改适配里的当前播放
+     *
      * @param music
      */
-    private void setCurrentMusic(Music music){
-        if(null != music){
-            ((MusicAdapter)getMAdapter()).setCurrentMusic(music.getShareUrl());
+    private void setCurrentMusic(Music music) {
+        if (null != music) {
+            ((MusicAdapter) getMAdapter()).setCurrentMusic(music.getShareUrl());
         }
     }
 
@@ -68,7 +70,7 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
     @Override
     public void initView(@NonNull View root) {
         super.initView(root);
-        setCurrentMusic( mEvent.getPlayMusicLiveData().getValue());
+        setCurrentMusic(mEvent.getPlayMusicLiveData().getValue());
     }
 
     @Override
@@ -102,6 +104,6 @@ public class BaseMusicFragment2<VM extends BaseListViewModel<Music>> extends Bas
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
         Music music = (Music) adapter.getItem(position);
-        PlayerActivity.Companion.startPlay(mActivity,music);
+        PlayerActivity.Companion.startPlay(mActivity, music);
     }
 }

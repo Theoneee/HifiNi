@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.activity.LauncherActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/StartAppTheme"
             android:exported="true">
 
@@ -26,7 +27,7 @@
         </activity>
 
         <activity android:name=".ui.activity.MainActivity"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="portrait"/>
 
 
         <activity android:name=".ui.activity.LoginRegisterActivity"

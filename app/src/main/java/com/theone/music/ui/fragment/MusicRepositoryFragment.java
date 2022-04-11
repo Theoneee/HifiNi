@@ -49,7 +49,7 @@ import java.util.List;
  * @email 625805189@qq.com
  * @remark
  */
-public class MusicRepositoryFragment extends BaseMusicFragment2<MusicRepositoryViewModel> {
+public class MusicRepositoryFragment extends BaseMusicFragment<MusicRepositoryViewModel> {
 
     @Override
     public boolean isNeedChangeStatusBarMode() {

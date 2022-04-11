@@ -1,10 +1,4 @@
-package com.theone.music.ui.fragment
-
-import android.view.View
-import com.theone.music.viewmodel.HistoryViewModel
-import com.theone.mvvm.ext.qmui.setTitleWitchBackBtn
-
-//  ┏┓　　　┏┓
+package com.theone.music.ui.fragment;//  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
 //┃　　　　　　　┃
 //┃　　　━　　　┃
@@ -21,17 +15,21 @@ import com.theone.mvvm.ext.qmui.setTitleWitchBackBtn
 //    ┗┓┓┏━┳┓┏┛
 //      ┃┫┫　┃┫┫
 //      ┗┻┛　┗┻┛
+
+import com.theone.music.viewmodel.HotViewModel;
+
 /**
  * @author The one
- * @date 2022-04-07 17:21
+ * @date 2022-04-11 11:01
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-class HistoryFragment:BaseMusicFragment<HistoryViewModel>() {
+public class HotFragment extends BaseMusicFragment<HotViewModel> {
 
-    override fun initView(root: View) {
-        super.initView(root)
-        setTitleWitchBackBtn("播放记录")
+    @Override
+    protected String getTopBarTitle() {
+        return "热门";
     }
+
 }
