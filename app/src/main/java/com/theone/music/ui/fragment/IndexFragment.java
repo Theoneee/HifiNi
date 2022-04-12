@@ -55,6 +55,11 @@ public class IndexFragment extends BaseTabInTitleFragment<BaseViewModel> {
     }
 
     @Override
+    public boolean isExitPage() {
+        return true;
+    }
+
+    @Override
     public boolean isNeedChangeStatusBarMode() {
         return true;
     }

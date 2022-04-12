@@ -75,7 +75,7 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
         Intent intent = new Intent(activity, PlayerActivity.class);
         intent.putExtra(BundleConstant.DATA, music);
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.anim_in, 0);
+        activity.overridePendingTransition(R.anim.anim_in,0);
     }
 
     private EventViewModel mEvent;
@@ -90,6 +90,7 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
         return mEvent;
     }
 
+
     @Override
     public void initView(@NonNull View view) {
 
@@ -99,11 +100,11 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
     public void initData() {
         // initData在createObserver之后
         mMusic = getIntent().getParcelableExtra(BundleConstant.DATA);
+        if (null == mMusic) {
+            return;
+        }
         User user = getEventVm().getUserInfoLiveData().getValue();
 
-        if (null == mMusic) {
-            mMusic = getCurrentMusic();
-        }
         getViewModel().setLink(mMusic.shareUrl);
 
         PlayerManager playerManager = PlayerManager.getInstance();
@@ -111,6 +112,7 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
         // TODO Step1 和当前播放的是同一个，直接拿当前的播放的数据显示
         if (null != playingMusic && playingMusic.getShareUrl().equals(mMusic.shareUrl)) {
             getViewModel().isSetSuccess().set(true);
+            mMusic.pic = playingMusic.getCoverImg();
             getViewModel().setMusicInfo(mMusic, user);
             return;
         }
@@ -345,6 +347,12 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
                 return keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0;
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0,R.anim.anim_out);
     }
 
 }

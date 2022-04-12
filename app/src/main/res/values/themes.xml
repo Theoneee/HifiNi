@@ -5,7 +5,8 @@
         <item name="qmui_skin_support_topbar_separator_height">0dp</item>
     </style>
 
-    <style name="TranslucentTheme" parent="AppTheme">
+    <style name="PlayerActivityTheme" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
 </resources>
