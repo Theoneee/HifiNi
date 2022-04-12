@@ -1,11 +1,8 @@
 package com.theone.music.data.repository
 
-import com.theone.lover.data.room.AppDataBase
 import com.theone.music.data.model.*
-import com.theone.music.data.room.DownloadDao
-import com.theone.music.data.room.MusicDao
-import com.theone.music.data.room.UserDao
 import com.theone.music.data.constant.NetConstant
+import com.theone.music.data.room.*
 import com.theone.music.player.PlayerManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -55,15 +52,15 @@ class DataRepository {
         }
 
         val MUSIC_DAO: MusicDao by lazy {
-            AppDataBase.INSTANCE.musicDao()
+            AppDataBase.getInstance().musicDao()
         }
 
         val USER_DAO: UserDao by lazy {
-            AppDataBase.INSTANCE.userDao()
+            AppDataBase.getInstance().userDao()
         }
 
         val DOWNLOAD_DAO: DownloadDao by lazy {
-            AppDataBase.INSTANCE.downloadDao()
+            AppDataBase.getInstance().downloadDao()
         }
 
     }
@@ -149,12 +146,12 @@ class DataRepository {
                         }
 
                         list.add(
-                            Music(
-                                author = author,
-                                pic = NetConstant.BASE_URL + avatar,
-                                title = name,
+                            Music().apply {
+                                author = author
+                                pic = NetConstant.BASE_URL + avatar
+                                title = name
                                 shareUrl = link
-                            )
+                            }
                         )
                     }
                 }
@@ -203,13 +200,14 @@ class DataRepository {
                                 }
                         }
 
+
                         list.add(
-                            Music(
-                                author = author,
-                                pic = NetConstant.BASE_URL + avatar,
-                                title = name,
+                            Music().apply {
+                                this.author = author
+                                pic = NetConstant.BASE_URL + avatar
+                                title = name
                                 shareUrl = link
-                            )
+                            }
                         )
                     }
                 }
@@ -287,7 +285,7 @@ class DataRepository {
     }
 
     fun getDbMusicInfo(link: String): Music? {
-        val list = MUSIC_DAO.findMusics(link)
+        val list = MUSIC_DAO.getMusicsByShareUrl(link)
         return if (list.isNotEmpty() && list[0].getMusicUrl().isNotEmpty()) {
             list[0]
         } else {
@@ -298,7 +296,7 @@ class DataRepository {
     suspend fun getMusicInfo(link: String, isReload: Boolean): Music {
         if (!isReload) {
             // 先从数据里查是否有
-            val list = MUSIC_DAO.findMusics(link)
+            val list = MUSIC_DAO.getMusicsByShareUrl(link)
             if (list.isNotEmpty() && list[0].getMusicUrl().isNotEmpty()) {
                 return list[0]
             }
@@ -317,7 +315,7 @@ class DataRepository {
         }
         // 重新加载的播放地址，更新数据库
         if (isReload) {
-            MUSIC_DAO.updateDataBaseMusic(link, music.url, music.realUrl)
+            MUSIC_DAO.updateMusicUrl(link, music.url, music.realUrl)
         } else {
             music.createDate = System.currentTimeMillis()
             MUSIC_DAO.insert(music)
@@ -376,11 +374,6 @@ class DataRepository {
                 "https://txmov2.a.kwimgs.com/upic/2021/12/21/10/BMjAyMTEyMjExMDE3MjlfMTY3NzUyNDAzXzYzMjEwODg4NjcwXzJfMw==_b_B738e41a16c925a9901596995228d9880.mp4",
                 "https://txmov2.a.kwimgs.com/upic/2021/12/21/10/BMjAyMTEyMjExMDE3MjlfMTY3NzUyNDAzXzYzMjEwODg4NjcwXzJfMw==_b_B738e41a16c925a9901596995228d9880.mp4",
                 "相思", "毛阿敏"
-            ),
-            MV(
-                "http://tx2.a.kwimgs.com/upic/2022/01/17/00/BMjAyMjAxMTcwMDE4NDdfMTQzNjU5OTY5MV82NTA0MDU1MDUxMF8xXzM=_B22e69f52692cbbd31c865b1ee3c74d3e.jpg?tag=1-1649396559-std-0-fcr6ceoh1h-7a923886ee61a21f&clientCacheKey=3xs7pazsdsvk93g.jpg&di=79c43beb&bp=12681",
-                "https://txmov2.a.kwimgs.com/upic/2022/01/17/00/BMjAyMjAxMTcwMDE4NDdfMTQzNjU5OTY5MV82NTA0MDU1MDUxMF8xXzM=_b_B43b19cec0f504b6d89438917f1dc168d.mp4?tag=1-1649396559-std-1-tifdlurm9q-4bd7f2845742773f&clientCacheKey=3xs7pazsdsvk93g_b.mp4&tt=b&di=79c43beb&bp=12681",
-                "后来-万人合唱版", "刘若英"
             )
         )
     }

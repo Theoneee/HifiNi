@@ -10,8 +10,12 @@
             type="com.theone.music.viewmodel.MusicInfoViewModel" />
 
         <variable
-            name="proxy"
+            name="click"
             type="com.theone.music.ui.activity.MainActivity.ClickProxy" />
+
+        <variable
+            name="listener"
+            type="com.theone.music.ui.activity.MainActivity.ListenerProxy" />
 
     </data>
 
@@ -22,6 +26,7 @@
         app:qmui_borderColor="@color/qmui_config_color_separator"
         app:qmui_general_shadow_alpha="0.55"
         app:qmui_shadowElevation="10dp"
+        android:onClick="@{()->click.jumpPlayerActivity()}"
         app:qmui_showBorderOnlyBeforeL="false"
         android:background="@color/white">
 
@@ -36,7 +41,7 @@
             app:enable="@{vm.isSuccess}"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="@{()->proxy.togglePlayPause()}"
+            android:onClick="@{()->click.togglePlayPause()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -46,7 +51,7 @@
             android:id="@+id/collection"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:selectListener="@{proxy}"
+            app:selectListener="@{listener}"
             app:select="@{vm.isCollection}"
             app:enable="@{vm.isCollectionEnable()}"
             app:img_normal="@drawable/svg_collection_normal"
@@ -97,16 +102,15 @@
             android:textSize="12sp"
             tools:text="五月天"/>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/collection"
-            app:enable="@{vm.isSuccess}"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="20dp"
-            android:onClick="@{()->proxy.jumpPlayerActivity()}"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/collection"-->
+<!--            app:enable="@{vm.isSuccess}"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
     </com.qmuiteam.qmui.layout.QMUIConstraintLayout>
 

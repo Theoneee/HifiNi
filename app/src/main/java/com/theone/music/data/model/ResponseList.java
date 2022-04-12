@@ -1,9 +1,4 @@
-package com.theone.music.data.room
-
-import androidx.room.*
-import com.theone.music.data.model.Download
-
-//  ┏┓　　　┏┓
+package com.theone.music.data.model;//  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
 //┃　　　　　　　┃
 //┃　　　━　　　┃
@@ -20,29 +15,39 @@ import com.theone.music.data.model.Download
 //    ┗┓┓┏━┳┓┏┛
 //      ┃┫┫　┃┫┫
 //      ┗┻┛　┗┻┛
+
+import java.util.List;
+
 /**
  * @author The one
- * @date 2021-10-08 09:31
+ * @date 2022-04-12 13:20
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-@Dao
-interface DownloadDao {
+public class ResponseList<T> {
 
-    @Insert
-    fun insert(bean: Download)
+    private List<T> list;
+    private int totalPage;
 
-    @Update
-    fun update(bean: Download): Int
+    public ResponseList(List<T> list, int totalPage) {
+        this.list = list;
+        this.totalPage = totalPage;
+    }
 
-    @Delete
-    fun delete(bean: Download): Int
+    public List<T> getList() {
+        return list;
+    }
 
-    @Query("select * from download order by time desc limit :pageSize offset (:page -1)*:pageSize")
-    fun getDownloadList(page:Int,pageSize:Int): List<Download>
+    public void setList(List<T> list) {
+        this.list = list;
+    }
 
-    @Query("update download set status =:status where musicId = :musicId ")
-    fun updateDownloadStatus(status:Int,musicId:Int):Int
+    public int getTotalPage() {
+        return totalPage;
+    }
 
+    public void setTotalPage(int totalPage) {
+        this.totalPage = totalPage;
+    }
 }

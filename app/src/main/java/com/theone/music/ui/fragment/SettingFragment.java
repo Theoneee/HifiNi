@@ -22,6 +22,7 @@ import static com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView.HORIZONT
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.qmuiteam.qmui.util.QMUIPackageHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -35,6 +36,7 @@ import com.theone.mvvm.base.viewmodel.BaseViewModel;
 import com.theone.mvvm.ext.qmui.QMUICommonListItemViewExtKt;
 import com.theone.mvvm.ext.qmui.QMUIDialogExtKt;
 import com.theone.mvvm.ext.qmui.QMUIFragmentExtKt;
+import com.theone.mvvm.ext.qmui.QMUITopBarLayoutExtKt;
 
 /**
  * @author The one
@@ -47,8 +49,15 @@ public class SettingFragment extends BaseFragment<BaseViewModel, FragmentSetting
 
     private QMUICommonListItemView mVersion, mLoginOut;
 
+    @Nullable
+    @Override
+    public Integer getRootBackgroundColor() {
+        return R.color.qmui_config_color_background;
+    }
+
     @Override
     public void initView(@NonNull View view) {
+        QMUITopBarLayoutExtKt.setTitleWitchBackBtn(this,"设置");
         QMUIGroupListView groupListView = getDataBinding().groupListView;
         mVersion = QMUICommonListItemViewExtKt.createItem(groupListView,
                 "当前版本",
@@ -63,7 +72,7 @@ public class SettingFragment extends BaseFragment<BaseViewModel, FragmentSetting
                 R.drawable.svg_setting_version, HORIZONTAL, ACCESSORY_TYPE_CHEVRON);
 
         if (CacheUtil.INSTANCE.isLogin()) {
-            QMUICommonListItemViewExtKt.addToGroup(groupListView, new QMUICommonListItemView[]{mLoginOut}, "关于", null, this);
+            QMUICommonListItemViewExtKt.addToGroup(groupListView, new QMUICommonListItemView[]{mLoginOut}, "", null, this);
         }
 
     }

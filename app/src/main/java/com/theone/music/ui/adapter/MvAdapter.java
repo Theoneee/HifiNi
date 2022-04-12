@@ -16,7 +16,7 @@ package com.theone.music.ui.adapter;//  ┏┓　　　┏┓
 //      ┃┫┫　┃┫┫
 //      ┗┻┛　┗┻┛
 
-import android.view.View;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -27,7 +27,7 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 import com.theone.music.R;
 import com.theone.music.data.model.MV;
 import com.theone.music.databinding.ItemMvBinding;
-import com.theone.music.ui.view.LoverVideoPlayer;
+import com.theone.music.ui.view.VideoPlayer;
 import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter;
 
 /**
@@ -39,41 +39,43 @@ import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter;
  */
 public class MvAdapter extends TheBaseQuickAdapter<MV, ItemMvBinding> {
 
+    private static final String TAG = "MvAdapter";
+
     public MvAdapter() {
         super(R.layout.item_mv);
     }
 
-    private LoverVideoPlayer curPlayer;
-    private boolean isPlaying;
+    private VideoPlayer curPlayer;
 
     @Override
     protected void convert(@NonNull BaseDataBindingHolder<ItemMvBinding> holder, MV item) {
-        LoverVideoPlayer videoPlayer = holder.getView(R.id.video_player);
+        VideoPlayer videoPlayer = holder.getView(R.id.video_player);
         videoPlayer.setVideoData(item);
         videoPlayer.setPlayTag(item.getUrl());
-//        videoPlayer.getPlayPosition(holder.);
+        videoPlayer.setPlayPosition(holder.getAbsoluteAdapterPosition());
         videoPlayer.setVideoAllCallBack(new GSYSampleCallBack() {
 
             @Override
             public void onPrepared(String url, Object... objects) {
                 super.onPrepared(url, objects);
-                curPlayer = (LoverVideoPlayer) objects[1];
-                isPlaying = true;
+                curPlayer = (VideoPlayer) objects[1];
             }
 
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 super.onAutoComplete(url, objects);
                 curPlayer = null;
-                isPlaying = false;
             }
         });
     }
 
     public void onResume() {
+        Log.e(TAG, "onResume: ");
         if (null != curPlayer) {
             GSYBaseVideoPlayer player = curPlayer.getCurrentPlayer();
+            Log.e(TAG, "onResume: null != curPlayer  " + player.getCurrentState());
             if (player.getCurrentState() == GSYVideoView.CURRENT_STATE_PAUSE) {
+                Log.e(TAG, "onResume: CURRENT_STATE_PAUSE ");
                 player.onVideoResume();
             } else {
                 player.startPlayLogic();
@@ -82,6 +84,7 @@ public class MvAdapter extends TheBaseQuickAdapter<MV, ItemMvBinding> {
     }
 
     public void onPause() {
+        Log.e(TAG, "onPause: ");
         if (null != curPlayer) {
             GSYBaseVideoPlayer player = curPlayer.getCurrentPlayer();
             player.onVideoPause();
@@ -89,6 +92,7 @@ public class MvAdapter extends TheBaseQuickAdapter<MV, ItemMvBinding> {
     }
 
     public void onDestroy() {
+        Log.e(TAG, "onDestroy: ");
         if (null != curPlayer) {
             GSYBaseVideoPlayer player = curPlayer.getCurrentPlayer();
             player.release();

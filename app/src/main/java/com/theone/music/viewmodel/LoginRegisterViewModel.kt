@@ -26,7 +26,7 @@ class LoginRegisterViewModel : BaseRequestViewModel<User>() {
                 onError("用户名已存在")
             }else{
                 // 这个用户名不存在，就往数据库添加一条用户数据
-                val user = User(account = account.get(),nickname = "",password = password.get().encrypt())
+                val user = User(account.get(),password.get().encrypt())
                 DataRepository.USER_DAO.insert(user)
                 onSuccess(user)
             }

@@ -48,7 +48,7 @@ public class CollectionFragment extends BaseMusicFragment<CollectionViewModel> {
         super.initData();
         User user = getEventVm().getUserInfoLiveData().getValue();
         if (null != user) {
-            getViewModel().setUserId(user.getId());
+            getViewModel().setUserId(user.id);
         }
     }
 
@@ -64,7 +64,7 @@ public class CollectionFragment extends BaseMusicFragment<CollectionViewModel> {
             @Override
             public void onChanged(CollectionEvent event) {
                 // 是收藏，刷新
-                if (event.getCollection()) {
+                if (event.isCollection()) {
                     onAutoRefresh();
                 } else {
                     Music collection = event.getMusic();
@@ -79,7 +79,7 @@ public class CollectionFragment extends BaseMusicFragment<CollectionViewModel> {
                         for (int i = 0; i < datas.size(); i++) {
                             Music music = datas.get(i);
                             // 找到相同的那个
-                            if (music.getShareUrl().equals(collection.getShareUrl())) {
+                            if (music.shareUrl.equals(collection.shareUrl)) {
                                 // 移除
                                 AppExtKt.removeItem(adapter,i);
                                 break;
@@ -98,9 +98,9 @@ public class CollectionFragment extends BaseMusicFragment<CollectionViewModel> {
                 List<Music> datas = adapter.getData();
                 for (int i = 0; i < datas.size(); i++) {
                     Music music = datas.get(i);
-                    if (music.getShareUrl().equals(changed.getShareUrl())) {
-                        music.setUrl(changed.getUrl());
-                        music.setRealUrl(changed.getRealUrl());
+                    if (music.shareUrl.equals(changed.shareUrl)) {
+                        music.url = changed.url;
+                        music.realUrl = changed.realUrl;
                         break;
                     }
                 }

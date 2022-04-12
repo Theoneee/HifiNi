@@ -71,7 +71,7 @@ public class MineFragment extends BaseFragment<MineViewModel, FragmentMineBindin
     }
 
     private void setUserInfo(User user) {
-        String nickName = null == user ? "未登录" : user.getAccount();
+        String nickName = null == user ? "未登录" : user.account;
         getViewModel().nickName.set(nickName);
     }
 

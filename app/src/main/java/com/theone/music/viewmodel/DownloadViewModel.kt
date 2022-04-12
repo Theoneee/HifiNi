@@ -1,10 +1,7 @@
 package com.theone.music.viewmodel
 
-import android.util.Log
 import com.theone.music.data.constant.DownloadStatus
-import com.theone.music.data.model.Download
 import com.theone.music.data.model.DownloadResult
-import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
 import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 import java.io.File

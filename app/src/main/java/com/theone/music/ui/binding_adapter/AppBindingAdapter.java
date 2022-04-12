@@ -3,30 +3,16 @@ package com.theone.music.ui.binding_adapter;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.BindingAdapter;
-import androidx.lifecycle.LiveData;
 
-import com.qmuiteam.qmui.arch.QMUIFragment;
-import com.qmuiteam.qmui.layout.QMUIFrameLayout;
-import com.qmuiteam.qmui.util.QMUIDisplayHelper;
-import com.qmuiteam.qmui.widget.QMUIFloatLayout;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 import com.theone.common.widget.TheSelectImageView;
 import com.theone.music.R;
-import com.theone.music.app.util.ColorUtil;
 import com.theone.music.data.constant.DownloadStatus;
 import com.theone.music.data.model.DownloadResult;
-import com.theone.music.data.model.Singer;
-import com.theone.music.ui.fragment.signer.SignerSearchFragment;
 import com.theone.music.ui.view.PlayPauseView;
 
-import android.content.Context;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.util.List;
 
 public class AppBindingAdapter {
 

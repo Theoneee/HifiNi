@@ -32,7 +32,7 @@ import com.theone.mvvm.core.base.viewmodel.BaseListViewModel
 class MvViewModel:BaseListViewModel<MV>() {
 
     override fun requestServer() {
-        onSuccess(DataRepository.INSTANCE.getMvList(),PageInfo())
+        onSuccess(DataRepository.INSTANCE.getMvList(), PageInfo())
     }
 
 }

@@ -41,12 +41,12 @@ public class MusicAdapter extends TheBaseQuickAdapter<Music, ItemMusicBinding> {
         setDiffCallback(new DiffUtil.ItemCallback<Music>() {
             @Override
             public boolean areItemsTheSame(@NonNull Music oldItem, @NonNull Music newItem) {
-                return oldItem.getShareUrl().equals(newItem.getShareUrl());
+                return oldItem.shareUrl.equals(newItem.shareUrl);
             }
 
             @Override
             public boolean areContentsTheSame(@NonNull Music oldItem, @NonNull Music newItem) {
-                return oldItem.getShareUrl().equals(newItem.getShareUrl());
+                return oldItem.shareUrl.equals(newItem.shareUrl);
             }
         });
     }
@@ -54,21 +54,21 @@ public class MusicAdapter extends TheBaseQuickAdapter<Music, ItemMusicBinding> {
     private Music currentMusic;
 
     public void setCurrentMusic(Music current) {
-        String currentUrl = current.getShareUrl();
+        String currentUrl = current.shareUrl;
         String oldUrl = "";
         if (null != currentMusic) {
-            oldUrl = currentMusic.getShareUrl();
+            oldUrl = currentMusic.shareUrl;
         }
         int old = -1;
         int now = -1;
         for (int i = 0; i < getData().size(); i++) {
             Music item = getData().get(i);
             // 上一个播放的位置
-            if (item.getShareUrl().equals(oldUrl)) {
+            if (item.shareUrl.equals(oldUrl)) {
                 old = i;
             }
             // 现在需要更改的位置
-            if (item.getShareUrl().equals(currentUrl)) {
+            if (item.shareUrl.equals(currentUrl)) {
                 now = i;
             }
             // 两个都找出来了退出循环
@@ -89,12 +89,11 @@ public class MusicAdapter extends TheBaseQuickAdapter<Music, ItemMusicBinding> {
                 notifyItemChanged(index + getHeaderLayoutCount());
             }
         }
-
     }
 
     @Override
     protected void convert(@NonNull BaseDataBindingHolder<ItemMusicBinding> holder, Music item) {
         super.convert(holder, item);
-        holder.getDataBinding().playing.setVisibility(currentMusic.getShareUrl().equals(item.getShareUrl())? View.VISIBLE:View.GONE);
+        holder.getDataBinding().playing.setVisibility(null !=currentMusic&&currentMusic.shareUrl.equals(item.shareUrl)? View.VISIBLE:View.GONE);
     }
 }

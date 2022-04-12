@@ -23,12 +23,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 import com.theone.music.R;
 import com.theone.music.data.model.MV;
 import com.theone.music.player.PlayerManager;
 import com.theone.music.ui.adapter.MvAdapter;
-import com.theone.music.ui.view.LoverVideoPlayer;
+import com.theone.music.ui.view.VideoPlayer;
 import com.theone.music.ui.view.OnViewPagerListener;
 import com.theone.music.ui.view.PagerLayoutManager;
 import com.theone.music.viewmodel.EventViewModel;
@@ -100,65 +101,70 @@ public class MvFragment extends BasePagerFragment<MV, MvViewModel> {
         layoutManager.setOnViewPagerListener(new OnViewPagerListener() {
             @Override
             public void onInitComplete(View view) {
-                startPlayVideo(mPlayPosition,view);
+                startPlayVideo(mPlayPosition, view);
             }
 
             @Override
             public void onPageRelease(boolean isNext, int position, View view) {
-                LoverVideoPlayer videoPlayer = view.findViewById(R.id.video_player);
-                videoPlayer.onVideoPause();
+                VideoPlayer videoPlayer = view.findViewById(R.id.video_player);
+                if (null != videoPlayer) {
+                    videoPlayer.onVideoPause();
+                }
             }
 
             @Override
             public void onPageSelected(int position, boolean isBottom, View view) {
-                if(mPlayPosition != position){
-                    startPlayVideo(position,view);
+                if (mPlayPosition != position) {
+                    startPlayVideo(position, view);
                 }
             }
         });
         return layoutManager;
     }
 
-    private void startPlayVideo(int position,View view){
-        mPlayPosition = position;
-        if(!isPageVisible){
+    private void startPlayVideo(int position, View view) {
+        if (!isPageVisible) {
             return;
         }
-        LoverVideoPlayer videoPlayer = view.findViewById(R.id.video_player);
-        if(videoPlayer.getCurrentState() == GSYVideoView.CURRENT_STATE_PAUSE){
+        mPlayPosition = position;
+        VideoPlayer videoPlayer = view.findViewById(R.id.video_player);
+        if (null == videoPlayer) {
+            return;
+        }
+        if (videoPlayer.getCurrentState() == GSYVideoView.CURRENT_STATE_PAUSE) {
             videoPlayer.onVideoResume();
-        }else{
+        } else {
             videoPlayer.startPlayLogic();
         }
     }
 
     private boolean isPlaying = false;
 
-    private MvAdapter getMvAdapter(){
+    private MvAdapter getMvAdapter() {
         return (MvAdapter) getMAdapter();
     }
 
     @Override
     protected void onLazyResume() {
         super.onLazyResume();
-        isPageVisible =true;
-        getEventVm().dispatchPlayWidgetEvent(false);
-        getMvAdapter().onResume();
-        if(PlayerManager.getInstance().isPlaying()){
+        isPageVisible = true;
+        if (PlayerManager.getInstance().isPlaying()) {
             isPlaying = true;
             PlayerManager.getInstance().pauseAudio();
         }
+        getMvAdapter().onResume();
+        getEventVm().dispatchPlayWidgetEvent(false);
     }
 
 
     @Override
     public void onPause() {
-        if(isPlaying){
+        isPageVisible = false;
+        getMvAdapter().onPause();
+        if (isPlaying) {
             PlayerManager.getInstance().resumeAudio();
         }
-        isPageVisible = false;
         getEventVm().dispatchPlayWidgetEvent(true);
-        getMvAdapter().onPause();
         super.onPause();
     }
 

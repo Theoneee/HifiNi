@@ -58,7 +58,7 @@ public class BaseMusicFragment<VM extends BaseListViewModel<Music>> extends Base
      */
     private void setCurrentMusic(Music music) {
         if (null != music) {
-            ((MusicAdapter) getMAdapter()).setCurrentMusic(music.getShareUrl());
+            ((MusicAdapter) getMAdapter()).setCurrentMusic(music);
         }
     }
 

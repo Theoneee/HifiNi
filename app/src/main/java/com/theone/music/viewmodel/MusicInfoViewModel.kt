@@ -1,16 +1,14 @@
 package com.theone.music.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.kunminx.player.bean.dto.PlayingMusic
-import com.theone.music.data.model.CollectionEvent
-import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
 import com.theone.common.callback.databind.BooleanObservableField
 import com.theone.common.callback.databind.IntObservableField
 import com.theone.common.callback.databind.StringObservableField
 import com.theone.music.app.util.CacheUtil
+import com.theone.music.data.model.CollectionEvent
+import com.theone.music.data.model.Music
 import com.theone.music.data.model.User
 import com.theone.music.player.PlayerManager
 import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
@@ -89,7 +87,7 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
         user?.let {
             request({
                 isCollection.set(
-                    DataRepository.MUSIC_DAO.findCollectionMusics(it.id, url).isNotEmpty()
+                    DataRepository.MUSIC_DAO.getUserCollectionMusic(it.id, url).isNotEmpty()
                 )
             })
         }
@@ -101,7 +99,7 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
                 DataRepository.MUSIC_DAO.updateCollectionMusic(
                     userId,
                     music.shareUrl,
-                    if (collection) 1 else 0,
+                    if (isCollection) 1 else 0,
                     System.currentTimeMillis()
                 )
             }
@@ -126,7 +124,7 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
 
     fun setMusicInfo(music: Music, user: User?) {
         isSuccess.set(true)
-        isCollectionEnable.set(CacheUtil.isLogin())
+        isCollectionEnable.set(user != null)
         name.set(music.title)
         author.set(music.author)
         cover.set(music.pic)

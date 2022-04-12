@@ -19,7 +19,6 @@ package com.theone.music.service;//  ┏┓　　　┏┓
 import android.app.Activity;
 import android.app.Notification;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -85,14 +84,14 @@ public class DownloadService extends Service {
         // 文件后缀
         String type = url.contains("mp3") ? "mp3" : "m4a";
         // 五月天-天使.mp3
-        String name = mDownload.getAuthor() + "-" + mDownload.getTitle() + "." + type;
+        String name = mDownload.author + "-" + mDownload.title + "." + type;
         // 保存的地址  APP名字/Download/Music
         String downloadPath = FileDirectoryManager.INSTANCE.getDownloadPath() + File.separator + "Music";
         // 数据库里拿到MusicId
-        List<Music> musics = DataRepository.Companion.getMUSIC_DAO().findMusics(mDownload.getShareUrl());
-        musicId = musics.get(0).getId();
+        List<Music> musics = DataRepository.Companion.getMUSIC_DAO().getMusicsByShareUrl(mDownload.shareUrl);
+        musicId = musics.get(0).id;
         // 创建一个下载对象
-        Download download = new Download(0, musicId, downloadPath + File.separator + name, DownloadStatus.DOWNLOADING, System.currentTimeMillis());
+        Download download = new Download(musicId, downloadPath + File.separator + name, DownloadStatus.DOWNLOADING, System.currentTimeMillis());
         // 添加到数据库
         DataRepository.Companion.getDOWNLOAD_DAO().insert(download);
 
@@ -142,7 +141,7 @@ public class DownloadService extends Service {
      */
     private void updateNotification(String title, boolean isFinish) {
         stopForeground(true);
-        NotificationCompat.Builder builder = NotificationManager.Companion.getInstance().createNotification(NOTIFICATION_ID, title, title, mDownload.getUrl(),
+        NotificationCompat.Builder builder = NotificationManager.Companion.getInstance().createNotification(NOTIFICATION_ID, title, title, mDownload.getMusicUrl(),
                 NotificationManager.LEVEL_DEFAULT_CHANNEL_ID,
                 true, isFinish ? R.drawable.service_down_finish : R.drawable.service_down);
         builder.setDefaults(Notification.DEFAULT_VIBRATE);
@@ -202,7 +201,7 @@ public class DownloadService extends Service {
                 NOTIFICATION_ID,
                 "开始下载",
                 "开始下载",
-                mDownload.getUrl(),
+                mDownload.getMusicUrl(),
                 NotificationManager.LEVEL_DEFAULT_CHANNEL_ID,
                 true, R.drawable.service_down
         );

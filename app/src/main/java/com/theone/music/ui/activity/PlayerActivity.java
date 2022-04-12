@@ -45,7 +45,6 @@ import com.theone.common.constant.BundleConstant;
 import com.theone.common.widget.TheSelectImageView;
 import com.theone.music.BR;
 import com.theone.music.R;
-import com.theone.music.app.ext.AppExtKt;
 import com.theone.music.data.model.CollectionEvent;
 import com.theone.music.data.model.Music;
 import com.theone.music.data.model.TestAlbum;
@@ -62,9 +61,6 @@ import com.theone.mvvm.ext.qmui.QMUIDialogExtKt;
 import com.theone.mvvm.ext.qmui.QMUITipsDialogExtKt;
 
 import java.util.List;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 /**
  * @author The one
@@ -96,18 +92,24 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
 
     @Override
     public void initView(@NonNull View view) {
+
+    }
+
+    @Override
+    public void initData() {
+        // initData在createObserver之后
         mMusic = getIntent().getParcelableExtra(BundleConstant.DATA);
         User user = getEventVm().getUserInfoLiveData().getValue();
 
         if (null == mMusic) {
             mMusic = getCurrentMusic();
         }
-        getViewModel().setLink(mMusic.getShareUrl());
+        getViewModel().setLink(mMusic.shareUrl);
 
         PlayerManager playerManager = PlayerManager.getInstance();
         TestAlbum.TestMusic playingMusic = playerManager.getCurrentPlayingMusic();
         // TODO Step1 和当前播放的是同一个，直接拿当前的播放的数据显示
-        if (null != playingMusic && playingMusic.getShareUrl().equals(mMusic.getShareUrl())) {
+        if (null != playingMusic && playingMusic.getShareUrl().equals(mMusic.shareUrl)) {
             getViewModel().isSetSuccess().set(true);
             getViewModel().setMusicInfo(mMusic, user);
             return;
@@ -118,10 +120,12 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
         }
         // 重置所有信息
         getViewModel().reset();
+        String musicUrl = mMusic.getMusicUrl();
         // TODO Step2 是否有音频地址，有说明是收藏过来的
-        if (!mMusic.getMusicUrl().isEmpty()) {
+        if (!musicUrl.isEmpty()) {
             // 直接设置数据
-            getViewModel().setMediaSource(mMusic, user, false);
+            String cacheUrl = playerManager.getCacheUrl(musicUrl);
+            getViewModel().setMediaSource(mMusic, user, !cacheUrl.isEmpty());
             return;
         }
         // TODO Step3 查询DB
@@ -131,13 +135,7 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
             getViewModel().setMediaSource(dbMusic, user, !cacheUrl.isEmpty());
         }
         // TODO Step4 请求网络获取数据
-        getRootView().post(new Runnable() {
-            @Override
-            public void run() {
-                onPageReLoad();
-            }
-        });
-
+        onPageReLoad();
     }
 
     @Override
@@ -214,7 +212,8 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
     private Music getCurrentMusic() {
         Music cur = getViewModel().getResponseLiveData().getValue();
         if (null == cur) {
-            cur = AppExtKt.toMusic(PlayerManager.getInstance().getCurrentPlayingMusic());
+            TestAlbum.TestMusic playingMusic = PlayerManager.getInstance().getCurrentPlayingMusic();
+            cur = new Music(playingMusic);
         }
         return cur;
     }
@@ -254,7 +253,7 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
                 // 一个收藏的事件
                 CollectionEvent event = new CollectionEvent(select, curMusic);
                 // 数据库更新收藏状态
-                getViewModel().toggleCollection(user.getId(), event);
+                getViewModel().toggleCollection(user.id, event);
                 // 分发一个收藏的状态
                 mEvent.dispatchCollectionEvent(event);
             }
@@ -319,11 +318,12 @@ public class PlayerActivity extends BaseCoreActivity<MusicInfoViewModel, PageMus
     private void startDownload() {
         Music music = getCurrentMusic();
         ToastUtils.show("开始下载");
-        DownloadService.start(this,music);
+        DownloadService.start(this, music);
     }
 
     /**
      * 权限申请失败提示弹窗
+     *
      * @param denied
      */
     private void showPermissionFailTips(List<String> denied) {

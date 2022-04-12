@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.theone.music.data.model.User
 import com.theone.mvvm.core.app.util.MMKVUtil
-import com.theone.mvvm.core.app.util.RxHttpManager
 
 
 //  ┏┓　　　┏┓

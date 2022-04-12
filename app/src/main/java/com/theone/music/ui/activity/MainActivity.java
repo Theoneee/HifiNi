@@ -37,7 +37,6 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout2;
 import com.theone.common.widget.TheSelectImageView;
 import com.theone.music.R;
-import com.theone.music.app.ext.AppExtKt;
 import com.theone.music.data.model.CollectionEvent;
 import com.theone.music.data.model.Music;
 import com.theone.music.data.model.TestAlbum;
@@ -82,7 +81,7 @@ public class MainActivity extends BaseFragmentActivity {
         mEvent.getCollectionLiveData().observe(this, new Observer<CollectionEvent>() {
             @Override
             public void onChanged(CollectionEvent event) {
-                mMusicViewModel.isCollection().set(event.getCollection());
+                mMusicViewModel.isCollection().set(event.isCollection());
             }
         });
         // 用户登录、退出后的消息
@@ -98,7 +97,7 @@ public class MainActivity extends BaseFragmentActivity {
                 if (isLogin) {
                     Music music = getCurrentMusic();
                     if (null != music) {
-                        mMusicViewModel.requestCollection(user, music.getShareUrl());
+                        mMusicViewModel.requestCollection(user, music.shareUrl);
                     }
                 }
             }
@@ -145,7 +144,7 @@ public class MainActivity extends BaseFragmentActivity {
         playerManager.getPauseEvent().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isPause) {
-                mMusicViewModel.isPlaying().set(isPause);
+                mMusicViewModel.isPlaying().set(!isPause);
             }
         });
 
@@ -154,15 +153,9 @@ public class MainActivity extends BaseFragmentActivity {
             @Override
             public void onChanged(ChangeMusic changeMusic) {
                 TestAlbum.TestMusic music = (TestAlbum.TestMusic) changeMusic.getMusic();
-                // 设置数据
-                mMusicViewModel.getCover().set(music.getCoverImg());
-                mMusicViewModel.getName().set(music.getTitle());
-                mMusicViewModel.getAuthor().set(music.getAuthor());
-                mMusicViewModel.isSuccess().set(true);
-
                 // 如果是登录的，查询当前用户是否已收藏当前的播放
                 User user = mEvent.getUserInfoLiveData().getValue();
-                mMusicViewModel.requestCollection(user, music.getShareUrl());
+                mMusicViewModel.setMusicInfo(new Music(music),user);
             }
         });
 
@@ -198,15 +191,15 @@ public class MainActivity extends BaseFragmentActivity {
             return null;
         } else {
             // 这里做一个局部的缓存，不用每次都去创建一个对象
-            if (null != mPlayingMusic && !mPlayingMusic.getShareUrl().equals(music.getShareUrl())) {
+            if (null == mPlayingMusic || !mPlayingMusic.shareUrl.equals(music.getShareUrl())) {
                 // TestAlbum.TestMusic -> Music
-                mPlayingMusic = AppExtKt.toMusic(music);
+                mPlayingMusic = new Music(music);
             }
             return mPlayingMusic;
         }
     }
 
-    public class ClickProxy implements TheSelectImageView.OnSelectChangedListener {
+    public class ClickProxy {
 
         public void togglePlayPause() {
             PlayerManager.getInstance().togglePlay();
@@ -219,17 +212,20 @@ public class MainActivity extends BaseFragmentActivity {
             }
         }
 
+    }
+
+    public class ListenerProxy implements TheSelectImageView.OnSelectChangedListener{
+
         @Override
         public void onSelectChanged(boolean select) {
             User user = mEvent.getUserInfoLiveData().getValue();
             Music curMusic = getCurrentMusic();
             if (null != user && null != curMusic) {
                 CollectionEvent event = new CollectionEvent(select, curMusic);
-                mMusicViewModel.toggleCollection(user.getId(), event);
+                mMusicViewModel.toggleCollection(user.id, event);
                 mEvent.dispatchCollectionEvent(event);
             }
         }
-
     }
 
     @Override
@@ -252,7 +248,9 @@ public class MainActivity extends BaseFragmentActivity {
             mPlayLayout = MusicPlayerLayoutBinding.inflate(getLayoutInflater());
             mPlayLayout.setLifecycleOwner(MainActivity.this);
             mPlayLayout.setVm(mMusicViewModel);
-            mPlayLayout.setProxy(new ClickProxy());
+            mPlayLayout.setClick(new ClickProxy());
+            mPlayLayout.setListener(new ListenerProxy());
+
             QMUIConstraintLayout root = (QMUIConstraintLayout) mPlayLayout.getRoot();
             root.updateTopDivider(0, 0, 1, ContextCompat.getColor(context, R.color.qmui_config_color_separator));
 
