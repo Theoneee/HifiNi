@@ -26,7 +26,7 @@ import com.theone.music.data.constant.DownloadStatus;
 /**
  * @author The one
  * @date 2022-04-12 11:29
- * @describe TODO
+ * @describe 下载
  * @email 625805189@qq.com
  * @remark
  */
@@ -44,11 +44,26 @@ public class Download {
         this.time = time;
     }
 
+    /**
+     * id、主键 自增
+     */
     @PrimaryKey(autoGenerate = true)
     public int id;
+    /**
+     * 关联音乐数据
+     */
     public int musicId;
+    /**
+     * 本地下载地址
+     */
     public String localPath = "";
+    /**
+     * 下载状态
+     */
     public int status = DownloadStatus.DOWNLOADING;
+    /**
+     * 下载时间
+     */
     public long time;
 
 

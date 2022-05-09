@@ -106,7 +106,7 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
         }
     }
 
-    fun updateMusicLastPlayDate() {
+    private fun updateMusicLastPlayDate() {
         val time = System.currentTimeMillis()
         DataRepository.MUSIC_DAO.updateMusicLastPlayDate(time, link)
     }

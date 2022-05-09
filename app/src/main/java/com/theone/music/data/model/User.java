@@ -26,7 +26,7 @@ import com.theone.music.data.constant.DownloadStatus;
 /**
  * @author The one
  * @date 2022-04-12 11:29
- * @describe TODO
+ * @describe 用户数据
  * @email 625805189@qq.com
  * @remark
  */
@@ -42,12 +42,26 @@ public class User {
         this.password = password;
     }
 
+    /**
+     * id、主键 自增
+     */
     @PrimaryKey(autoGenerate = true)
     public int id;
+    /**
+     * 用户名
+     */
     public String account = "";
+    /**
+     * 用户昵称
+     */
     public String nickname;
+    /**
+     * 密码
+     */
     public String password = "";
+    /**
+     * 性别
+     */
     public int sex;
-
 
 }

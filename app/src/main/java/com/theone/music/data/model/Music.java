@@ -31,24 +31,63 @@ import java.util.Objects;
 /**
  * @author The one
  * @date 2022-04-12 11:14
- * @describe TODO
+ * @describe 音乐数据
  * @email 625805189@qq.com
  * @remark
  */
+
+/**
+ * Room的使用  每个需要保存的表使用[@Entity]注解
+ * indices-唯一键
+  */
 @Entity(tableName = "MusicInfo",indices = {@Index(value = "shareUrl",unique = true)})
 public class Music implements Parcelable {
 
+    /**
+     * id、主键 自增
+     */
     @PrimaryKey(autoGenerate = true)
     public int id;
+    /**
+     * 用户id 关联登录用户
+     */
     public int userId;
+
+    /**
+     * 歌名
+     */
     public String title = "";
+    /**
+     * 歌手
+     */
     public String author = "";
+    /**
+     * 播放地址
+     */
     public String url = "";
+    /**
+     * 封面图片地址
+     */
     public String pic = "";
+    /**
+     * 分享界面的Url
+     */
     public String shareUrl;
+    /**
+     * 实际的播放地址 - 可能会通过播放地址【域名重定向】得到一个实际的播放地址
+     */
     public String realUrl = "";
+    /**
+     * 创建时间 - 用于排序
+     */
     public long createDate = 0;
+    /**
+     * 最后播放时间 - 用于最近播放排序
+     */
     public long lastPlayDate = 0;
+    /**
+     * 是否收藏 0 未收藏 1 已收藏
+     */
     public int collection;
 
 
