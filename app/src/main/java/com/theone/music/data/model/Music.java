@@ -47,11 +47,11 @@ public class Music implements Parcelable {
      * id、主键 自增
      */
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int id = 0;
     /**
      * 用户id 关联登录用户
      */
-    public int userId;
+    public int userId = 0;
 
     /**
      * 歌名
@@ -88,7 +88,7 @@ public class Music implements Parcelable {
     /**
      * 是否收藏 0 未收藏 1 已收藏
      */
-    public int collection;
+    public int collection = 0;
 
 
 

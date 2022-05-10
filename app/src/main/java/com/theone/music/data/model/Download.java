@@ -48,11 +48,11 @@ public class Download {
      * id、主键 自增
      */
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int id = 0;
     /**
      * 关联音乐数据
      */
-    public int musicId;
+    public int musicId = 0;
     /**
      * 本地下载地址
      */
@@ -64,7 +64,7 @@ public class Download {
     /**
      * 下载时间
      */
-    public long time;
+    public long time = 0;
 
 
 }

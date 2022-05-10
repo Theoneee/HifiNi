@@ -46,7 +46,7 @@ public class User {
      * id、主键 自增
      */
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int id = 0;
     /**
      * 用户名
      */
@@ -54,7 +54,7 @@ public class User {
     /**
      * 用户昵称
      */
-    public String nickname;
+    public String nickname = "";
     /**
      * 密码
      */
@@ -62,6 +62,6 @@ public class User {
     /**
      * 性别
      */
-    public int sex;
+    public int sex = 0;
 
 }
