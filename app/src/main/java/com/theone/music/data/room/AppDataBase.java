@@ -44,7 +44,7 @@ public abstract class AppDataBase extends RoomDatabase {
 
     private static volatile AppDataBase sInstance;
 
-    private static final String DB_NAME = "HifiNi_Java.db";
+    private static final String DB_NAME = "HifiNi.db";
 
     /**
      * 懒汉单例模式
