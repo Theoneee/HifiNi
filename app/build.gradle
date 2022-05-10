@@ -4,12 +4,12 @@ apply from: "../default.gradle"
 android {
     defaultConfig {
         applicationId "com.theone.music"
-        versionCode 7
-        versionName "1.1.0"
+        versionCode 8
+        versionName "1.1.2"
 
         ndk {
             //设置支持的SO库架构
-            abiFilters 'arm64-v8a','x86'
+            abiFilters 'arm64-v8a'
         }
     }
 }

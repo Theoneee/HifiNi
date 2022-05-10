@@ -9,8 +9,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->  // each 改为 all
-            //def fileName = "HifiNi_${variant.versionName}_release.apk"
-            def fileName = "HifiNi_beta_release.apk"
+            def fileName = "HifiNi_kt_${variant.versionName}_release.apk"
             def outFile = output.outputFile
             if (outFile != null && outFile.name.endsWith('.apk')) {
                 outputFileName = fileName  //  output.outputFile 改为 outputFileName
