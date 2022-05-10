@@ -39,7 +39,7 @@
 
         <service android:name=".player.notification.PlayerService" />
 
-        <service android:name=".DownloadMusicService"/>
+        <service android:name=".service.DownloadMusicService"/>
 
         <receiver
             android:name=".player.notification.PlayerReceiver"

@@ -122,7 +122,7 @@ class PlayerActivity :
                         getCurrentMusic().setMusicInfo()
                         return
                     }
-                    // 不是同一个，就暂停上一个
+                    // 不是同一个，就暂停上一个?
                     if (isPlaying) {
                         pauseAudio()
                     }

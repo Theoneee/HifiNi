@@ -5,7 +5,9 @@ import com.shuyu.gsyvideoplayer.cache.CacheFactory
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.theone.music.BuildConfig
 import com.theone.music.player.PlayerManager
+import com.theone.music.ui.activity.LauncherActivity
 import com.theone.mvvm.core.app.CoreApplication
+import com.theone.mvvm.core.app.ext.initCrashConfig
 import com.theone.mvvm.core.app.util.RxHttpManager
 import com.theone.mvvm.core.base.loader.Loader
 import com.theone.mvvm.core.base.loader.callback.ErrorCallback
@@ -45,15 +47,10 @@ class App:CoreApplication() {
     override fun isDebug(): Boolean = BuildConfig.DEBUG
 
     override fun init(application: Application) {
+        initCrashConfig(LauncherActivity::class.java)
+        super.init(application)
         // 对播放器的初始化
         PlayerManager.getInstance().init(application)
-        super.init(application)
-        // 这个是框架里面的
-        Loader.beginBuilder()
-            .addCallback(LoadingCallback::class.java)
-            .addCallback(ErrorCallback::class.java)
-            .defaultCallback(SuccessCallback::class.java)
-            .commit()
         // 网络请求
         RxHttpManager.init(RxHttpBuilder().apply {
             // 这个是缓存地址  app.cacheDir.absolutePath 这个地址是APP内部的，这个是不需要请求权限的

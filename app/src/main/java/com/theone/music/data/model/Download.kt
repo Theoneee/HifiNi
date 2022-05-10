@@ -35,7 +35,7 @@ data class Download(
     val musicId: Int = 0,// 音乐id
     val localPath: String = "",
     var status: Int = DownloadStatus.DOWNLOADING,
-    val time: Long = 0
+    var time: Long = 0
 ) {
 
     @Ignore

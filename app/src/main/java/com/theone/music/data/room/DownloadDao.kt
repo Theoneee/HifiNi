@@ -45,4 +45,10 @@ interface DownloadDao {
     @Query("update download set status =:status where musicId = :musicId ")
     fun updateDownloadStatus(status:Int,musicId:Int):Int
 
+    @Query("select * from download where localPath = :localPath order by time desc limit 1 ")
+    fun getDownloadByLocalPath(localPath:String):List<Download>
+
+    @Query("select * from download where musicId = :musicId order by time desc limit 1 ")
+    fun getDownloadByMusicId(musicId:Int):List<Download>
+
 }

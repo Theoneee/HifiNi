@@ -36,7 +36,8 @@ class DownloadMusicService : Service() {
     private var mDownload: Music? = null
     private var NOTIFICATION_ID: Int = 0
     private var mOldPercent: Int = 0
-    private var musicId:Int = 0
+    private var mFileSize: Long = 0
+    private var musicId: Int = 0
 
     private lateinit var mNotificationBuilder: NotificationCompat.Builder
 
@@ -44,7 +45,6 @@ class DownloadMusicService : Service() {
         if (null != intent && null == mDownload) {
             NOTIFICATION_ID = UUID.randomUUID().hashCode()
             mDownload = intent.getParcelableExtra(BundleConstant.DATA)
-            initNotification()
             startDown()
         }
         return super.onStartCommand(intent, flags, startId)
@@ -68,17 +68,60 @@ class DownloadMusicService : Service() {
             val name = "$author-$title.$type" // 五月天-天使.mp3
             // 保存的地址  APP名字/Download/Music
             val downloadPath = FileDirectoryManager.getDownloadPath() + File.separator + "Music"
+            // APP名字/Download/Music/五月天-天使.mp3
+            val localPath = downloadPath + File.separator + name
             val musics = DataRepository.MUSIC_DAO.findMusics(shareUrl)
             musicId = musics[0].id
-            val download = Download(
+            var download = Download(
                 musicId = musicId,
-                // APP名字/Download/Music/五月天-天使.mp3
-                localPath = downloadPath + File.separator + name,
+                localPath = localPath,
                 time = System.currentTimeMillis(),
                 status = DownloadStatus.DOWNLOADING
             )
-            // 数据库插入一条下载信息
-            DataRepository.DOWNLOAD_DAO.insert(download)
+            // 检查本地文件是否存在
+            val file = File(localPath)
+            val downloads =
+                DataRepository.DOWNLOAD_DAO.getDownloadByLocalPath(localPath)
+            // 文件存在且本地没有保存数据，防止文件不是完成的直接，删除重新开始吧
+            if (downloads.isEmpty()) {
+                if (file.exists()) {
+                    file.delete()
+                }
+            } else {
+                // 如果本地数据也存在,判断下载状态
+                download = downloads[0]
+                when (download.status) {
+                    DownloadStatus.FAIL -> {
+                        // 如果是失败就删除重新下载
+                        if (file.exists()) {
+                            file.delete()
+                        }
+                        download.time = System.currentTimeMillis()
+                        download.status = DownloadStatus.DOWNLOADING
+                    }
+                    DownloadStatus.SUCCESS ->{
+                        // 如果是成功文件不存在就重新下载
+                        if(!file.exists()){
+                            download.time = System.currentTimeMillis()
+                            download.status = DownloadStatus.DOWNLOADING
+                        }else{
+                            //ToastUtils.show("已下载")
+                            return
+                        }
+                    }
+                    DownloadStatus.DOWNLOADING->{
+                        return
+                    }
+                }
+            }
+            if (download.id == 0) {
+                // 数据库插入一条下载信息
+                DataRepository.DOWNLOAD_DAO.insert(download)
+            } else {
+                // 更新
+                DataRepository.DOWNLOAD_DAO.update(download)
+            }
+            initNotification()
             OkHttpUtils.get()
                 .url(getMusicUrl())
                 .tag(getMusicUrl())
@@ -90,6 +133,7 @@ class DownloadMusicService : Service() {
                         val percent = (progress * 100).toInt()
                         if (percent != mOldPercent) {
                             mOldPercent = percent
+                            mFileSize = total
                             updateProgress(percent)
                         }
                     }
@@ -146,8 +190,8 @@ class DownloadMusicService : Service() {
     /**
      * 更新数据库里面下载的状态
      */
-    private fun updateDownloadDB(status:Int) {
-        DataRepository.DOWNLOAD_DAO.updateDownloadStatus(status,musicId)
+    private fun updateDownloadDB(status: Int) {
+        DataRepository.DOWNLOAD_DAO.updateDownloadStatus(status, musicId)
     }
 
 
