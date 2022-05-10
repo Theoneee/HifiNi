@@ -8,6 +8,8 @@
 
 [Wiki](https://github.com/Theoneee/HifiNi/wiki)
 
+[演示视频]()
+
 #### 功能
 
 1. 分类音乐数据显示。
