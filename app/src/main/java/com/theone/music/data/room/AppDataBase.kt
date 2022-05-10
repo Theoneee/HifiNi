@@ -56,7 +56,7 @@ abstract class AppDataBase:RoomDatabase() {
     abstract fun downloadDao(): DownloadDao
 
     companion object{
-        private const val DB_NAME = "HifiNi.db"
+        private const val DB_NAME = "HifiNi_Kotlin.db"
 
         val INSTANCE:AppDataBase by lazy(LazyThreadSafetyMode.SYNCHRONIZED){
             Room.databaseBuilder(
