@@ -47,7 +47,7 @@ android {
 
 dependencies {
     // 主要的框架
-    implementation 'com.gitee.theoneee.qmui-mvvm:core:1.0.3-beta'
+    implementation "com.github.Theoneee.QMUI-MVVM:core:1.0.5"
     // 这个框架里面网络请求的一个注解处理器 RxHttp
     kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:2.8.5"
 }

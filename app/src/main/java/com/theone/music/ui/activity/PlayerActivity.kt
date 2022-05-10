@@ -21,22 +21,18 @@ import com.theone.music.R
 import com.theone.music.app.ext.toMusic
 import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.CollectionEvent
-import com.theone.music.data.model.Download
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
 import com.theone.music.databinding.PageMusicPlayerBinding
 import com.theone.music.player.PlayerManager
-import com.theone.music.startMusicDownloadService
+import com.theone.music.service.startMusicDownloadService
 import com.theone.music.ui.view.TheSelectImageView
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.core.app.ext.showErrorPage
 import com.theone.mvvm.core.app.ext.showLoadingPage
 import com.theone.mvvm.core.app.ext.showSuccessPage
-import com.theone.mvvm.core.app.util.FileDirectoryManager
 import com.theone.mvvm.core.base.activity.BaseCoreActivity
-import com.theone.mvvm.core.data.entity.DownloadBean
-import com.theone.mvvm.core.service.startDownloadService
 import com.theone.mvvm.ext.addParams
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
@@ -44,9 +40,8 @@ import com.theone.mvvm.ext.qmui.showMsgDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
-//  ┏┓　　　┏┓
+// ┏┓　  ┏┓
 //┏┛┻━━━┛┻┓
 //┃　　　　　　　┃
 //┃　　　━　　　┃
@@ -361,7 +356,7 @@ class PlayerActivity :
      * 下载：
      *
      *  缺点：
-     *  由于时间原因，下载没有做是否已经下载判断，这个是系统的bug
+     *  由于时间原因，下载没有做是否已经下载判断
      */
     private fun startDownload(){
         getCurrentMusic().let {

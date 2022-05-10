@@ -3,6 +3,7 @@ package com.theone.music.ui.fragment
 import android.content.Context
 import android.widget.RelativeLayout
 import com.qmuiteam.qmui.arch.QMUIFragment
+import com.qmuiteam.qmui.widget.QMUITopBarLayout
 import com.theone.music.R
 import com.theone.music.net.NetConstant
 import com.theone.mvvm.base.viewmodel.BaseViewModel
@@ -23,10 +24,9 @@ class MainFragment:BaseTabInTitleFragment<BaseViewModel>() {
         }
     }
 
-    override fun initTopBar() {
-        getTopBar()?.run {
-            addLeftCloseImageBtn()
-        }
+    override fun QMUITopBarLayout.initTopBar() {
+        addLeftCloseImageBtn()
+        setCenterView(getMagicIndicator())
     }
 
     override fun getNavIndicator(context: Context): IPagerIndicator? = null

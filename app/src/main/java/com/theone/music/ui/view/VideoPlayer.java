@@ -27,9 +27,9 @@ import java.io.File;
  * 自定义播放器
  * @author theone
  */
-public class LoverVideoPlayer extends StandardGSYVideoPlayer {
+public class VideoPlayer extends StandardGSYVideoPlayer {
 
-    private static final String TAG = "LoverVideoPlayer";
+    private static final String TAG = "VideoPlayer";
 
     ImageView mCoverImage, ivIcon;
     DouYinLoadingView mLoadingView;
@@ -38,11 +38,11 @@ public class LoverVideoPlayer extends StandardGSYVideoPlayer {
     private TextView  tvNickName, tvContent;
     private boolean isClickPause = false;
 
-    public LoverVideoPlayer(Context context) {
+    public VideoPlayer(Context context) {
         super(context);
     }
 
-    public LoverVideoPlayer(Context context, AttributeSet attrs) {
+    public VideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

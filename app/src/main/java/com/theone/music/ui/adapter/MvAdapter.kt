@@ -1,21 +1,13 @@
 package com.theone.music.ui.adapter
 
-import android.text.TextUtils
 import com.chad.library.adapter.base.viewholder.BaseDataBindingHolder
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.luck.picture.lib.config.PictureConfig
-import com.qmuiteam.qmui.widget.QMUIRadiusImageView2
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
-import com.theone.common.ext.YYYY_MM_DD_HH_MM_SS
-import com.theone.common.util.DateFormatUtils
-import com.theone.common.widget.TheNineGridLayout
 import com.theone.music.R
 import com.theone.music.data.model.MV
 import com.theone.music.databinding.ItemMvBinding
-import com.theone.music.ui.view.LoverVideoPlayer
+import com.theone.music.ui.view.VideoPlayer
 import com.theone.mvvm.core.base.adapter.TheBaseQuickAdapter
-import com.theone.mvvm.core.ui.binding_adapter.CoreBindAdapter
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -43,20 +35,20 @@ import com.theone.mvvm.core.ui.binding_adapter.CoreBindAdapter
  */
 class MvAdapter:TheBaseQuickAdapter<MV,ItemMvBinding>(R.layout.item_mv) {
 
-    private var curPlayer: LoverVideoPlayer? = null
+    private var curPlayer: VideoPlayer? = null
     private var isPlay = false
 
     override fun convert(holder: BaseDataBindingHolder<ItemMvBinding>, item: MV) {
         with(holder) {
                 initVideoPlayer(
-                    getView<LoverVideoPlayer>(R.id.video_player),
+                    getView<VideoPlayer>(R.id.video_player),
                     item,
                     holder.absoluteAdapterPosition
                 )
         }
     }
     private fun initVideoPlayer(
-        coverVideo: LoverVideoPlayer,
+        coverVideo: VideoPlayer,
         item: MV,
         position: Int
     ) {
@@ -68,7 +60,7 @@ class MvAdapter:TheBaseQuickAdapter<MV,ItemMvBinding>(R.layout.item_mv) {
 
                 override fun onPrepared(url: String, vararg objects: Any) {
                     super.onPrepared(url, *objects)
-                    curPlayer = objects[1] as LoverVideoPlayer
+                    curPlayer = objects[1] as VideoPlayer
                     isPlay = true
                 }
 

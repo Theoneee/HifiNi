@@ -16,14 +16,7 @@ package com.theone.music.ui.adapter;//  ┏┓　　　┏┓
 //      ┃┫┫　┃┫┫
 //      ┗┻┛　┗┻┛
 
-import android.view.View;
-import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 import com.theone.music.R;
 import com.theone.music.data.model.Banner;
 import com.theone.music.databinding.ItemBannerBinding;

@@ -1,4 +1,4 @@
-package com.theone.music
+package com.theone.music.service
 
 import android.app.Activity
 import android.app.Notification
@@ -7,10 +7,10 @@ import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.hjq.toast.ToastUtils
 import com.theone.common.constant.BundleConstant
+import com.theone.music.R
 import com.theone.music.data.constant.DownloadStatus
 import com.theone.music.data.model.Download
 import com.theone.music.data.model.Music

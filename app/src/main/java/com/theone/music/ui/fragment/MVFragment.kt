@@ -4,13 +4,12 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.theone.music.R
 import com.theone.music.data.model.MV
 import com.theone.music.player.PlayerManager
 import com.theone.music.ui.adapter.MvAdapter
-import com.theone.music.ui.view.LoverVideoPlayer
+import com.theone.music.ui.view.VideoPlayer
 import com.theone.music.ui.view.OnViewPagerListener
 import com.theone.music.ui.view.PagerLayoutManager
 import com.theone.music.viewmodel.EventViewModel
@@ -76,7 +75,7 @@ class MVFragment : BasePagerFragment<MV, MvViewModel>() {
                 }
 
                 override fun onPageRelease(isNext: Boolean, position: Int, view: View?) {
-                    view?.findViewById<LoverVideoPlayer>(R.id.video_player)?.onVideoPause()
+                    view?.findViewById<VideoPlayer>(R.id.video_player)?.onVideoPause()
                 }
 
                 override fun onPageSelected(position: Int, isBottom: Boolean, view: View?) {
@@ -92,7 +91,7 @@ class MVFragment : BasePagerFragment<MV, MvViewModel>() {
         if (!isPageVisible) {
             return
         }
-        view?.findViewById<LoverVideoPlayer>(R.id.video_player)?.let {
+        view?.findViewById<VideoPlayer>(R.id.video_player)?.let {
             if (it.currentState == GSYVideoView.CURRENT_STATE_PAUSE) {
                 it.onVideoResume()
             } else {

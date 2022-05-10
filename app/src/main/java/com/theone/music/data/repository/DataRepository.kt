@@ -387,4 +387,10 @@ class DataRepository {
         )
     }
 
+    fun getBannerList() = arrayListOf(
+        Banner("https://y.qq.com/music/common/upload/MUSIC_FOCUS/4279661.jpg?max_age=2592000"),
+        Banner("https://y.qq.com/music/common/upload/MUSIC_FOCUS/4280047.jpg?max_age=2592000"),
+        Banner("https://y.qq.com/music/common/upload/MUSIC_FOCUS/4279664.jpg?max_age=2592000")
+    )
+
 }

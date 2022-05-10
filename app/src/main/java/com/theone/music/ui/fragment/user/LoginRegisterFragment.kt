@@ -2,6 +2,7 @@ package com.theone.music.ui.fragment.user
 
 import android.content.Context
 import com.qmuiteam.qmui.arch.QMUIFragment
+import com.qmuiteam.qmui.widget.QMUITopBarLayout
 import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.newFragment
 import com.theone.music.R
@@ -41,9 +42,10 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.Simple
  */
 class LoginRegisterFragment : BaseTabInTitleFragment<BaseViewModel>() {
 
-    override fun initTopBar() {
+    override fun QMUITopBarLayout.initTopBar() {
         addLeftCloseImageBtn(R.drawable.mz_comment_titlebar_ic_close_dark)
-        getTopBar()?.updateBottomDivider(0, 0, 0, 0)
+        updateBottomDivider(0, 0, 0, 0)
+        setCenterView(getMagicIndicator())
     }
 
     override fun initTabAndFragments(

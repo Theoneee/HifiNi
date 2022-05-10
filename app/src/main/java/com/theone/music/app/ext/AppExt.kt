@@ -9,7 +9,7 @@ import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
 import com.theone.music.ui.activity.LoginRegisterActivity
 import com.theone.mvvm.base.fragment.BaseQMUIFragment
-import com.theone.mvvm.core.app.util.FileDirectoryUtil
+import com.theone.mvvm.core.app.util.FileDirectoryManager
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -49,7 +49,7 @@ fun BaseQMUIFragment.checkLogin(action: () -> Unit = {}){
 }
 
 
-fun writeStringToFile(path: String = FileDirectoryUtil.getCachePath()+ File.separator+"temp.txt", content: String) {
+fun writeStringToFile(path: String = FileDirectoryManager.getCachePath()+ File.separator+"temp.txt", content: String) {
     try {
         val pw = PrintWriter(FileWriter(path))
         pw.print(content)
