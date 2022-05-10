@@ -23,7 +23,7 @@
 
 ### 下载地址
 
-![HiFiNi](https://qr.api.cli.im/newqr/create?data=http%3A%2F%2Ffile.cudag.com%2F2022%2F01%2F13%2F503c115140ab17b1809dd646318f34f4.apk&level=H&transparent=false&bgcolor=%23FFFFFF&forecolor=%23000&blockpixel=12&marginblock=2&logourl=&logoshape=no&size=191&bgimg=&text=&fontsize=30&fontcolor=&fontfamily=msyh.ttf&incolor=%231694e3&outcolor=&qrcode_eyes=pin-3.png&background=images%2Fbackground%2Fbg25.png&wper=0.84&hper=0.84&tper=0.08&lper=0.08&eye_use_fore=&qrpad=10&embed_text_fontfamily=simhei.ttc&body_type=0&qr_rotate=0&logo_pos=0&kid=cliim&key=0ae96de8ad8c03201262c0d033109119 "HifiNi-Download.png")
+![HiFiNi](https://qr.api.cli.im/newqr/create?data=https%253A%252F%252Fwww.pgyer.com%252F2G45&level=H&transparent=false&bgcolor=%23FFFFFF&forecolor=%23000&blockpixel=12&marginblock=2&logourl=&logoshape=no&size=300&embed_text_fontfamily=simhei.ttc&eye_use_fore=&background=images%2Fbackground%2Fbg25.png&wper=0.84&hper=0.84&tper=0.08&lper=0.08&qrcode_eyes=pin-3.png&outcolor=&incolor=%231694e3&body_type=0&qr_rotate=0&text=&fontfamily=msyh.ttf&fontsize=30&fontcolor=&logo_pos=0&kid=cliim&key=41a3781f6d9f80eb337e963b4cd1495f "HifiNi-Download.png")
 
 #### 感谢
 
