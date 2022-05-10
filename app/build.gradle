@@ -4,12 +4,13 @@ apply from: "../default.gradle"
 android {
     defaultConfig {
         applicationId "com.theone.music"
-        versionCode 7
-        versionName "1.1.0"
+        versionCode 8
+        versionName "1.1.2"
 
         ndk {
             //设置支持的SO库架构
             abiFilters 'arm64-v8a','x86'
+            //abiFilters 'arm64-v8a','x86'
         }
     }
 }
@@ -26,7 +27,7 @@ dependencies {
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.1.6-jitpack'
     implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer-exo2:v8.1.6-jitpack'
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-arm64:v8.1.6-jitpack'
-    implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86:v8.1.6-jitpack'
+    //implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-x86:v8.1.6-jitpack'
 
     // 数据库
     def room_version = "2.3.0"
