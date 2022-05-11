@@ -139,7 +139,7 @@ class PlayerActivity :
                 // 查询DB
                 getViewModel().requestDbMusic()?.let {
                     val cacheUrl = getCacheUrl(it.getMusicUrl())
-                    setMediaSource(it,cacheUrl.isNotEmpty())
+                    setMediaSource(it, cacheUrl.isNotEmpty())
                     return
                 }
             }
@@ -164,7 +164,7 @@ class PlayerActivity :
             setMediaSource(it, true)
         }
         getViewModel().getErrorLiveData().observe(this) {
-            showErrorPage(it){
+            showErrorPage(it) {
                 onPageReLoad()
             }
         }
@@ -215,7 +215,7 @@ class PlayerActivity :
             it.author.set(author)
             it.cover.set(pic)
             mEvent.getUserInfoLiveData().value?.let { user ->
-                it.requestCollection(user.id,shareUrl)
+                it.requestCollection(user.id, shareUrl)
             }
         }
     }
@@ -229,25 +229,29 @@ class PlayerActivity :
         data.setMusicInfo()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                // 不是新数据才检查地址是否可行
-                if (!newData  && getViewModel().checkUrl(data.getMusicUrl())) {
-                    getViewModel().isReload = true
-                    getViewModel().requestServer()
-                }else{
-                    if(!getViewModel().ensureUrl(data.getMusicUrl())){
-                        withContext(Dispatchers.Main){
-                            showFailTipsDialog("当前播放地址不可用")
-                        }
-                    }else{
-                        PlayerManager.getInstance().loadAlbum(data)
-                        getViewModel().run {
-                            isSetSuccess.set(true)
-                            // 更新音乐信息 最后播放时间
-                            updateMusicLastPlayDate()
-                        }
+                val cacheUrl = PlayerManager.getInstance().getCacheUrl(data.getMusicUrl())
+                // 缓存有就直接播放
+                if (cacheUrl.isNullOrEmpty()) {
+                    loadAlbum(data)
+                } else {
+                    // 不是新数据才检查地址是否可行
+                    if (!newData && getViewModel().checkUrl(data.getMusicUrl())) {
+                        getViewModel().isReload = true
+                        getViewModel().requestServer()
+                    } else {
+                        loadAlbum(data)
                     }
                 }
             }
+        }
+    }
+
+    private fun loadAlbum(data: Music) {
+        PlayerManager.getInstance().loadAlbum(data)
+        getViewModel().run {
+            isSetSuccess.set(true)
+            // 更新音乐信息 最后播放时间
+            updateMusicLastPlayDate()
         }
     }
 
@@ -359,7 +363,7 @@ class PlayerActivity :
      *  缺点：
      *  由于时间原因，下载没有做是否已经下载判断
      */
-    private fun startDownload(){
+    private fun startDownload() {
         getCurrentMusic().let {
             ToastUtils.show("开始下载")
             startMusicDownloadService(it)

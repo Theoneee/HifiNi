@@ -81,7 +81,7 @@
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="@{vm.name}"
+            app:spanString="@{vm.name}"
             android:layout_marginStart="12dp"
             tools:text="天使"/>
 
@@ -92,7 +92,7 @@
             app:layout_constraintBottom_toBottomOf="@id/cover"
             app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintTop_toBottomOf="@id/name"
-            android:text="@{vm.author}"
+            app:spanString="@{vm.author}"
             android:textColor="@color/qmui_config_color_gray_3"
             android:textSize="12sp"
             tools:text="五月天"/>

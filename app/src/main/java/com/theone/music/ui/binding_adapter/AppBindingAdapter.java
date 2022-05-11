@@ -5,15 +5,19 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.BindingAdapter;
 
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
+import com.theone.common.ext.StringExtKt;
 import com.theone.music.R;
+import com.theone.music.app.ext.AppExtKt;
 import com.theone.music.data.constant.DownloadStatus;
 import com.theone.music.data.model.DownloadResult;
 import com.theone.music.ui.view.PlayPauseView;
 import com.theone.music.ui.view.TheSelectImageView;
 
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 public class AppBindingAdapter {
 
@@ -41,6 +45,11 @@ public class AppBindingAdapter {
         btn.setText(status);
         btn.setBackgroundColor(ContextCompat.getColor(btn
                 .getContext(), color));
+    }
+
+    @BindingAdapter(value = {"spanString"}, requireAll = false)
+    public static void setSpanString(TextView textView, String spanString) {
+        textView.setText(StringExtKt.toHtml(spanString, Html.FROM_HTML_MODE_LEGACY));
     }
 
     @BindingAdapter(value = {"res"}, requireAll = false)

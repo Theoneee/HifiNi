@@ -270,30 +270,12 @@ class DataRepository {
      * @return String
      */
     fun checkUrl(url: String): Boolean {
-        // 先判断本地有没有缓存，有缓存后续就会用
-        val cacheUrl = PlayerManager.getInstance().getCacheUrl(url)
-        if (cacheUrl.contains("storage/emulated")) {
-            return false
-        }
-        val conn = URL(url).openConnection() as HttpURLConnection
-        val code = conn.responseCode
-        conn.disconnect()
-        // 不为200的或者跳到了腾讯网了都算作废
-        return code != 200  || conn.url.toString().contains("https://www.qq.com/")
-    }
-
-    /**
-     * 确保链接可用
-     * @param url String
-     * @return Boolean
-     */
-    fun ensureUrl(url:String):Boolean{
         val conn = URL(url).openConnection() as HttpURLConnection
         conn.setRequestProperty("referer",NetConstant.BASE_URL)
         val code = conn.responseCode
         conn.disconnect()
-        Log.e(TAG, "ensureUrl: $code" )
-        return code == 200
+        // 不为200的或者跳到了腾讯网了都算作废
+        return code != 200  || conn.url.toString().contains("https://www.qq.com/")
     }
 
     suspend fun get(url: String, vararg formatArgs: Any): ResponseList<Music> {

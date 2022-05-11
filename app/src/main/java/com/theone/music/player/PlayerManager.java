@@ -18,6 +18,7 @@ package com.theone.music.player;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -47,6 +48,8 @@ import com.theone.music.player.notification.PlayerService;
  * Create by KunMinX at 19/10/31
  */
 public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestMusic> {
+
+    private static final String TAG = "PlayerManager";
 
     private static final PlayerManager sManager = new PlayerManager();
 
