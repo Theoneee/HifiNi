@@ -12,6 +12,10 @@
 
 [Wiki](https://github.com/Theoneee/HifiNi/wiki)
 
+#### 演示视频
+
+https://user-images.githubusercontent.com/32156330/167596934-2f99e270-78dc-46c7-a2c9-71802873bad7.mp4
+
 #### 功能
 
 1. 分类音乐数据显示。
