@@ -22,6 +22,7 @@ import android.content.Intent;
 import androidx.lifecycle.LiveData;
 
 import com.danikula.videocache.HttpProxyCacheServer;
+import com.danikula.videocache.headers.HeaderInjector;
 import com.kunminx.player.PlayerController;
 import com.kunminx.player.bean.dto.ChangeMusic;
 import com.kunminx.player.bean.dto.PlayingMusic;
@@ -29,11 +30,16 @@ import com.kunminx.player.contract.ICacheProxy;
 import com.kunminx.player.contract.IPlayController;
 import com.kunminx.player.contract.IServiceNotifier;
 import com.kunminx.player.helper.MediaPlayerHelper;
+import com.theone.music.data.model.Music;
 import com.theone.music.data.model.TestAlbum;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.theone.music.data.repository.DataRepository;
+import com.theone.music.net.NetConstant;
 import com.theone.music.player.helper.PlayerFileNameGenerator;
 import com.theone.music.player.notification.PlayerService;
 
@@ -65,6 +71,14 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
         Context context1 = context.getApplicationContext();
 
         mProxy = new HttpProxyCacheServer.Builder(context1)
+                .headerInjector(new HeaderInjector() {
+                    @Override
+                    public Map<String, String> addHeaders(String url) {
+                        Map<String, String> header = new HashMap<>();
+                        header.put("referer", NetConstant.BASE_URL);
+                        return header;
+                    }
+                })
                 .fileNameGenerator(new PlayerFileNameGenerator())
                 .maxCacheSize(2147483648L)
                 .build();
@@ -91,6 +105,10 @@ public class PlayerManager implements IPlayController<TestAlbum, TestAlbum.TestM
 
     public String getCacheUrl(String url){
         return mProxy.getProxyUrl(url);
+    }
+
+    public void loadAlbum(Music music) {
+        mController.loadAlbum(DataRepository.Companion.getINSTANCE().createAlbum(music),0);
     }
 
     @Override

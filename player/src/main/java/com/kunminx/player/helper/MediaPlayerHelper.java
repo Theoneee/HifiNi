@@ -16,6 +16,7 @@
 
 package com.kunminx.player.helper;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -28,7 +29,9 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.media.MediaTimestamp;
+import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -38,7 +41,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdateListener, OnErrorListener, OnInfoListener,
         OnPreparedListener, OnSeekCompleteListener, OnVideoSizeChangedListener, SurfaceHolder.Callback {
@@ -56,7 +61,10 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
             ".mid"
     };
 
+    private Context mContext;
+
     private List<String> formatList = new ArrayList<>();
+    private Map<String, String> headers ;
 
     //所有支持的格式（可在外部自定义添加）
     public List<String> getFormatList() {
@@ -65,6 +73,20 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
 
     {
         formatList.addAll(Arrays.asList(ext));
+    }
+
+    /**
+     * 添加请求头
+     * @param key
+     * @param value
+     */
+    public void addHeader(String key,String value){
+        if(null == headers){
+            headers = new HashMap<>();
+        }
+        if(!headers.containsKey(key)){
+            headers.put(key,value);
+        }
     }
 
     public Holder uiHolder;
@@ -195,6 +217,7 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
     }
 
     public void initAssetManager(Context context) {
+        mContext = context.getApplicationContext();
         assetMg = context.getAssets();
     }
 
@@ -210,10 +233,15 @@ public class MediaPlayerHelper implements OnCompletionListener, OnBufferingUpdat
                 uiHolder.assetDescriptor = assetMg.openFd(path);
                 uiHolder.player.setDataSource(uiHolder.assetDescriptor.getFileDescriptor(), uiHolder.assetDescriptor.getStartOffset(), uiHolder.assetDescriptor.getLength());
             }else{
-                uiHolder.player.setDataSource(path);
+                if(null == headers){
+                    uiHolder.player.setDataSource(path);
+                }else{
+                    uiHolder.player.setDataSource(mContext,Uri.parse(path),headers);
+                }
             }
             uiHolder.player.prepare();
         } catch (Exception e) {
+            e.printStackTrace();
             callBack(CallBackState.ERROR, uiHolder.player);
             return false;
         }

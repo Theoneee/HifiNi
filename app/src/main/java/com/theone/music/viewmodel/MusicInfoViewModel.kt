@@ -75,6 +75,10 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
         })
     }
 
+    fun checkUrl(url:String) =  DataRepository.INSTANCE.checkUrl(url)
+
+    fun ensureUrl(url:String) =  DataRepository.INSTANCE.ensureUrl(url)
+
     fun requestDbMusic():Music?{
        return DataRepository.INSTANCE.getDbMusicInfo(link)
     }

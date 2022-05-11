@@ -15,6 +15,7 @@ import com.theone.music.data.constant.DownloadStatus
 import com.theone.music.data.model.Download
 import com.theone.music.data.model.Music
 import com.theone.music.data.repository.DataRepository
+import com.theone.music.net.NetConstant
 import com.theone.mvvm.base.appContext
 import com.theone.mvvm.core.app.util.FileDirectoryManager
 import com.theone.mvvm.core.app.util.NotificationManager
@@ -124,6 +125,7 @@ class DownloadMusicService : Service() {
             initNotification()
             OkHttpUtils.get()
                 .url(getMusicUrl())
+                .addHeader("referer", NetConstant.BASE_URL)
                 .tag(getMusicUrl())
                 .build()
                 .execute(object : FileCallBack(downloadPath, name) {

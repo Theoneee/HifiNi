@@ -76,10 +76,12 @@ class DataRepository {
      */
     suspend fun request(url: String, vararg formatArgs: Any): String {
         return RxHttp.get(url, *formatArgs)
-                // 设置缓存模式： 先从缓存获取，如果缓存没有再请求网络
-            .setCacheMode(CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK)
-                // 这是缓存时间
-            .setCacheValidTime(-1)
+            // 不再设置缓存了，第一次请求成功后，本地数据库已经保存了播放信息，这里必要要从网络获取最新的
+            // 设置缓存模式： 先从缓存获取，如果缓存没有再请求网络
+            //.setCacheMode(CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK)
+            // 这是缓存时间
+            //.setCacheValidTime(-1)
+            .setCacheMode(CacheMode.ONLY_NETWORK)
             .toStr()
             .await()
     }
@@ -252,7 +254,7 @@ class DataRepository {
      */
     private suspend fun getRedirectUrl(url: String): String {
         return withContext(Dispatchers.IO) {
-            val conn = URL(NetConstant.BASE_URL + url).openConnection() as HttpURLConnection
+            val conn = URL(url).openConnection() as HttpURLConnection
             conn.responseCode
             val realUrl = conn.url.toString()
             conn.disconnect()
@@ -276,8 +278,22 @@ class DataRepository {
         val conn = URL(url).openConnection() as HttpURLConnection
         val code = conn.responseCode
         conn.disconnect()
-        // 403的或者跳到了腾讯网了都算作废
-        return code == 403 || conn.url.toString().contains("https://www.qq.com/")
+        // 不为200的或者跳到了腾讯网了都算作废
+        return code != 200  || conn.url.toString().contains("https://www.qq.com/")
+    }
+
+    /**
+     * 确保链接可用
+     * @param url String
+     * @return Boolean
+     */
+    fun ensureUrl(url:String):Boolean{
+        val conn = URL(url).openConnection() as HttpURLConnection
+        conn.setRequestProperty("referer",NetConstant.BASE_URL)
+        val code = conn.responseCode
+        conn.disconnect()
+        Log.e(TAG, "ensureUrl: $code" )
+        return code == 200
     }
 
     suspend fun get(url: String, vararg formatArgs: Any): ResponseList<Music> {
@@ -313,8 +329,13 @@ class DataRepository {
         val music = parseMusicInfo(response).apply {
             shareUrl = link
             if (!url.startsWith("http")) {
+                url = NetConstant.BASE_URL + url
                 // 然后得到重定向后的地址
                 realUrl = getRedirectUrl(url)
+                // 其实这里可以不需要这个实际播放地址（重定向过后的）
+                // 但是这里得到的信息返回成功后界面将会显示内容层
+                // 后续再交给PlayerManager去重定向缓冲等耗时操作，界面的等待时间就会增长
+                // 那直接把这个等待时间给到加载界面吧
             }
         }
         // 重新加载的播放地址，更新数据库

@@ -35,6 +35,7 @@ import com.kunminx.player.helper.MediaPlayerHelper;
 
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Create by KunMinX at 18/9/25
@@ -130,7 +131,6 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
         M freeMusic = null;
         freeMusic = mPlayingInfoManager.getCurrentPlayingMusic();
         url = freeMusic.getUrl();
-        Log.e(TAG, "getUrlAndPlay: " + url);
         if (TextUtils.isEmpty(url)) {
             pauseAudio();
         } else {
@@ -160,7 +160,6 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
     private void bindProgressListener() {
         MediaPlayerHelper.getInstance().setProgressInterval(1000).setMediaPlayerHelperCallBack(
                 (state, mediaPlayerHelper, args) -> {
-                    Log.i(TAG, "bindProgressListener: " + state.toString());
                     if (state == MediaPlayerHelper.CallBackState.PROGRESS) {
                         int position = mediaPlayerHelper.getMediaPlayer().getCurrentPosition();
                         int duration = mediaPlayerHelper.getMediaPlayer().getDuration();
@@ -178,7 +177,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
                                 playNext();
                             }
                         }
-                    } else if (state == MediaPlayerHelper.CallBackState.EXCEPTION) {
+                    } else if (state == MediaPlayerHelper.CallBackState.EXCEPTION ||state == MediaPlayerHelper.CallBackState.ERROR) {
                         playErrorLiveData.postValue(state.toString());
                     }
                 });

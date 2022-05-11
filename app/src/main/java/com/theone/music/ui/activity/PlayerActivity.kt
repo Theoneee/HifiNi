@@ -1,6 +1,7 @@
 package com.theone.music.ui.activity
 
 import android.app.Activity
+import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import android.widget.SeekBar
@@ -156,6 +157,8 @@ class PlayerActivity :
             // 重新得到数据后，要刷新收藏里的数据
             if (getViewModel().isReload) {
                 getViewModel().isReload = false
+                // 从新获取新的播放地址，但是收藏界面的数据并没有更新
+                // 避免下一次点击时依然是旧的数据，会造成重复数据加载
                 mEvent.dispatchReloadMusic(it)
             }
             setMediaSource(it, true)
@@ -170,13 +173,6 @@ class PlayerActivity :
 
             // 暂停事件
             pauseEvent.observe(this@PlayerActivity) {
-                // 等同于
-//                if(it){
-//                    getDataBinding().playerPause.pause()
-//                }else{
-//                    getDataBinding().playerPause.play()
-//                }
-                // AppBindingAdapter.isPlaying
                 getViewModel().isPlaying.set(!it)
             }
 
@@ -234,17 +230,22 @@ class PlayerActivity :
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 // 不是新数据才检查地址是否可行
-                if (!newData && DataRepository.INSTANCE.checkUrl(data.getMusicUrl())) {
+                if (!newData  && getViewModel().checkUrl(data.getMusicUrl())) {
                     getViewModel().isReload = true
                     getViewModel().requestServer()
-                    return@withContext
-                }
-                val album = DataRepository.INSTANCE.createAlbum(data)
-                PlayerManager.getInstance().loadAlbum(album, 0)
-                getViewModel().run {
-                    isSetSuccess.set(true)
-                    // 更新音乐信息 最后播放时间
-                    updateMusicLastPlayDate()
+                }else{
+                    if(!getViewModel().ensureUrl(data.getMusicUrl())){
+                        withContext(Dispatchers.Main){
+                            showFailTipsDialog("当前播放地址不可用")
+                        }
+                    }else{
+                        PlayerManager.getInstance().loadAlbum(data)
+                        getViewModel().run {
+                            isSetSuccess.set(true)
+                            // 更新音乐信息 最后播放时间
+                            updateMusicLastPlayDate()
+                        }
+                    }
                 }
             }
         }

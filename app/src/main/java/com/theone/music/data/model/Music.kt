@@ -6,6 +6,7 @@ import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.theone.music.app.ext.getHtmlString
+import com.theone.music.net.NetConstant
 import kotlinx.android.parcel.Parcelize
 
 //  ┏┓　　　┏┓
@@ -33,7 +34,7 @@ import kotlinx.android.parcel.Parcelize
  * @remark
  */
 
-@Entity(tableName = "MusicInfo",indices = [Index(value = ["shareUrl"],unique = true)])
+@Entity(tableName = "MusicInfo", indices = [Index(value = ["shareUrl"], unique = true)])
 @Parcelize
 data class Music(
     @PrimaryKey(autoGenerate = true)
@@ -47,19 +48,26 @@ data class Music(
     var realUrl: String = "",
     var createDate: Long = 0,
     var lastPlayDate: Long = 0,
-    var collection:Int = 0
+    var collection: Int = 0
 ) : Parcelable {
 
     @Ignore
-    constructor() : this(0) {}
+    constructor() : this(0) {
+    }
 
-    fun getMusicUrl(): String = realUrl.ifEmpty { url }
+    fun getMusicUrl(): String = realUrl.ifEmpty {
+        if(url.isNotEmpty()&&!url.startsWith("http")){
+            NetConstant.BASE_URL+url
+        }else{
+            url
+        }
+    }
 
-    fun getAuthorHtml(): CharSequence{
+    fun getAuthorHtml(): CharSequence {
         return author.getHtmlString()
     }
 
-    fun getTitleHtml(): CharSequence{
+    fun getTitleHtml(): CharSequence {
         return title.getHtmlString()
     }
 
