@@ -138,8 +138,7 @@ class PlayerActivity :
                 }
                 // 查询DB
                 getViewModel().requestDbMusic()?.let {
-                    val cacheUrl = getCacheUrl(it.getMusicUrl())
-                    setMediaSource(it, cacheUrl.isNotEmpty())
+                    setMediaSource(it)
                     return
                 }
             }

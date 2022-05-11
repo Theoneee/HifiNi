@@ -300,7 +300,12 @@ class DataRepository {
             // 先从数据里查是否有
             val list = MUSIC_DAO.findMusics(link)
             if (list.isNotEmpty() && list[0].getMusicUrl().isNotEmpty()) {
-                return list[0]
+                val music = list[0]
+                if(music.getMusicUrl().isNotEmpty()){
+                    if(checkUrl(music.getMusicUrl())){
+                        return music
+                    }
+                }
             }
         }
         // 请求 https://hifini.com/thread-35837.htm
