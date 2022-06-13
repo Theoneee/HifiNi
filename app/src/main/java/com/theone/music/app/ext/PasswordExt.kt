@@ -27,6 +27,8 @@ package com.theone.music.app.ext
 
 import android.util.Base64
 import java.nio.charset.Charset
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -74,5 +76,36 @@ fun String.decrypt(): String {
     cipher.init(Cipher.DECRYPT_MODE, keySpec, IvParameterSpec(byteArray))
     val original = cipher.doFinal(encrypted)
     return String(original, CHARSET)
+}
+
+/**
+ * MD5加密
+ * @receiver String
+ * @return String
+ */
+fun String.md5encode(): String {
+    try {
+        //获取md5加密对象
+        val instance: MessageDigest = MessageDigest.getInstance("MD5")
+        //对字符串加密，返回字节数组
+        val digest:ByteArray = instance.digest(this.toByteArray())
+        var sb : StringBuffer = StringBuffer()
+        for (b in digest) {
+            //获取低八位有效值
+            var i :Int = b.toInt() and 0xff
+            //将整数转化为16进制
+            var hexString = Integer.toHexString(i)
+            if (hexString.length < 2) {
+                //如果是一位的话，补0
+                hexString = "0" + hexString
+            }
+            sb.append(hexString)
+        }
+        return sb.toString()
+
+    } catch (e: NoSuchAlgorithmException) {
+        e.printStackTrace()
+    }
+    return ""
 }
 

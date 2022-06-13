@@ -29,10 +29,20 @@ import rxhttp.wrapper.annotation.DefaultDomain
 object NetConstant {
 
     @DefaultDomain
-    // RxHttp
     const val BASE_URL = "https://www.hifini.com/"
 
+    /**
+     * 登录 - 拿取[cookie]里的[bbs_token]
+     */
+    const val LOGIN = "user-login.htm"
+
+    /**
+     * 签到
+     */
+    const val SIGN = "sg_sign.htm"
+
     const val INDEX = "index-%d.htm"
+
     const val FORUM = "forum-%d-%d.htm"
 
     const val SEARCH = "search-%s.htm"

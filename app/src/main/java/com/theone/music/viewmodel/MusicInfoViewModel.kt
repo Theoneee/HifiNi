@@ -66,7 +66,7 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
         isCollectionEnable.set(CacheUtil.isLogin())
     }
 
-    var isReload = false
+    var isReload = true
 
     override fun requestServer() {
         request({

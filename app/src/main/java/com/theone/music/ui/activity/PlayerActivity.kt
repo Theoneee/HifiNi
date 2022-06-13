@@ -137,10 +137,10 @@ class PlayerActivity :
                     return
                 }
                 // 查询DB
-                getViewModel().requestDbMusic()?.let {
-                    setMediaSource(it)
-                    return
-                }
+//                getViewModel().requestDbMusic()?.let {
+//                    setMediaSource(it)
+//                    return
+//                }
             }
             getRootView().post {
                 onPageReLoad()

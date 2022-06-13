@@ -17,6 +17,7 @@ import rxhttp.toStr
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.utils.GsonUtil
+import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
@@ -232,7 +233,9 @@ class DataRepository {
     private suspend fun parseMusicInfo(response: String): Music {
         return withContext(Dispatchers.IO) {
             var result = ""
-            val elements = Jsoup.parse(response).select("script")
+            val doc = Jsoup.parse(response)
+            doc.parsePassword()
+            val elements = doc.select("script")
             for (element in elements) {
                 val item = element.toString()
                 if (item.contains("APlayer")) {
@@ -245,6 +248,55 @@ class DataRepository {
             result = result.substring(start, end)
             GsonUtil.fromJson<Music>(result, Music::class.java)
         }
+    }
+
+    /**
+     * 解析提取码
+     * @receiver Document
+     */
+    private fun Document.parsePassword() {
+        val auths = select("div.container").select("style")
+        val validKeys = mutableListOf<String>()
+        for (index in 0..1) {
+            try {
+                val validItems = auths[index].toString().replace(".", "").replace("<style>","").run {
+                    substring(0, indexOf("{"))
+                }.split(",")
+                validKeys.addAll(validItems)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        val pans = select("div.message.break-all").select("p")
+        var urls = mutableListOf<String>()
+        for (pan in pans){
+            val href = pan.select("a").attr("href")
+            if(!href.isNullOrEmpty()&&href.startsWith("http")){
+                urls.add(href)
+                break
+            }
+        }
+        val list = select("div.alert.alert-success")
+        val passwordItems = mutableListOf<String>()
+        val sb = StringBuilder()
+        for (link in list) {
+            sb.setLength(0)
+            val href = link.select("a").attr("href")
+            if(!href.isNullOrEmpty()&&href.startsWith("http")){
+                urls.add(href)
+            }
+            val spans = link.select("span")
+            for (span in spans) {
+                val value = span.html()
+                val key = span.attr("class")
+                if (key in validKeys) {
+                    sb.append(value)
+                }
+            }
+            passwordItems.add(sb.toString())
+        }
+        Log.e(TAG, "urls: $urls")
+        Log.e(TAG, "passwordItems: $passwordItems")
     }
 
     /**
@@ -271,11 +323,11 @@ class DataRepository {
      */
     fun checkUrl(url: String): Boolean {
         val conn = URL(url).openConnection() as HttpURLConnection
-        conn.setRequestProperty("referer",NetConstant.BASE_URL)
+        conn.setRequestProperty("referer", NetConstant.BASE_URL)
         val code = conn.responseCode
         conn.disconnect()
         // 不为200的或者跳到了腾讯网了都算作废
-        return code != 200  || conn.url.toString().contains("https://www.qq.com/")
+        return code != 200 || conn.url.toString().contains("https://www.qq.com/")
     }
 
     suspend fun get(url: String, vararg formatArgs: Any): ResponseList<Music> {
@@ -301,8 +353,8 @@ class DataRepository {
             val list = MUSIC_DAO.findMusics(link)
             if (list.isNotEmpty() && list[0].getMusicUrl().isNotEmpty()) {
                 val music = list[0]
-                if(music.getMusicUrl().isNotEmpty()){
-                    if(checkUrl(music.getMusicUrl())){
+                if (music.getMusicUrl().isNotEmpty()) {
+                    if (checkUrl(music.getMusicUrl())) {
                         return music
                     }
                 }

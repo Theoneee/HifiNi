@@ -12,8 +12,11 @@ import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.theone.mvvm.core.data.entity.QMUITabBean
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.widget.QMUITopBarLayout
+import com.theone.music.viewmodel.MainViewModel
 import com.theone.mvvm.core.app.ext.qmui.addTab
+import com.theone.mvvm.core.app.ext.showSuccessPage
 import com.theone.mvvm.ext.getAppViewModel
+import com.theone.mvvm.ext.qmui.showSuccessTipsDialog
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -39,7 +42,7 @@ import com.theone.mvvm.ext.getAppViewModel
  * @email 625805189@qq.com
  * @remark
  */
-class IndexFragment : BaseTabInTitleFragment<BaseViewModel>() {
+class IndexFragment : BaseTabInTitleFragment<MainViewModel>() {
 
     private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
     private var mSearchBtn: QMUIAlphaImageButton? = null
@@ -86,6 +89,7 @@ class IndexFragment : BaseTabInTitleFragment<BaseViewModel>() {
             override fun onPageSelected(position: Int) {}
             override fun onPageScrollStateChanged(state: Int) {}
         })
+        getViewModel().requestServer()
     }
 
     override fun initTabAndFragments(
@@ -106,6 +110,9 @@ class IndexFragment : BaseTabInTitleFragment<BaseViewModel>() {
 
     override fun createObserver() {
         super.createObserver()
+        getViewModel().getResponseLiveData().observe(this){
+            showSuccessTipsDialog(it)
+        }
         mEvent.getPlayWidgetAlphaLiveData().observe(this) {
                 show: Float ->
             mSearchBtn?.setImageResource(if (show > 0.6) R.drawable.mz_titlebar_ic_search_light else R.drawable.mz_titlebar_ic_search_dark) }

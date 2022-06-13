@@ -55,6 +55,7 @@ class App:CoreApplication() {
         RxHttpManager.init(RxHttpBuilder().apply {
             // 这个是缓存地址  app.cacheDir.absolutePath 这个地址是APP内部的，这个是不需要请求权限的
             cacheFilePath = app.cacheDir.absolutePath
+            isNeedCookie = true
         }).setDebug(BuildConfig.DEBUG).setOnParamAssembly {
             //添加公共请求头
             it.addHeader(
