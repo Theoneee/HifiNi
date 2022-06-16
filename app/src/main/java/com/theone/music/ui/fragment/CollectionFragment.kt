@@ -3,7 +3,9 @@ package com.theone.music.ui.fragment
 import android.view.View
 import com.theone.music.app.ext.removeItem
 import com.theone.music.viewmodel.CollectionViewModel
+import com.theone.music.viewmodel.EventViewModel
 import com.theone.mvvm.core.app.ext.showEmptyPage
+import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.setTitleWitchBackBtn
 
 //  ┏┓　　　┏┓
@@ -32,6 +34,8 @@ import com.theone.mvvm.ext.qmui.setTitleWitchBackBtn
  */
 class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
 
+    private val mEvent: EventViewModel by lazy { getAppViewModel<EventViewModel>() }
+
     override fun initView(root: View) {
         setTitleWitchBackBtn("我的收藏")
         super.initView(root)
@@ -40,7 +44,7 @@ class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
     override fun initData() {
         super.initData()
         mEvent.getUserInfoLiveData().value?.let {
-            getViewModel().userId = it.id
+            getViewModel().username = it.account
         }
     }
 
@@ -48,17 +52,13 @@ class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
         super.setRefreshLayoutEnabled(false)
     }
 
-//    override fun onLoadMoreComplete() {
-//        onLoadMoreEnd()
-//    }
-
     override fun createObserver() {
         super.createObserver()
         mEvent.getCollectionLiveData().observe(this){
             if(it.collection){
                 onAutoRefresh()
             }else{
-                mAdapter.run {
+                getAdapter().run {
                     if(data.size == 1){
                         showEmptyPage()
                     }else{
@@ -74,10 +74,10 @@ class CollectionFragment: BaseMusicFragment<CollectionViewModel>() {
         }
 
         mEvent.getReloadMusicLiveData().observe(this){
-            with(mAdapter){
+            with(getAdapter()){
                 for ((index,item) in data.withIndex()){
                     if(item.shareUrl == it.shareUrl){
-                        item.url = it.url
+                        item.playUrl = it.playUrl
                         item.realUrl = it.realUrl
                         break
                     }

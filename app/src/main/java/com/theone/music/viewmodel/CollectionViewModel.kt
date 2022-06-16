@@ -35,11 +35,11 @@ class CollectionViewModel:BaseListViewModel<Music>() {
 
     private val pageSize = 10
 
-    var userId:Int = 0
+    var username:String = ""
 
     override fun requestServer() {
        request({
-           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList(userId,page,pageSize))
+           onSuccess(DataRepository.MUSIC_DAO.getCollectionMusicList(username,page,pageSize))
        })
     }
 }

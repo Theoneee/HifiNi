@@ -9,12 +9,11 @@ import android.widget.RelativeLayout
 import com.theone.music.R
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import com.theone.mvvm.core.data.entity.QMUITabBean
+import com.theone.mvvm.core.data.entity.QMUIItemBean
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.widget.QMUITopBarLayout
 import com.theone.music.viewmodel.MainViewModel
 import com.theone.mvvm.core.app.ext.qmui.addTab
-import com.theone.mvvm.core.app.ext.showSuccessPage
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showSuccessTipsDialog
 
@@ -89,11 +88,10 @@ class IndexFragment : BaseTabInTitleFragment<MainViewModel>() {
             override fun onPageSelected(position: Int) {}
             override fun onPageScrollStateChanged(state: Int) {}
         })
-        getViewModel().requestServer()
     }
 
     override fun initTabAndFragments(
-        tabs: MutableList<QMUITabBean>,
+        tabs: MutableList<QMUIItemBean>,
         fragments: MutableList<QMUIFragment>
     ) {
         with(tabs){

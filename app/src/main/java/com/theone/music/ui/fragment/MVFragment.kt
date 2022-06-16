@@ -112,7 +112,7 @@ class MVFragment : BasePagerFragment<MV, MvViewModel>() {
         isPageVisible = true
         // 发一个通知
         mEvent.dispatchPlayWidgetEvent(false)
-        (mAdapter as MvAdapter).onResume()
+        (getAdapter() as MvAdapter).onResume()
         if (PlayerManager.getInstance().isPlaying) {
             isPlaying = true
             PlayerManager.getInstance().pauseAudio()
@@ -127,12 +127,12 @@ class MVFragment : BasePagerFragment<MV, MvViewModel>() {
         isPageVisible = false
         mEvent.dispatchPlayWidgetEvent(true)
         super.onPause()
-        (mAdapter as MvAdapter).onPause()
+        (getAdapter() as MvAdapter).onPause()
     }
 
     @Override
     override fun onDestroy() {
-        (mAdapter as MvAdapter).onDestroy()
+        (getAdapter() as MvAdapter).onDestroy()
         super.onDestroy()
     }
 

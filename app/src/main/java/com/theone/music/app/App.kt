@@ -9,14 +9,9 @@ import com.theone.music.ui.activity.LauncherActivity
 import com.theone.mvvm.core.app.CoreApplication
 import com.theone.mvvm.core.app.ext.initCrashConfig
 import com.theone.mvvm.core.app.util.RxHttpManager
-import com.theone.mvvm.core.base.loader.Loader
-import com.theone.mvvm.core.base.loader.callback.ErrorCallback
-import com.theone.mvvm.core.base.loader.callback.LoadingCallback
-import com.theone.mvvm.core.base.loader.callback.SuccessCallback
 import com.theone.mvvm.core.data.entity.RxHttpBuilder
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager
 import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager
-import java.io.File
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓

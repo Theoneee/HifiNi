@@ -1,14 +1,11 @@
 package com.theone.music.data.repository
 
 import android.util.Log
-import com.theone.common.ext.getNumbers
 import com.theone.lover.data.room.AppDataBase
 import com.theone.music.data.model.*
 import com.theone.music.data.room.DownloadDao
 import com.theone.music.data.room.MusicDao
-import com.theone.music.data.room.UserDao
 import com.theone.music.net.NetConstant
-import com.theone.music.player.PlayerManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -59,10 +56,6 @@ class DataRepository {
 
         val MUSIC_DAO: MusicDao by lazy {
             AppDataBase.INSTANCE.musicDao()
-        }
-
-        val USER_DAO: UserDao by lazy {
-            AppDataBase.INSTANCE.userDao()
         }
 
         val DOWNLOAD_DAO: DownloadDao by lazy {
@@ -155,9 +148,9 @@ class DataRepository {
 
                         list.add(
                             Music(
-                                author = author,
-                                pic = NetConstant.BASE_URL + avatar,
-                                title = name,
+                                singer = author,
+                                cover = NetConstant.BASE_URL + avatar,
+                                name = name,
                                 shareUrl = link
                             )
                         )
@@ -210,9 +203,9 @@ class DataRepository {
 
                         list.add(
                             Music(
-                                author = author,
-                                pic = NetConstant.BASE_URL + avatar,
-                                title = name,
+                                singer = author,
+                                cover = NetConstant.BASE_URL + avatar,
+                                name = name,
                                 shareUrl = link
                             )
                         )
@@ -243,10 +236,14 @@ class DataRepository {
                     break
                 }
             }
-            val start = result.indexOf("[") + 1
-            val end = result.indexOf("}") + 1
-            result = result.substring(start, end)
-            GsonUtil.fromJson<Music>(result, Music::class.java)
+            if(result.isNotEmpty()){
+                val start = result.indexOf("[") + 1
+                val end = result.indexOf("}") + 1
+                result = result.substring(start, end)
+                GsonUtil.fromJson<Music>(result, Music::class.java)
+            }else{
+                Music()
+            }
         }
     }
 
@@ -295,8 +292,6 @@ class DataRepository {
             }
             passwordItems.add(sb.toString())
         }
-        Log.e(TAG, "urls: $urls")
-        Log.e(TAG, "passwordItems: $passwordItems")
     }
 
     /**
@@ -304,7 +299,7 @@ class DataRepository {
      * @param url String
      * @return String
      */
-    private suspend fun getRedirectUrl(url: String): String {
+    suspend fun getRedirectUrl(url: String): String {
         return withContext(Dispatchers.IO) {
             val conn = URL(url).openConnection() as HttpURLConnection
             conn.responseCode
@@ -348,18 +343,6 @@ class DataRepository {
     }
 
     suspend fun getMusicInfo(link: String, isReload: Boolean): Music {
-        if (!isReload) {
-            // 先从数据里查是否有
-            val list = MUSIC_DAO.findMusics(link)
-            if (list.isNotEmpty() && list[0].getMusicUrl().isNotEmpty()) {
-                val music = list[0]
-                if (music.getMusicUrl().isNotEmpty()) {
-                    if (checkUrl(music.getMusicUrl())) {
-                        return music
-                    }
-                }
-            }
-        }
         // 请求 https://hifini.com/thread-35837.htm
         // response 其实一个html 信息
         // 我们最后想要拿到的是一个ListBean
@@ -367,19 +350,23 @@ class DataRepository {
         // 解析
         val music = parseMusicInfo(response).apply {
             shareUrl = link
-            if (!url.startsWith("http")) {
-                url = NetConstant.BASE_URL + url
+            if(!cover.startsWith("http")){
+                cover = "https://www.hifini.com/upload/forum/1.png"
+            }
+            if (!playUrl.startsWith("http")) {
+                playUrl = NetConstant.BASE_URL + playUrl
                 // 然后得到重定向后的地址
-                realUrl = getRedirectUrl(url)
+                realUrl = getRedirectUrl(playUrl)
                 // 其实这里可以不需要这个实际播放地址（重定向过后的）
                 // 但是这里得到的信息返回成功后界面将会显示内容层
                 // 后续再交给PlayerManager去重定向缓冲等耗时操作，界面的等待时间就会增长
                 // 那直接把这个等待时间给到加载界面吧
             }
         }
+        Log.e(TAG, "getMusicInfo: $music" )
         // 重新加载的播放地址，更新数据库
         if (isReload) {
-            MUSIC_DAO.updateDataBaseMusic(link, music.url, music.realUrl)
+            MUSIC_DAO.updateDataBaseMusic(link, music.playUrl, music.realUrl)
         } else {
             music.createDate = System.currentTimeMillis()
             MUSIC_DAO.insert(music)
@@ -395,9 +382,9 @@ class DataRepository {
             add(TestAlbum.TestMusic().apply {
                 musicId = UUID.randomUUID().toString()
                 shareUrl = data.shareUrl
-                coverImg = data.pic
-                title = data.title
-                author = data.author
+                coverImg = data.cover
+                title = data.name
+                author = data.singer
                 url = data.getMusicUrl()
                 artist = artists
             })
@@ -406,9 +393,9 @@ class DataRepository {
         return TestAlbum().apply {
             albumId = UUID.randomUUID().toString()
             title = "HiFiNi"
-            summary = data.author
+            summary = data.singer
             artist = artists
-            coverImg = data.pic
+            coverImg = data.cover
             musics = music
         }
     }

@@ -1,18 +1,25 @@
 package com.theone.music.ui.fragment
 
 import android.view.View
+import androidx.work.Data
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
+import com.danikula.videocache.Cache
 import com.qmuiteam.qmui.util.QMUIPackageHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.theone.music.R
 import com.theone.music.app.util.CacheUtil
+import com.theone.music.data.model.User
 import com.theone.music.databinding.FragmentSettingBinding
+import com.theone.music.domain.work.LoginSignWorker
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.mvvm.base.fragment.BaseQMUIFragment
 import com.theone.mvvm.base.viewmodel.BaseViewModel
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.*
+import java.util.concurrent.TimeUnit
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -83,12 +90,21 @@ class SettingFragment :BaseCoreFragment<BaseViewModel,FragmentSettingBinding>(),
             listener = QMUIDialogAction.ActionListener { dialog, index ->
                 dialog.dismiss()
                 if (index > 0) {
+                    cancelWorker()
                     mEvent.setUserInfo(null)
                     CacheUtil.loginOut()
                     showSuccessTipsExitDialog("退出成功")
                 }
             }, prop = QMUIDialogAction.ACTION_PROP_NEGATIVE
         )
+    }
+
+    /**
+     * 退出登录时取消任务
+     * @receiver User
+     */
+    private fun cancelWorker(){
+        WorkManager.getInstance(mActivity).cancelAllWorkByTag(LoginSignWorker.TAG)
     }
 
 }

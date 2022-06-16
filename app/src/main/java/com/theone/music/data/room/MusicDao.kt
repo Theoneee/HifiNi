@@ -51,8 +51,8 @@ interface MusicDao {
     @Query("select * from MusicInfo where id =:id")
     fun getMusicById(id:Int): List<Music>
 
-    @Query("select * from MusicInfo where userId ==:userId and collection = 1 order by createDate desc limit :pageSize offset (:page -1)*:pageSize")
-    fun getCollectionMusicList(userId: Int,page:Int,pageSize:Int): List<Music>
+    @Query("select * from MusicInfo where username ==:username and collection = 1 order by createDate desc limit :pageSize offset (:page -1)*:pageSize")
+    fun getCollectionMusicList(username: String,page:Int,pageSize:Int): List<Music>
 
     @Query("select * from MusicInfo order by lastPlayDate desc limit :pageSize offset (:page -1)*:pageSize")
     fun getHistoryMusicList(page:Int,pageSize:Int): List<Music>
@@ -60,18 +60,18 @@ interface MusicDao {
     @Query("select * from MusicInfo where shareUrl ==:shareUrl")
     fun findMusics(shareUrl: String): List<Music>
 
-    @Query("select * from MusicInfo where userId ==:userId and shareUrl ==:shareUrl and collection = 1")
-    fun findCollectionMusics(userId: Int,shareUrl: String): List<Music>
+    @Query("select * from MusicInfo where username ==:username and shareUrl ==:shareUrl and collection = 1")
+    fun findCollectionMusics(username: String,shareUrl: String): List<Music>
 
-    @Query("update MusicInfo set userId = :userId,collection = :collection, createDate =:createDate  where shareUrl ==:shareUrl ")
+    @Query("update MusicInfo set username = :username,collection = :collection, createDate =:createDate  where shareUrl ==:shareUrl ")
     fun updateCollectionMusic(
-        userId: Int,
+        username: String,
         shareUrl: String,
         collection: Int,
         createDate: Long
     )
 
-    @Query("update MusicInfo set url = :url, realUrl =:realUrl  where shareUrl ==:shareUrl")
+    @Query("update MusicInfo set playUrl = :url, realUrl =:realUrl  where shareUrl ==:shareUrl")
     fun updateDataBaseMusic(
         shareUrl: String,
         url: String,

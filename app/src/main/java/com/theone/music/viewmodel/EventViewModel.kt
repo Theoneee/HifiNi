@@ -15,8 +15,6 @@ class EventViewModel : BaseViewModel() {
 
     private val collection = UnPeekLiveData<CollectionEvent>()
 
-    private val playMusic = UnPeekLiveData<Music>()
-
     private val reloadMusic = UnPeekLiveData<Music>()
 
     private val playWidget = UnPeekLiveData<Boolean>()
@@ -26,8 +24,6 @@ class EventViewModel : BaseViewModel() {
     fun getUserInfoLiveData(): ProtectedUnPeekLiveData<User> = userInfo
 
     fun getCollectionLiveData(): ProtectedUnPeekLiveData<CollectionEvent> = collection
-
-    fun getPlayMusicLiveData(): ProtectedUnPeekLiveData<Music> = playMusic
 
     fun getReloadMusicLiveData(): ProtectedUnPeekLiveData<Music> = reloadMusic
 
@@ -51,13 +47,6 @@ class EventViewModel : BaseViewModel() {
 
     fun dispatchCollectionEvent(event: CollectionEvent) {
         collection.value = event
-    }
-
-    /**
-     * 分发当前播放的音乐的通知
-     */
-    fun dispatchPlayMusic(music: Music) {
-        playMusic.value = music
     }
 
     fun dispatchReloadMusic(music: Music) {

@@ -1,14 +1,19 @@
 package com.theone.music.ui.fragment
 
 import android.view.View
+import androidx.work.*
 import com.theone.common.ext.notNull
 import com.theone.music.app.ext.checkLogin
+import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.User
 import com.theone.music.databinding.FragmentMineBinding
+import com.theone.music.domain.work.LoginSignWorker
+import com.theone.music.ui.fragment.user.UserInfoFragment
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.music.viewmodel.MineViewModel
 import com.theone.mvvm.ext.getAppViewModel
+import java.util.concurrent.TimeUnit
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -49,7 +54,7 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
     }
 
     private fun User?.setUserInfo() {
-        getViewModel().nickName.set(this?.account?:"未登录")
+        getViewModel().nickName.set(this?.account ?: "未登录")
     }
 
     override fun initView(root: View) {
@@ -59,20 +64,45 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
     override fun createObserver() {
         mAppVm.getUserInfoLiveData().observe(this) {
             it.setUserInfo()
+            it?.doWorker()
         }
+    }
+
+    /**
+     * 开启每日登录签到任务
+     * @receiver User
+     */
+    private fun User.doWorker() {
+        // 添加约束，网络连接时才启用
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)  // 网络状态
+            .setRequiresBatteryNotLow(false)                 // 不在电量不足时执行
+            .setRequiresCharging(false)                      // 在充电时执行
+            .setRequiresStorageNotLow(false)                 // 不在存储容量不足时执行
+            //.setRequiresDeviceIdle(true)                    // 在待机状态下执行，需要 API 23
+            .build()
+
+        val inputData = Data.Builder().putString(LoginSignWorker.EMAIL, account)
+            .putString(LoginSignWorker.PASSWORD, password).build()
+
+        // 周期任务  一天执行一次签到
+        val signRequest = PeriodicWorkRequest
+            .Builder(LoginSignWorker::class.java, 1, TimeUnit.DAYS)
+            .setConstraints(constraints)
+            .setInputData(inputData)
+            .addTag(LoginSignWorker.TAG)
+            .build()
+
+        WorkManager.getInstance(mActivity).enqueue(signRequest)
     }
 
     override fun getBindingClick(): Any = ClickProxy()
 
     inner class ClickProxy {
 
-        fun login() {
-            checkLogin()
-        }
-
-        fun icon() {
+        fun userInfo() {
             checkLogin {
-
+                startFragment(UserInfoFragment())
             }
         }
 

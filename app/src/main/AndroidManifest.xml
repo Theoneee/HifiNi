@@ -15,6 +15,8 @@
 
         <activity android:name=".ui.activity.LauncherActivity"
             android:theme="@style/StartAppTheme"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
             android:exported="true">
 
             <intent-filter>
@@ -26,14 +28,16 @@
         </activity>
 
         <activity android:name=".ui.activity.MainActivity"
-            android:screenOrientation="fullSensor"/>
-
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
 
         <activity android:name=".ui.activity.LoginRegisterActivity"
-            android:screenOrientation="fullSensor"/>
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
 
-        <activity android:name=".ui.activity.PlayerActivity"
-            android:screenOrientation="fullSensor"
+        <activity android:name=".ui.activity.MusicPlayerActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
             android:launchMode="singleTop"
             android:theme="@style/TranslucentTheme"/>
 

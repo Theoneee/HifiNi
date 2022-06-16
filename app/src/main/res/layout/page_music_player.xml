@@ -11,11 +11,11 @@
 
         <variable
             name="click"
-            type="com.theone.music.ui.activity.PlayerActivity.ClickProxy" />
+            type="com.theone.music.ui.fragment.music.PlayerFragment.ClickProxy" />
 
         <variable
             name="listener"
-            type="com.theone.music.ui.activity.PlayerActivity.ListenerProxy" />
+            type="com.theone.music.ui.fragment.music.PlayerFragment.ListenerProxy" />
 
         <variable
             name="util"

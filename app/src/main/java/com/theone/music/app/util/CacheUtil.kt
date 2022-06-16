@@ -39,6 +39,8 @@ object CacheUtil {
     private const val LAUNCHER: String = "launcher_mode"
     private const val USER: String = "user"
 
+    private const val SIGN_WORKER_ID = "sign_worker_id"
+
     fun isLogin(): Boolean = null != getUser()
 
     fun loginOut() {
@@ -57,6 +59,13 @@ object CacheUtil {
         else
             Gson().fromJson(userStr, User::class.java)
     }
+
+
+    fun setSignWorkerId(id:String){
+        MMKVUtil.putString(SIGN_WORKER_ID,id)
+    }
+
+    fun getSignWorkerId() = MMKVUtil.getString(SIGN_WORKER_ID)
 
     private const val FIRST: String = "app_first"
 

@@ -1,25 +1,13 @@
 package com.theone.music.data.repository
 
-import android.util.Log
-import com.theone.common.ext.getNumbers
-import com.theone.lover.data.room.AppDataBase
+import com.theone.music.app.ext.md5encode
 import com.theone.music.data.model.*
-import com.theone.music.data.room.DownloadDao
-import com.theone.music.data.room.MusicDao
-import com.theone.music.data.room.UserDao
 import com.theone.music.net.NetConstant
-import com.theone.music.player.PlayerManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import rxhttp.toOkResponse
+import rxhttp.toClass
 import rxhttp.toStr
 import rxhttp.wrapper.cahce.CacheMode
 import rxhttp.wrapper.param.RxHttp
-import rxhttp.wrapper.utils.GsonUtil
-import java.net.HttpURLConnection
-import java.net.URL
+import rxhttp.wrapper.param.toResponse
 import java.util.*
 
 //  ┏┓　　　┏┓
@@ -65,12 +53,60 @@ class ApiRepository {
      */
     fun login(email: String, password: String) =
         RxHttp.postForm(NetConstant.LOGIN)
-        .add("email", email)
-        .add("password", password)
-        .toOkResponse()
+            .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+            .addHeader("x-requested-with", "XMLHttpRequest")
+            .add("email", email)
+            .add("password", password)
+            .toResponse()
 
 
+    /**
+     * 注册
+     * @param email String
+     * @param username String
+     * @param password String 密码,使用MD5加密过的
+     * @param repeat_password String 确认密码，原始密码
+     * @return String
+     */
+    fun register(email: String, username: String, password: String) =
+        RxHttp.postForm(NetConstant.REGISTER)
+            .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+            .addHeader("x-requested-with", "XMLHttpRequest")
+            .add("email", email)
+            .add("username", username)
+            .add("password", password.md5encode())
+            .add("repeat_password", password)
+            .toResponse()
+
+
+    /**
+     * 签到 - 已登录情况下
+     * @return Await<Response>
+     */
     fun sign() = RxHttp.postForm(NetConstant.SIGN)
-            .toOkResponse()
+        .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+        .addHeader("x-requested-with", "XMLHttpRequest")
+        .toResponse()
+
+    /**
+     * 用户信息
+     * @return Await<String>
+     */
+    fun userInfo() = RxHttp.get(NetConstant.USER_INFO)
+        .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+        .addHeader("x-requested-with", "XMLHttpRequest")
+        .toClass<String>()
+
+
+    /**
+     * https://hifini.com/
+     * url = forum-15.htm
+     */
+    suspend fun request(url: String, vararg formatArgs: Any): String {
+        return RxHttp.get(url, *formatArgs)
+            .setCacheMode(CacheMode.ONLY_NETWORK)
+            .toStr()
+            .await()
+    }
 
 }

@@ -9,7 +9,7 @@ import com.theone.music.net.NetConstant
 import com.theone.music.ui.fragment.MusicItemFragment
 import com.theone.mvvm.base.viewmodel.BaseViewModel
 import com.theone.mvvm.core.base.fragment.BaseTabInTitleFragment
-import com.theone.mvvm.core.data.entity.QMUITabBean
+import com.theone.mvvm.core.data.entity.QMUIItemBean
 import com.theone.mvvm.core.app.ext.qmui.addTab
 import com.theone.mvvm.core.app.widge.indicator.SkinScaleTransitionPagerTitleView
 import com.theone.mvvm.ext.qmui.addLeftCloseImageBtn
@@ -37,7 +37,7 @@ class RankFragment:BaseTabInTitleFragment<BaseViewModel>() {
 //    }
 
     override fun initTabAndFragments(
-        tabs: MutableList<QMUITabBean>,
+        tabs: MutableList<QMUIItemBean>,
         fragments: MutableList<QMUIFragment>
     ) {
         for ((k,v) in NetConstant.RANK_TYPES){

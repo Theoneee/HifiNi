@@ -8,16 +8,16 @@ import com.theone.common.ext.getColor
 import com.theone.common.ext.getValueNonNull
 import com.theone.music.R
 import com.theone.music.app.util.CacheUtil
-import com.theone.music.viewmodel.LoginRegisterViewModel
-import com.theone.music.databinding.FragmentLoginRegisterBinding
+import com.theone.music.databinding.FragmentLoginRegister2Binding
 import com.theone.music.viewmodel.EventViewModel
+import com.theone.music.viewmodel.LoginRegisterViewModel2
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
 import com.theone.mvvm.ext.qmui.showSuccessTipsExitDialog
 
 class LoginRegisterItemFragment private constructor() :
-    BaseCoreFragment<LoginRegisterViewModel, FragmentLoginRegisterBinding>() {
+    BaseCoreFragment<LoginRegisterViewModel2, FragmentLoginRegister2Binding>() {
 
     companion object {
         fun newInstant(isRegister: Boolean): LoginRegisterItemFragment {
@@ -56,7 +56,8 @@ class LoginRegisterItemFragment private constructor() :
         fun login() {
             with(getViewModel()) {
                 when {
-                    account.get().isEmpty() -> showFailTipsDialog("请填写账号")
+                    isRegister.get() && email.get().isEmpty() -> showFailTipsDialog("请填写邮箱")
+                    username.get().isEmpty() -> showFailTipsDialog("请填写账号")
                     password.get().isEmpty() -> showFailTipsDialog("请填写密码")
                     isRegister.get() && repassword.get().isEmpty() -> showFailTipsDialog("请填写确认密码")
                     else -> {

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.theone.music.viewmodel.LrcViewModel" />
+
+        <variable
+            name="click"
+            type="com.theone.music.ui.fragment.music.LrcFragment.ClickProxy" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/music_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{vm.musicName}"
+            android:textColor="@color/we_chat_black"
+            android:textSize="23sp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="如烟" />
+
+        <TextView
+            android:id="@+id/music_singer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@{vm.musicSinger}"
+            android:textColor="@color/qmui_config_color_gray_4"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/music_name"
+            tools:text="五月天" />
+
+        <com.theone.music.ui.view.PlayPauseView
+            android:id="@+id/player_pause"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{()->click.togglePlayPause()}"
+            app:isCircleDraw="true"
+            app:isPlaying="@{vm.isPlaying}"
+            app:layout_constraintBaseline_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            visible="@{vm.responseLiveData.size() > 1}"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="20dp"
+            android:onClick="@{()->click.lrcChange()}"
+            android:src="@drawable/ic_lrc_resource"
+            app:layout_constraintBottom_toBottomOf="@id/player_pause"
+            app:layout_constraintEnd_toStartOf="@id/player_pause" />
+
+        <com.theone.music.ui.view.lrc.LrcView
+            android:id="@+id/lrc_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="20dp"
+            app:layout_constraintBottom_toTopOf="@id/player_pause"
+            app:layout_constraintTop_toBottomOf="@id/music_singer"
+            app:lrcCurrentTextColor="?attr/app_skin_primary_color" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

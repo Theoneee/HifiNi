@@ -26,7 +26,7 @@
             app:imageUrl="@{vm.icon}"
             android:scaleType="centerCrop"
             app:qmui_is_circle="true"
-            app:noRepeatClick="@{()-> click.icon()}"
+            app:noRepeatClick="@{()-> click.userInfo()}"
             android:layout_marginTop="15dp"
             android:src="@mipmap/ic_launcher_round"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="@id/icon"
             android:textSize="17sp"
             android:textStyle="bold"
-            app:noRepeatClick="@{()-> click.login()}"
+            app:noRepeatClick="@{()-> click.userInfo()}"
             app:layout_constraintStart_toEndOf="@id/icon"
             app:layout_constraintTop_toTopOf="@id/icon" />
 

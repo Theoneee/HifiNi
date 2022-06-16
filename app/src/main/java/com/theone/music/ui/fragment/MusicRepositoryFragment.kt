@@ -97,7 +97,7 @@ class MusicRepositoryFragment : BaseMusicFragment<MusicRepositoryViewModel>() {
         super.initAdapter()
         val topView =
             LayoutInflater.from(context).inflate(R.layout.custom_music_repository, null, false)
-        mAdapter.addHeaderView(topView)
+        getAdapter().addHeaderView(topView)
         val bannerViewPager: BannerViewPager<Banner> = topView.findViewById(R.id.banner_view)
         val actionRc: RecyclerView = topView.findViewById(R.id.action_recyclerView)
         initBannerView(bannerViewPager)

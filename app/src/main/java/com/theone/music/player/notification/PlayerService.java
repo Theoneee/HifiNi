@@ -40,7 +40,7 @@ import com.theone.music.player.helper.PlayerCallHelper;
 import com.theone.music.player.PlayerManager;
 import com.theone.music.data.model.TestAlbum;
 import com.theone.music.R;
-import com.theone.music.ui.activity.PlayerActivity;
+import com.theone.music.ui.activity.MusicPlayerActivity;
 import com.theone.mvvm.core.app.util.glide.GlideUtil;
 
 
@@ -110,7 +110,7 @@ public class PlayerService extends Service {
             expandedView = new RemoteViews(
                     getApplicationContext().getPackageName(), R.layout.notify_player_big);
 
-            Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MusicPlayerActivity.class);
             intent.setAction("showPlayer");
             intent.putExtra(BundleConstant.DATA,testMusic);
             PendingIntent contentIntent = PendingIntent.getActivity(

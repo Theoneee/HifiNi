@@ -9,6 +9,8 @@ import com.theone.common.callback.databind.BooleanObservableField
 import com.theone.common.callback.databind.IntObservableField
 import com.theone.common.callback.databind.StringObservableField
 import com.theone.music.app.util.CacheUtil
+import com.theone.music.data.repository.LrcRepository
+import com.theone.mvvm.base.viewmodel.BaseViewModel
 import com.theone.mvvm.core.base.viewmodel.BaseRequestViewModel
 import kotlinx.coroutines.launch
 
@@ -36,7 +38,7 @@ import kotlinx.coroutines.launch
  * @email 625805189@qq.com
  * @remark
  */
-class MusicInfoViewModel : BaseRequestViewModel<Music>() {
+class MusicInfoViewModel : BaseViewModel() {
 
     /**
      * 数据是否成功
@@ -66,41 +68,37 @@ class MusicInfoViewModel : BaseRequestViewModel<Music>() {
         isCollectionEnable.set(CacheUtil.isLogin())
     }
 
-    var isReload = true
+    var isReload = false
 
-    override fun requestServer() {
-        request({
-            val music = DataRepository.INSTANCE.getMusicInfo(link,isReload)
-            onSuccess(music)
-        })
+    fun checkUrl(url: String) = DataRepository.INSTANCE.checkUrl(url)
+
+    fun requestDbMusic(): Music? {
+        return DataRepository.INSTANCE.getDbMusicInfo(link)
     }
 
-    fun checkUrl(url:String) =  DataRepository.INSTANCE.checkUrl(url)
-
-    fun requestDbMusic():Music?{
-       return DataRepository.INSTANCE.getDbMusicInfo(link)
+    fun requestCollection(username: String, url: String) {
+        isCollection.set(DataRepository.MUSIC_DAO.findCollectionMusics(username, url).isNotEmpty())
     }
 
-    fun requestCollection(userId:Int,url: String) {
-        request({
-            isCollection.set(DataRepository.MUSIC_DAO.findCollectionMusics(userId,url).isNotEmpty())
-        })
-    }
-
-    fun toggleCollection(userId:Int,collectionEvent: CollectionEvent) {
+    fun toggleCollection(username: String, collectionEvent: CollectionEvent) {
         with(collectionEvent) {
             viewModelScope.launch {
-                DataRepository.MUSIC_DAO.updateCollectionMusic(userId,music.shareUrl,if (collection) 1 else  0,System.currentTimeMillis())
+                DataRepository.MUSIC_DAO.updateCollectionMusic(
+                    username,
+                    music.shareUrl,
+                    if (collection) 1 else 0,
+                    System.currentTimeMillis()
+                )
             }
         }
     }
 
-    fun updateMusicLastPlayDate(){
+    fun updateMusicLastPlayDate() {
         val time = System.currentTimeMillis()
-        DataRepository.MUSIC_DAO.updateMusicLastPlayDate(time,link)
+        DataRepository.MUSIC_DAO.updateMusicLastPlayDate(time, link)
     }
 
-    fun reset(){
+    fun reset() {
         isSuccess.set(false)
         isSetSuccess.set(false)
         isCollection.set(false)

@@ -13,8 +13,11 @@
 
     <string name="login">登  录</string>
     <string name="register">注  册</string>
-    <string name="login_input_account">请输入账号</string>
+    <string name="login_input_account">请输入用户名</string>
     <string name="login_input_password">请输入密码</string>
     <string name="login_input_repassword">请确认密码</string>
+    <string name="login_input_email">请输入邮箱</string>
+
+    <string name="lrc_label">暂无歌词</string>
 
 </resources>

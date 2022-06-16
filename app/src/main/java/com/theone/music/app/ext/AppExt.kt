@@ -88,5 +88,5 @@ fun BaseQuickAdapter<*, *>.removeItem(position: Int){
 }
 
 fun TestAlbum.TestMusic.toMusic(): Music {
-    return Music(title = title,author = author,url = url,pic = coverImg,shareUrl = shareUrl)
+    return Music(name = title,singer = author,playUrl = url,cover = coverImg,shareUrl = shareUrl)
 }

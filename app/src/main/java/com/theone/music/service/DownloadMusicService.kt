@@ -56,7 +56,7 @@ class DownloadMusicService : Service() {
             NOTIFICATION_ID,
             "开始下载",
             "开始下载",
-            mDownload?.url
+            mDownload?.playUrl
         ).apply {
             setOngoing(true)
         }
@@ -66,7 +66,7 @@ class DownloadMusicService : Service() {
     private fun startDown() {
         mDownload?.run {
             val type = if (getMusicUrl().contains("mp3")) "mp3" else "m4a"
-            val name = "$author-$title.$type" // 五月天-天使.mp3
+            val name = "$singer-$name.$type" // 五月天-天使.mp3
             // 保存的地址  APP名字/Download/Music
             val downloadPath = FileDirectoryManager.getDownloadPath() + File.separator + "Music"
             // APP名字/Download/Music/五月天-天使.mp3
@@ -167,7 +167,7 @@ class DownloadMusicService : Service() {
     private fun updateNotification(title: String, isFinish: Boolean) {
         stopForeground(true)
         val builder = NotificationManager.getInstance().createNotification(
-            NOTIFICATION_ID, title, title, mDownload?.url,
+            NOTIFICATION_ID, title, title, mDownload?.playUrl,
             smallIcon = if (isFinish) R.drawable.service_down_finish else R.drawable.service_down
         ).apply {
             setDefaults(Notification.DEFAULT_VIBRATE)

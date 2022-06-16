@@ -37,9 +37,37 @@ object NetConstant {
     const val LOGIN = "user-login.htm"
 
     /**
+     * 注册
+     * @POST
+     * @param email
+     * @param username
+     * @param password
+     * @param repeat_password
+     */
+    const val REGISTER = "user-create.htm"
+
+    /**
+     * 修改头像
+     * @POST
+     * @param width
+     * @param height
+     * @param action
+     * @param filetype  jpg
+     * @param name xxx.png
+     * @param data file
+     */
+    const val AVATAR = "my-avatar.htm"
+
+    /**
      * 签到
      */
     const val SIGN = "sg_sign.htm"
+
+    /**
+     * 用户信息
+     */
+    const val USER_INFO = "my.htm"
+
 
     const val INDEX = "index-%d.htm"
 

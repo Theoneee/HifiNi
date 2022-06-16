@@ -7,7 +7,7 @@ import com.theone.common.constant.BundleConstant
 import com.theone.common.ext.newFragment
 import com.theone.music.R
 import com.theone.mvvm.base.viewmodel.BaseViewModel
-import com.theone.mvvm.core.data.entity.QMUITabBean
+import com.theone.mvvm.core.data.entity.QMUIItemBean
 import com.theone.mvvm.core.app.ext.qmui.addTab
 import com.theone.mvvm.core.app.widge.indicator.SkinScaleTransitionPagerTitleView
 import com.theone.mvvm.core.base.fragment.BaseTabInTitleFragment
@@ -49,7 +49,7 @@ class LoginRegisterFragment : BaseTabInTitleFragment<BaseViewModel>() {
     }
 
     override fun initTabAndFragments(
-        tabs: MutableList<QMUITabBean>,
+        tabs: MutableList<QMUIItemBean>,
         fragments: MutableList<QMUIFragment>
     ) {
         with(tabs) {

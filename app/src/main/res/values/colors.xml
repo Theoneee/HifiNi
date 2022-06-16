@@ -8,4 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray">#999</color>
+
+    <color name="lrc_normal_text_color">#777777</color>
+    <color name="lrc_current_text_color">#F71816</color>
+    <color name="lrc_timeline_text_color">#F71816</color>
+    <color name="lrc_timeline_color">#777777</color>
+    <color name="lrc_time_text_color">#809E9E9E</color>
+
 </resources>

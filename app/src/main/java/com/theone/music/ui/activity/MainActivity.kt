@@ -1,15 +1,11 @@
 package com.theone.music.ui.activity
 
-import android.animation.LayoutTransition
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
-import androidx.core.view.children
 import androidx.fragment.app.FragmentContainerView
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.layout.QMUIConstraintLayout
@@ -57,8 +53,6 @@ import com.theone.mvvm.ext.qmui.showFailTipsDialog
  *  框架采用的是  单Activity+多 Fragment模式
  *
  *
- *
- *
  *  Activity + Activity +
  *
  *  Activity 一个相框   Fragment 里面的照片  碎片
@@ -96,7 +90,7 @@ class MainActivity : BaseFragmentActivity() {
                         author.set(music.author)
                         isSuccess.set(true)
                         mEvent.getUserInfoLiveData().value?.let { user ->
-                            requestCollection(user.id, music.shareUrl)
+                            requestCollection(user.account, music.shareUrl)
                         }
                     }
                 }
@@ -120,7 +114,7 @@ class MainActivity : BaseFragmentActivity() {
             } else {
                 // 登录后如果当前有播放，查询请求一次是否当前账户已收藏当前播放的歌曲
                 getCurrentMusic()?.let { music ->
-                    mMusicViewModel.requestCollection(it.id, music.shareUrl)
+                    mMusicViewModel.requestCollection(it.account, music.shareUrl)
                 }
             }
         }
@@ -128,12 +122,12 @@ class MainActivity : BaseFragmentActivity() {
         mEvent.getPlayWidgetLiveData().observe(this) {
             mPlayLayout?.musicPlayerLayout?.run {
                 visible(it)
-                val height = if(it) playerLayoutHeight else 0
-                if(layoutParams.height == height){
+                val height = if (it) playerLayoutHeight else 0
+                if (layoutParams.height == height) {
                     return@run
                 }
                 layoutParams =
-                    ConstraintLayout.LayoutParams(matchParent,height)
+                    ConstraintLayout.LayoutParams(matchParent, height)
                         .apply {
                             startToStart = PARENT_ID
                             endToEnd = PARENT_ID
@@ -145,10 +139,10 @@ class MainActivity : BaseFragmentActivity() {
             mPlayLayout?.run {
                 // 拿到滑动变量然后算出他的高度
                 val height = (playerLayoutHeight * (1 - it)).toInt()
-                if(musicPlayerLayout.layoutParams.height == height){
+                if (musicPlayerLayout.layoutParams.height == height) {
                     return@run
                 }
-                Log.e(TAG, "createObserve: getPlayWidgetAlphaLiveData $height" )
+                Log.e(TAG, "createObserve: getPlayWidgetAlphaLiveData $height")
                 if (height == 0) {
                     root.gone()
                     return@run
@@ -179,7 +173,7 @@ class MainActivity : BaseFragmentActivity() {
 
         fun jumpPlayerActivity() {
             getCurrentMusic()?.let {
-                PlayerActivity.startPlay(this@MainActivity, it)
+                MusicPlayerActivity.startPlay(this@MainActivity, it)
             }
         }
 
@@ -187,7 +181,7 @@ class MainActivity : BaseFragmentActivity() {
             mEvent.getUserInfoLiveData().value?.let { user ->
                 getCurrentMusic()?.let {
                     CollectionEvent(isSelected, it).let { event ->
-                        mMusicViewModel.toggleCollection(user.id, event)
+                        mMusicViewModel.toggleCollection(user.account, event)
                         mEvent.dispatchCollectionEvent(event)
                     }
                 }

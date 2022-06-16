@@ -1,8 +1,9 @@
-package com.theone.music.data.room
+package com.theone.music.viewmodel
 
-import androidx.room.*
-import com.theone.music.data.model.Music
-import com.theone.music.data.model.User
+import com.theone.music.domain.request.UserInfoRequest
+import com.theone.mvvm.base.viewmodel.BaseViewModel
+import com.theone.mvvm.core.app.ext.launch
+import com.theone.mvvm.core.base.viewmodel.BaseRequestVM
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -23,24 +24,18 @@ import com.theone.music.data.model.User
 //      ┗┻┛　┗┻┛
 /**
  * @author The one
- * @date 2021-10-08 09:31
+ * @date 2022-06-14 10:47
  * @describe TODO
  * @email 625805189@qq.com
  * @remark
  */
-@Dao
-interface UserDao {
+class UserInfoViewModel:BaseRequestVM<UserInfoRequest>() {
 
-    @Insert
-    fun insert(user: User)
+    override fun createRequest(): UserInfoRequest  = UserInfoRequest()
 
-    @Update
-    fun update(user: User): Int
-
-    @Delete
-    fun delete(user: User): Int
-
-    @Query("select * from user where account == :account")
-    fun getUserList(account:String): List<User>
-
+    override fun requestServer() {
+        launch({
+            getRequest().getUserInfo()
+        })
+    }
 }

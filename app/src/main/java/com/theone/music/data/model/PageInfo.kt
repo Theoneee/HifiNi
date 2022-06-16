@@ -1,6 +1,7 @@
 package com.theone.music.data.model
 
-import com.theone.mvvm.core.data.net.IPageInfo
+import com.theone.mvvm.core.base.request.IPageInfo
+
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -26,7 +27,7 @@ import com.theone.mvvm.core.data.net.IPageInfo
  * @email 625805189@qq.com
  * @remark
  */
-class PageInfo(private val curPage:Int = 1,private val totalPage:Int = 1):IPageInfo {
+class PageInfo(private val curPage:Int = 1,private val totalPage:Int = 1): IPageInfo {
 
     override fun getPage(): Int = curPage
 
