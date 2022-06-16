@@ -24,6 +24,6 @@ package com.theone.music.data.model
  * @email 625805189@qq.com
  * @remark
  */
-data class Response(val code:String,val message:String) {
+data class Response<T>(val code:String,val message:String,var data:T?) {
 
 }

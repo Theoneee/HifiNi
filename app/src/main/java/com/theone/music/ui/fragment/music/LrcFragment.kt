@@ -1,18 +1,10 @@
 package com.theone.music.ui.fragment.music
 
-import android.graphics.Color
-import android.util.Log
 import android.view.View
-import com.hw.lrcviewlib.LrcDataBuilder
-import com.qmuiteam.qmui.util.QMUIDisplayHelper
-import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
-import com.theone.common.ext.getColor
 import com.theone.common.ext.notNull
-import com.theone.music.R
 import com.theone.music.data.model.Lrc
 import com.theone.music.databinding.FragmentLrcBinding
-import com.theone.music.net.LrcUrl
 import com.theone.music.player.PlayerManager
 import com.theone.music.viewmodel.LrcViewModel
 import com.theone.mvvm.core.app.ext.qmui.OnGridBottomSheetItemClickListener
@@ -22,7 +14,6 @@ import com.theone.mvvm.core.app.ext.showLoadingPage
 import com.theone.mvvm.core.app.ext.showSuccessPage
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.mvvm.core.base.loader.callback.LoadingCallback
-import com.theone.mvvm.ext.qmui.showSingleChoiceDialog
 import java.io.File
 
 //  ┏┓　　　┏┓

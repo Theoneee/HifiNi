@@ -2,17 +2,20 @@ package com.theone.music.ui.activity
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
 import androidx.fragment.app.FragmentContainerView
+import com.hjq.permissions.OnPermission
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.layout.QMUIConstraintLayout
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout2
 import com.theone.common.ext.*
 import com.theone.music.R
 import com.theone.music.app.ext.toMusic
+import com.theone.music.app.util.AppUpdateUtil
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
@@ -72,6 +75,7 @@ class MainActivity : BaseFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createObserve()
+        requestPermission()
     }
 
     private fun createObserve() {
@@ -142,7 +146,6 @@ class MainActivity : BaseFragmentActivity() {
                 if (musicPlayerLayout.layoutParams.height == height) {
                     return@run
                 }
-                Log.e(TAG, "createObserve: getPlayWidgetAlphaLiveData $height")
                 if (height == 0) {
                     root.gone()
                     return@run
@@ -156,6 +159,26 @@ class MainActivity : BaseFragmentActivity() {
                     }
             }
         }
+    }
+
+    private fun requestPermission(){
+        XXPermissions.with(this)
+            .permission(Permission.Group.STORAGE)
+            .constantRequest()
+            .request(object :OnPermission{
+
+                override fun hasPermission(granted: MutableList<String>?, all: Boolean) {
+                   if(all){
+                       AppUpdateUtil(this@MainActivity,false).checkUpdate()
+                   }
+                }
+
+                override fun noPermission(denied: MutableList<String>?, quick: Boolean) {
+
+                }
+
+            })
+
     }
 
     /**

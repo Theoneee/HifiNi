@@ -5,6 +5,7 @@ import com.shuyu.gsyvideoplayer.cache.CacheFactory
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.theone.music.BuildConfig
 import com.theone.music.player.PlayerManager
+import com.theone.music.ui.activity.ErrorReportActivity
 import com.theone.music.ui.activity.LauncherActivity
 import com.theone.mvvm.core.app.CoreApplication
 import com.theone.mvvm.core.app.ext.initCrashConfig
@@ -42,7 +43,7 @@ class App:CoreApplication() {
     override fun isDebug(): Boolean = BuildConfig.DEBUG
 
     override fun init(application: Application) {
-        initCrashConfig(LauncherActivity::class.java)
+        initCrashConfig(LauncherActivity::class.java, ErrorReportActivity::class.java)
         super.init(application)
         // 对播放器的初始化
         PlayerManager.getInstance().init(application)
@@ -61,6 +62,7 @@ class App:CoreApplication() {
         // 这个是播放器的配置
         PlayerFactory.setPlayManager(Exo2PlayerManager::class.java) //EXO模式
         CacheFactory.setCacheManager(ExoPlayerCacheManager::class.java) //exo缓存模式，支持m3u8，只支持exo
+
     }
 
 }

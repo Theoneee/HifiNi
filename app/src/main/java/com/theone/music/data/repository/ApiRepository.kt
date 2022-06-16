@@ -1,8 +1,10 @@
 package com.theone.music.data.repository
 
+import com.qmuiteam.qmui.util.QMUIPackageHelper
 import com.theone.music.app.ext.md5encode
 import com.theone.music.data.model.*
 import com.theone.music.net.NetConstant
+import com.theone.music.net.PgyerUrl
 import rxhttp.toClass
 import rxhttp.toStr
 import rxhttp.wrapper.cahce.CacheMode
@@ -57,7 +59,7 @@ class ApiRepository {
             .addHeader("x-requested-with", "XMLHttpRequest")
             .add("email", email)
             .add("password", password)
-            .toResponse()
+            .toResponse<String>()
 
 
     /**
@@ -76,7 +78,7 @@ class ApiRepository {
             .add("username", username)
             .add("password", password.md5encode())
             .add("repeat_password", password)
-            .toResponse()
+            .toResponse<String>()
 
 
     /**
@@ -86,7 +88,7 @@ class ApiRepository {
     fun sign() = RxHttp.postForm(NetConstant.SIGN)
         .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
         .addHeader("x-requested-with", "XMLHttpRequest")
-        .toResponse()
+        .toResponse<String>()
 
     /**
      * 用户信息
@@ -108,5 +110,15 @@ class ApiRepository {
             .toStr()
             .await()
     }
+
+
+    /**
+     * 检查更新
+     */
+    fun checkUpdate() = RxHttp.postForm(PgyerUrl.CHECK_UPDATE)
+        .setDomainToPgyerIfAbsent()
+        .add("_api_key", PgyerUrl.API_KEY)
+        .add("appKey", PgyerUrl.APP_KEY)
+        .toResponse<Update>()
 
 }
