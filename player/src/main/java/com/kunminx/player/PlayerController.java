@@ -160,7 +160,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
     private void bindProgressListener() {
         MediaPlayerHelper.getInstance().setProgressInterval(1000).setMediaPlayerHelperCallBack(
                 (state, mediaPlayerHelper, args) -> {
-                    if (state == MediaPlayerHelper.CallBackState.PROGRESS&&!mIsPaused) {
+                    if (state == MediaPlayerHelper.CallBackState.PROGRESS) {
                         int position = mediaPlayerHelper.getMediaPlayer().getCurrentPosition();
                         int duration = mediaPlayerHelper.getMediaPlayer().getDuration();
                         mCurrentPlay.setNowTime(calculateTime(position / 1000));
@@ -177,7 +177,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
                                 playNext();
                             }
                         }
-                    } else if (state == MediaPlayerHelper.CallBackState.EXCEPTION ||state == MediaPlayerHelper.CallBackState.ERROR) {
+                    } else if (state == MediaPlayerHelper.CallBackState.EXCEPTION || state == MediaPlayerHelper.CallBackState.ERROR) {
                         playErrorLiveData.postValue(state.toString());
                     }
                 });
@@ -289,6 +289,8 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
             // 重置播放时间
             mCurrentPlay.setNowTime("00:00");
             mCurrentPlay.setAllTime("00:00");
+            mCurrentPlay.setPlayerPosition(0);
+            mCurrentPlay.setDuration(0);
             mChangeMusic.setBaseInfo(mPlayingInfoManager.getMusicAlbum(), getCurrentPlayingMusic());
             mCurrentPlay.setBaseInfo(mPlayingInfoManager.getMusicAlbum(), getCurrentPlayingMusic());
             changeMusicLiveData.postValue(mChangeMusic);
