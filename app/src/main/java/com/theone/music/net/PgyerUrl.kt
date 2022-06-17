@@ -13,7 +13,7 @@ import rxhttp.wrapper.annotation.Domain
 object PgyerUrl {
 
     const val API_KEY = "016fdb173278e52b3be8b605418aacbb"
-    const val APP_KEY = "9bd0a24ff6feb1ccc84cf49b6b90521a"
+    const val APP_KEY = "b6dc24478f1aab9ded6794fa0256f6d9"
 
     @Domain(name = "Pgyer")
     const val BASE_URL = "https://www.pgyer.com/apiv2/"

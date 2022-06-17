@@ -186,7 +186,7 @@ class PlayerFragment :
      */
     private fun requestPermission() {
         XXPermissions.with(mActivity)
-            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .permission(Permission.Group.STORAGE)
             .constantRequest()
             .request(object : OnPermission {
 

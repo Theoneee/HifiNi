@@ -75,7 +75,7 @@ class MainActivity : BaseFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createObserve()
-        requestPermission()
+        AppUpdateUtil(this@MainActivity,false).checkUpdate()
     }
 
     private fun createObserve() {
@@ -159,26 +159,6 @@ class MainActivity : BaseFragmentActivity() {
                     }
             }
         }
-    }
-
-    private fun requestPermission(){
-        XXPermissions.with(this)
-            .permission(Permission.Group.STORAGE)
-            .constantRequest()
-            .request(object :OnPermission{
-
-                override fun hasPermission(granted: MutableList<String>?, all: Boolean) {
-                   if(all){
-                       AppUpdateUtil(this@MainActivity,false).checkUpdate()
-                   }
-                }
-
-                override fun noPermission(denied: MutableList<String>?, quick: Boolean) {
-
-                }
-
-            })
-
     }
 
     /**
