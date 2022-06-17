@@ -2,7 +2,6 @@ package com.theone.music.ui.activity
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.lifecycle.lifecycleScope
@@ -142,17 +141,18 @@ class MusicPlayerActivity : BaseCoreActivity<MusicPlayerViewModel, BaseTabInTitl
     private fun setMediaSource(data: Music, newData: Boolean = false) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                Log.e(TAG, "setMediaSource: " + data.getMusicUrl())
                 val cacheUrl = PlayerManager.getInstance().getCacheUrl(data.getMusicUrl())
-                Log.e(TAG, "setMediaSource: $cacheUrl")
                 // 缓存有就直接播放
                 if (cacheUrl.startsWith("file")) {
                     loadAlbum(data)
                 } else {
-                    // 不是新数据才检查地址是否可行
-                    if (!newData && getViewModel().checkUrl(data.getMusicUrl())) {
-                        getViewModel().getRequest().isReload = true
-                        getViewModel().requestServer()
+                    // 不是新数据才本地还没有缓存就直接重新加载
+                    if (!newData) {
+                        getViewModel().run {
+                            // 本地数据有就重新加载，更新本地数据库，而不是插入一条新数据
+                            isReload = data.id > 0
+                            requestServer()
+                        }
                     } else {
                         loadAlbum(data)
                     }

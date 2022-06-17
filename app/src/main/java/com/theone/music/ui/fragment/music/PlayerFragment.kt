@@ -10,8 +10,6 @@ import com.hjq.permissions.XXPermissions
 import com.hjq.toast.ToastUtils
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction
 import com.theone.common.callback.OnKeyBackClickListener
-import com.theone.common.constant.BundleConstant
-import com.theone.common.ext.*
 import com.theone.music.BR
 import com.theone.music.app.ext.toMusic
 import com.theone.music.app.util.CacheUtil
@@ -88,10 +86,6 @@ class PlayerFragment :
                     return@observe
                 }
                 getViewModel().run {
-                    // 只有在设置了音乐数据后才能设置播放信息，避免被上一首的播放信息污染
-                    if (!isSetSuccess.get()) {
-                        return@observe
-                    }
                     max.set(it.duration)
                     progress.set(it.playerPosition)
                     nowTime.set(it.nowTime)

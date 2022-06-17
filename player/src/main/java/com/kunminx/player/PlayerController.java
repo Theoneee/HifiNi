@@ -167,7 +167,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
                         mCurrentPlay.setAllTime(calculateTime(duration / 1000));
                         mCurrentPlay.setDuration(duration);
                         mCurrentPlay.setPlayerPosition(position);
-                        playingMusicLiveData.setValue(mCurrentPlay);
+                        playingMusicLiveData.postValue(mCurrentPlay);
                         if (mCurrentPlay.getAllTime().equals(mCurrentPlay.getNowTime())
                                 //容许两秒内的误差，有的内容它就是会差那么 1 秒
                                 || duration / 1000 - position / 1000 < 2) {
@@ -177,7 +177,7 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
                                 playNext();
                             }
                         }
-                    } else if (state == MediaPlayerHelper.CallBackState.EXCEPTION ||state == MediaPlayerHelper.CallBackState.ERROR) {
+                    } else if (state == MediaPlayerHelper.CallBackState.EXCEPTION || state == MediaPlayerHelper.CallBackState.ERROR) {
                         playErrorLiveData.postValue(state.toString());
                     }
                 });
@@ -286,9 +286,14 @@ public class PlayerController<B extends BaseAlbumItem, M extends BaseMusicItem> 
     public void setChangingPlayingMusic(boolean changingPlayingMusic) {
         mIsChangingPlayingMusic = changingPlayingMusic;
         if (mIsChangingPlayingMusic) {
+            // 重置播放时间
+            mCurrentPlay.setNowTime("00:00");
+            mCurrentPlay.setAllTime("00:00");
+            mCurrentPlay.setPlayerPosition(0);
+            mCurrentPlay.setDuration(0);
             mChangeMusic.setBaseInfo(mPlayingInfoManager.getMusicAlbum(), getCurrentPlayingMusic());
-            changeMusicLiveData.postValue(mChangeMusic);
             mCurrentPlay.setBaseInfo(mPlayingInfoManager.getMusicAlbum(), getCurrentPlayingMusic());
+            changeMusicLiveData.postValue(mChangeMusic);
         }
     }
 

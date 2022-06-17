@@ -37,16 +37,15 @@ import kotlinx.coroutines.withContext
 class MusicPlayerViewModel:BaseRequestVM<MusicPlayerRequest>() {
 
     var link: String = ""
+    var isReload = false
 
     override fun createRequest() = MusicPlayerRequest()
 
     override fun requestServer() {
         request({
-            getRequest().getMusicInfo(link)
+            getRequest().getMusicInfo(link,isReload)
         })
     }
-
-    fun checkUrl(url:String) =  DataRepository.INSTANCE.checkUrl(url)
 
     fun requestDbMusic(): Music?{
         return DataRepository.INSTANCE.getDbMusicInfo(link)

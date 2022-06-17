@@ -68,14 +68,6 @@ class MusicInfoViewModel : BaseViewModel() {
         isCollectionEnable.set(CacheUtil.isLogin())
     }
 
-    var isReload = false
-
-    fun checkUrl(url: String) = DataRepository.INSTANCE.checkUrl(url)
-
-    fun requestDbMusic(): Music? {
-        return DataRepository.INSTANCE.getDbMusicInfo(link)
-    }
-
     fun requestCollection(username: String, url: String) {
         isCollection.set(DataRepository.MUSIC_DAO.findCollectionMusics(username, url).isNotEmpty())
     }
@@ -91,11 +83,6 @@ class MusicInfoViewModel : BaseViewModel() {
                 )
             }
         }
-    }
-
-    fun updateMusicLastPlayDate() {
-        val time = System.currentTimeMillis()
-        DataRepository.MUSIC_DAO.updateMusicLastPlayDate(time, link)
     }
 
     fun reset() {
