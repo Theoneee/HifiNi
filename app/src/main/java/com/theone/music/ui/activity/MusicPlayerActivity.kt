@@ -2,7 +2,6 @@ package com.theone.music.ui.activity
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.lifecycle.lifecycleScope
@@ -142,9 +141,7 @@ class MusicPlayerActivity : BaseCoreActivity<MusicPlayerViewModel, BaseTabInTitl
     private fun setMediaSource(data: Music, newData: Boolean = false) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                Log.e(TAG, "setMediaSource: " + data.getMusicUrl())
                 val cacheUrl = PlayerManager.getInstance().getCacheUrl(data.getMusicUrl())
-                Log.e(TAG, "setMediaSource: $cacheUrl")
                 // 缓存有就直接播放
                 if (cacheUrl.startsWith("file")) {
                     loadAlbum(data)

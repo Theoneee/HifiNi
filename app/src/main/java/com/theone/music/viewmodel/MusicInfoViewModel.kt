@@ -93,11 +93,6 @@ class MusicInfoViewModel : BaseViewModel() {
         }
     }
 
-    fun updateMusicLastPlayDate() {
-        val time = System.currentTimeMillis()
-        DataRepository.MUSIC_DAO.updateMusicLastPlayDate(time, link)
-    }
-
     fun reset() {
         isSuccess.set(false)
         isSetSuccess.set(false)
