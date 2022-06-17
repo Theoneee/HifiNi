@@ -64,36 +64,7 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
     override fun createObserver() {
         mAppVm.getUserInfoLiveData().observe(this) {
             it.setUserInfo()
-            it?.doWorker()
         }
-    }
-
-    /**
-     * 开启每日登录签到任务
-     * @receiver User
-     */
-    private fun User.doWorker() {
-        // 添加约束，网络连接时才启用
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)  // 网络状态
-            .setRequiresBatteryNotLow(false)                 // 不在电量不足时执行
-            .setRequiresCharging(false)                      // 在充电时执行
-            .setRequiresStorageNotLow(false)                 // 不在存储容量不足时执行
-            //.setRequiresDeviceIdle(true)                    // 在待机状态下执行，需要 API 23
-            .build()
-
-        val inputData = Data.Builder().putString(LoginSignWorker.EMAIL, account)
-            .putString(LoginSignWorker.PASSWORD, password).build()
-
-        // 周期任务  一天执行一次签到
-        val signRequest = PeriodicWorkRequest
-            .Builder(LoginSignWorker::class.java, 1, TimeUnit.DAYS)
-            .setConstraints(constraints)
-            .setInputData(inputData)
-            .addTag(LoginSignWorker.TAG)
-            .build()
-
-        WorkManager.getInstance(mActivity).enqueue(signRequest)
     }
 
     override fun getBindingClick(): Any = ClickProxy()
