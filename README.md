@@ -32,6 +32,8 @@ https://user-images.githubusercontent.com/32156330/167596934-2f99e270-78dc-46c7-
 
 ![HiFiNi](https://www.pgyer.com/app/qrcode/HifiNi)
 
+[点击下载](https://www.pgyer.com/HifiNi)
+
 #### 感谢
 
 [Jetpack-MusicPlayer](https://github.com/KunMinX/Jetpack-MusicPlayer)
@@ -50,8 +52,23 @@ https://user-images.githubusercontent.com/32156330/167596934-2f99e270-78dc-46c7-
 
 [QMUI-MVVM](https://github.com/Theoneee/QMUI-MVVM)
 
+# License
 
+```
+Copyright 2018-present Theoneee
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
 
 
 
