@@ -13,20 +13,6 @@
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
 
-<!--        &lt;!&ndash;蒲公英相关配置&ndash;&gt;-->
-<!--        <meta-data-->
-<!--            android:name="PGYER_API_KEY"-->
-<!--            android:value="016fdb173278e52b3be8b605418aacbb"/>-->
-
-<!--        <meta-data-->
-<!--            android:name="PGYER_FRONTJS_KEY"-->
-<!--            android:value="a1384be716542668102e7c4aca262d87"/>-->
-
-<!--        &lt;!&ndash;添加新版本检测&ndash;&gt;-->
-<!--        <meta-data-->
-<!--            android:name="PGYER_FEATURE_CHECK_UNPDATE"-->
-<!--            android:value="true"/>-->
-
         <activity android:name=".ui.activity.LauncherActivity"
             android:theme="@style/StartAppTheme"
             android:screenOrientation="portrait"
@@ -54,10 +40,6 @@
             tools:ignore="LockedOrientationActivity"
             android:launchMode="singleTop"
             android:theme="@style/TranslucentTheme"/>
-
-        <activity android:name=".ui.activity.ErrorReportActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"/>
 
         <service android:name=".player.notification.PlayerService" />
 
