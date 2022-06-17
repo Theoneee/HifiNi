@@ -186,7 +186,7 @@ class PlayerFragment :
      */
     private fun requestPermission() {
         XXPermissions.with(mActivity)
-            .permission(Permission.MANAGE_EXTERNAL_STORAGE)
+            .permission(Permission.Group.STORAGE)
             .constantRequest()
             .request(object : OnPermission {
 
@@ -216,6 +216,7 @@ class PlayerFragment :
     private fun startDownload() {
         getCurrentMusic().let {
             ToastUtils.show("开始下载")
+            Log.e(TAG, "startDownload: "+it.getMusicUrl() )
             mActivity.startMusicDownloadService(it)
         }
     }

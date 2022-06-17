@@ -142,7 +142,6 @@ class MainActivity : BaseFragmentActivity() {
                 if (musicPlayerLayout.layoutParams.height == height) {
                     return@run
                 }
-                Log.e(TAG, "createObserve: getPlayWidgetAlphaLiveData $height")
                 if (height == 0) {
                     root.gone()
                     return@run

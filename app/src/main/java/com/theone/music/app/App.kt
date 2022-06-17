@@ -61,6 +61,7 @@ class App:CoreApplication() {
         // 这个是播放器的配置
         PlayerFactory.setPlayManager(Exo2PlayerManager::class.java) //EXO模式
         CacheFactory.setCacheManager(ExoPlayerCacheManager::class.java) //exo缓存模式，支持m3u8，只支持exo
+
     }
 
 }
