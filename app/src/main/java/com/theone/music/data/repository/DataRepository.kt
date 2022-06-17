@@ -363,7 +363,6 @@ class DataRepository {
                 // 那直接把这个等待时间给到加载界面吧
             }
         }
-        Log.e(TAG, "getMusicInfo: $music" )
         // 重新加载的播放地址，更新数据库
         if (isReload) {
             MUSIC_DAO.updateDataBaseMusic(link, music.playUrl, music.realUrl)

@@ -30,9 +30,7 @@ import com.theone.mvvm.core.base.request.BaseRequest
  */
 class MusicPlayerRequest : BaseRequest<Music>() {
 
-    var isReload = false
-
-    suspend fun getMusicInfo(link:String) {
+    suspend fun getMusicInfo(link:String,isReload:Boolean) {
         val music = DataRepository.INSTANCE.getMusicInfo(link, isReload)
         onSuccess(music)
     }

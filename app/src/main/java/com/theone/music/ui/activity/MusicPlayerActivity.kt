@@ -146,10 +146,13 @@ class MusicPlayerActivity : BaseCoreActivity<MusicPlayerViewModel, BaseTabInTitl
                 if (cacheUrl.startsWith("file")) {
                     loadAlbum(data)
                 } else {
-                    // 不是新数据才检查地址是否可行
-                    if (!newData && getViewModel().checkUrl(data.getMusicUrl())) {
-                        getViewModel().getRequest().isReload = true
-                        getViewModel().requestServer()
+                    // 不是新数据才本地还没有缓存就直接重新加载
+                    if (!newData) {
+                        getViewModel().run {
+                            // 本地数据有就重新加载，更新本地数据库，而不是插入一条新数据
+                            isReload = data.id > 0
+                            requestServer()
+                        }
                     } else {
                         loadAlbum(data)
                     }
