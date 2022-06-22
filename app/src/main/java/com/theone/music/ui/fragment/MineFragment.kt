@@ -2,6 +2,7 @@ package com.theone.music.ui.fragment
 
 import android.view.View
 import androidx.work.*
+import com.danikula.videocache.Cache
 import com.theone.common.ext.notNull
 import com.theone.music.app.ext.checkLogin
 import com.theone.music.app.util.CacheUtil
@@ -13,6 +14,7 @@ import com.theone.music.viewmodel.EventViewModel
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.music.viewmodel.MineViewModel
 import com.theone.mvvm.ext.getAppViewModel
+import com.theone.mvvm.ext.qmui.showFailTipsDialog
 import java.util.concurrent.TimeUnit
 
 //  ┏┓　　　┏┓
@@ -54,7 +56,20 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
     }
 
     private fun User?.setUserInfo() {
-        getViewModel().nickName.set(this?.account ?: "未登录")
+        this.notNull({
+            getViewModel().nickName.set(it.account)
+            // 获取用户信息
+            setSwipeRefreshState(true)
+            getViewModel().requestServer()
+        },{
+            getDataBinding().swipeRefresh.isEnabled = false
+            getViewModel().nickName.set("未登录")
+        })
+    }
+
+    private fun setSwipeRefreshState(state:Boolean){
+        getDataBinding().swipeRefresh.isRefreshing = state
+        getDataBinding().swipeRefresh.isEnabled = !state
     }
 
     override fun initView(root: View) {
@@ -62,6 +77,17 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
     }
 
     override fun createObserver() {
+        getViewModel().getRequest().run {
+            getResponseLiveData().observe(this@MineFragment){
+                getViewModel().icon.set(it.avatar)
+                CacheUtil.setUserInfo(it)
+                setSwipeRefreshState(false)
+            }
+            getErrorLiveData().observe(this@MineFragment){
+                showFailTipsDialog(it.msg)
+                setSwipeRefreshState(false)
+            }
+        }
         mAppVm.getUserInfoLiveData().observe(this) {
             it.setUserInfo()
         }

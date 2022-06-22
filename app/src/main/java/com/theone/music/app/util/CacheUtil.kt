@@ -1,11 +1,9 @@
 package com.theone.music.app.util
 
-import android.text.TextUtils
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.theone.music.data.model.User
+import com.theone.music.data.model.UserInfo
 import com.theone.mvvm.core.app.util.MMKVUtil
-import com.theone.mvvm.core.app.util.RxHttpManager
 
 
 //  ┏┓　　　┏┓
@@ -34,66 +32,39 @@ import com.theone.mvvm.core.app.util.RxHttpManager
  */
 object CacheUtil {
 
-    private const val HISTORY: String = "search_history"
-    private const val ANIMATION: String = "animation_type"
-    private const val LAUNCHER: String = "launcher_mode"
     private const val USER: String = "user"
-
-    private const val SIGN_WORKER_ID = "sign_worker_id"
+    private const val USER_INFO: String = "user_info"
 
     fun isLogin(): Boolean = null != getUser()
 
     fun loginOut() {
         setUser(null)
+        setUserInfo(null)
     }
 
-    fun setUser(userInfo: User?) {
-        val user = if (null != userInfo) Gson().toJson(userInfo) else ""
-        MMKVUtil.putString(USER, user)
+    fun setUser(user: User?) {
+        user.putClassBean(USER)
     }
 
-    fun getUser(): User? {
-        val userStr = MMKVUtil.getString(USER)
-        return if (userStr.isNullOrEmpty())
+    fun getUser(): User?  = USER.getClassBean()
+
+    fun setUserInfo(userInfo: UserInfo?) {
+        userInfo.putClassBean(USER_INFO)
+    }
+
+    fun getUserInfo(): UserInfo?  = USER_INFO.getClassBean()
+
+    private fun <T> T?.putClassBean(key:String){
+        val json = if (null != this) Gson().toJson(this) else ""
+        MMKVUtil.putString(key, json)
+    }
+
+    private inline fun <reified T> String.getClassBean():T?{
+        val json = MMKVUtil.getString(this)
+        return if (json.isNullOrEmpty())
             null
         else
-            Gson().fromJson(userStr, User::class.java)
-    }
-
-
-    fun setSignWorkerId(id:String){
-        MMKVUtil.putString(SIGN_WORKER_ID,id)
-    }
-
-    fun getSignWorkerId() = MMKVUtil.getString(SIGN_WORKER_ID)
-
-    private const val FIRST: String = "app_first"
-
-    fun isFirst(): Boolean = MMKVUtil.getBoolean(FIRST, true)
-
-    fun isEnterApp() {
-        MMKVUtil.putBoolean(FIRST, false)
-    }
-
-    /**
-     * 获取搜索历史缓存数据
-     */
-    fun getSearchHistoryData(): ArrayList<String> {
-        val searchCacheStr = MMKVUtil.getString(HISTORY)
-        if (!TextUtils.isEmpty(searchCacheStr)) {
-            return Gson().fromJson(
-                searchCacheStr
-                , object : TypeToken<ArrayList<String>>() {}.type
-            )
-        }
-        return arrayListOf()
-    }
-
-    /**
-     * 设置搜索历史数据
-     */
-    fun setSearchHistoryData(searchResponseStr: String) {
-        MMKVUtil.putString(HISTORY, searchResponseStr)
+            Gson().fromJson(json, T::class.java)
     }
 
 }

@@ -9,6 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray">#999</color>
 
+    <color name="user_icon_dark_color">#FF111111</color>
+    <color name="user_icon_color">#FFD84A</color>
+
     <color name="lrc_normal_text_color">#777777</color>
     <color name="lrc_current_text_color">#F71816</color>
     <color name="lrc_timeline_text_color">#F71816</color>

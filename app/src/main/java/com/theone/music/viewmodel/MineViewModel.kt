@@ -1,4 +1,11 @@
-package com.theone.music.viewmodel;//  ┏┓　　　┏┓
+package com.theone.music.viewmodel
+
+import com.theone.mvvm.core.base.viewmodel.BaseRequestVM
+import com.theone.music.domain.request.UserInfoRequest
+import com.theone.common.callback.databind.StringObservableField
+import com.theone.mvvm.core.app.ext.launch
+
+//  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
 //┃　　　　　　　┃
 //┃　　　━　　　┃
@@ -15,10 +22,6 @@ package com.theone.music.viewmodel;//  ┏┓　　　┏┓
 //    ┗┓┓┏━┳┓┏┛
 //      ┃┫┫　┃┫┫
 //      ┗┻┛　┗┻┛
-
-import com.theone.common.callback.databind.StringObservableField;
-import com.theone.mvvm.base.viewmodel.BaseViewModel;
-
 /**
  * @author The one
  * @date 2022-04-06 17:14
@@ -26,9 +29,19 @@ import com.theone.mvvm.base.viewmodel.BaseViewModel;
  * @email 625805189@qq.com
  * @remark
  */
-public class MineViewModel extends BaseViewModel {
+class MineViewModel : BaseRequestVM<UserInfoRequest>() {
 
-    public final StringObservableField icon = new StringObservableField("https://www.hifini.com/view/img/logo.png");
-    public final StringObservableField nickName = new StringObservableField("未登录");
+    val icon = StringObservableField("https://www.hifini.com/view/img/logo.png")
+    val nickName = StringObservableField("未登录")
+
+    override fun createRequest(): UserInfoRequest {
+        return UserInfoRequest()
+    }
+
+    override fun requestServer() {
+        launch({
+            getRequest().getUserInfo()
+        })
+    }
 
 }
