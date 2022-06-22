@@ -2,6 +2,7 @@ package com.theone.music.data.repository
 
 import com.theone.common.ext.trimAll
 import com.theone.music.data.model.UserInfo
+import com.theone.music.net.NetConstant
 import org.jsoup.Jsoup
 
 //  ┏┓　　　┏┓
@@ -41,16 +42,19 @@ class JsoupRepository {
     }
 
     fun parseUserInfo(html: String) =
-        Jsoup.parse(html).select("div.col-md-6").toString().run {
-            val theme = substring("主题数：</span>", "<br>")
-            val post = substring("帖子数：</span>", "<br>")
-            val collection = substring("<a href=\"my-favorites.htm\" target=\"_blank\">", "</a>")
-            val coin = substring("bolder;\">", "</em>")
-            val group = substring("用户组：</span>", "<br>")
-            val createDate = substring("创建时间：</span>", "<br>")
-            val lastLoginDate = substring("最后登录：</span>", "<br>")
-            val email = substring("Email：</span>", "</div>")
-            UserInfo(theme, post, collection, coin, group, createDate, lastLoginDate, email)
+        Jsoup.parse(html).run {
+            val avatar = NetConstant.BASE_URL+select("img.avatar-4").first().attr("src")
+            select("div.col-md-6").toString().run {
+                val theme = substring("主题数：</span>", "<br>")
+                val post = substring("帖子数：</span>", "<br>")
+                val collection = substring("<a href=\"my-favorites.htm\" target=\"_blank\">", "</a>")
+                val coin = substring("bolder;\">", "</em>")
+                val group = substring("用户组：</span>", "<br>")
+                val createDate = substring("创建时间：</span>", "<br>")
+                val lastLoginDate = substring("最后登录：</span>", "<br>")
+                val email = substring("Email：</span>", "</div>")
+                UserInfo(avatar,theme, post, collection, coin, group, createDate, lastLoginDate, email)
+            }
         }
 
     private fun String.substring(start: String, end: String): String {

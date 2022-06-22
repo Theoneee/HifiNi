@@ -216,6 +216,7 @@ class PlayerFragment :
     private fun startDownload() {
         getCurrentMusic().let {
             ToastUtils.show("开始下载")
+            Log.e(TAG, "startDownload: "+it.getMusicUrl() )
             mActivity.startMusicDownloadService(it)
         }
     }

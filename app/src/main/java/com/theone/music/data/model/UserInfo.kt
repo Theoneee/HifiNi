@@ -25,6 +25,7 @@ package com.theone.music.data.model
  * @remark
  */
 data class UserInfo(
+    val avatar:String,
     val theme: String,
     val post: String,
     val collection: String,
