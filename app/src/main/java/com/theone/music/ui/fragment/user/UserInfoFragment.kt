@@ -18,6 +18,7 @@ import com.theone.mvvm.core.base.loader.callback.LoadingCallback
 import com.theone.mvvm.ext.qmui.addToGroup
 import com.theone.mvvm.ext.qmui.createItem
 import com.theone.mvvm.ext.qmui.setTitleWithBackBtn
+import com.theone.mvvm.ext.qmui.showFailTipsDialog
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -79,18 +80,30 @@ class UserInfoFragment:BaseCoreFragment<UserInfoViewModel,FragmentUserInfoBindin
             addToGroup(mEmail,mGroup,mCreateDate,mLastLoginDate, title = "")
         }
 
+        getDataBinding().swipeRefresh.setOnRefreshListener {
+            setSwipeRefreshState(true)
+            getViewModel().requestServer()
+        }
         CacheUtil.getUserInfo().notNull(
             {
                 it.setUserInfo()
                 showSuccessPage()
             },{
-                getViewModel().requestServer()
+                onPageReLoad()
             }
         )
     }
 
+    private fun setSwipeRefreshState(state:Boolean){
+        getDataBinding().swipeRefresh.run{
+            isRefreshing = state
+            isEnabled = !state
+        }
+    }
+
     override fun onPageReLoad() {
         showLoadingPage()
+        setSwipeRefreshState(true)
         getViewModel().requestServer()
     }
 
@@ -98,11 +111,18 @@ class UserInfoFragment:BaseCoreFragment<UserInfoViewModel,FragmentUserInfoBindin
         getViewModel().getRequest().run {
             getResponseLiveData().observe(this@UserInfoFragment){
                 it.setUserInfo()
+                CacheUtil.setUserInfo(it)
+                setSwipeRefreshState(false)
                 showSuccessPage()
             }
             getErrorLiveData().observe(this@UserInfoFragment){
-                showErrorPage(it.msg){
-                    onPageReLoad()
+                if(getDataBinding().swipeRefresh.isRefreshing){
+                    setSwipeRefreshState(false)
+                    showFailTipsDialog(it.msg)
+                }else{
+                    showErrorPage(it.msg){
+                        onPageReLoad()
+                    }
                 }
             }
         }

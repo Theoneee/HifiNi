@@ -1,6 +1,7 @@
 package com.theone.music.app
 
 import android.app.Application
+import com.pgyer.pgyersdk.PgyerSDKManager
 import com.shuyu.gsyvideoplayer.cache.CacheFactory
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.theone.music.BuildConfig

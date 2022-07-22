@@ -1,21 +1,17 @@
 package com.theone.music.ui.fragment
 
 import android.view.View
-import androidx.work.*
-import com.danikula.videocache.Cache
 import com.theone.common.ext.notNull
 import com.theone.music.app.ext.checkLogin
 import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.User
 import com.theone.music.databinding.FragmentMineBinding
-import com.theone.music.domain.work.LoginSignWorker
 import com.theone.music.ui.fragment.user.UserInfoFragment
 import com.theone.music.viewmodel.EventViewModel
 import com.theone.mvvm.core.base.fragment.BaseCoreFragment
 import com.theone.music.viewmodel.MineViewModel
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
-import java.util.concurrent.TimeUnit
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -68,11 +64,18 @@ class MineFragment : BaseCoreFragment<MineViewModel, FragmentMineBinding>() {
     }
 
     private fun setSwipeRefreshState(state:Boolean){
-        getDataBinding().swipeRefresh.isRefreshing = state
-        getDataBinding().swipeRefresh.isEnabled = !state
+        getDataBinding().swipeRefresh.run{
+            isRefreshing = state
+            isEnabled = !state
+        }
     }
 
     override fun initView(root: View) {
+        getDataBinding().swipeRefresh.setOnRefreshListener {
+            // 获取用户信息
+            setSwipeRefreshState(true)
+            getViewModel().requestServer()
+        }
         mAppVm.getUserInfoLiveData().value.setUserInfo()
     }
 

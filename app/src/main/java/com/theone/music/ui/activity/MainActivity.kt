@@ -9,13 +9,17 @@ import androidx.fragment.app.FragmentContainerView
 import com.hjq.permissions.OnPermission
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
+import com.pgyer.pgyersdk.PgyerSDKManager
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.layout.QMUIConstraintLayout
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout2
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction.ACTION_PROP_NEGATIVE
+import com.theone.common.callback.OnKeyBackClickListener
 import com.theone.common.ext.*
 import com.theone.music.R
 import com.theone.music.app.ext.toMusic
 import com.theone.music.app.util.AppUpdateUtil
+import com.theone.music.app.util.CacheUtil
 import com.theone.music.data.model.CollectionEvent
 import com.theone.music.data.model.Music
 import com.theone.music.data.model.TestAlbum
@@ -28,6 +32,7 @@ import com.theone.music.viewmodel.MusicInfoViewModel
 import com.theone.mvvm.base.activity.BaseFragmentActivity
 import com.theone.mvvm.ext.getAppViewModel
 import com.theone.mvvm.ext.qmui.showFailTipsDialog
+import com.theone.mvvm.ext.qmui.showMsgDialog
 
 //  ┏┓　　　┏┓
 //┏┛┻━━━┛┻┓
@@ -74,8 +79,44 @@ class MainActivity : BaseFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(CacheUtil.isFirst()){
+            showDialog()
+        }else{
+            init()
+        }
+    }
+
+    private fun init(){
         createObserve()
-        AppUpdateUtil(this@MainActivity,false).checkUpdate()
+        initPgyerSdk()
+        AppUpdateUtil(this@MainActivity, false).checkUpdate()
+    }
+
+    private fun initPgyerSdk(){
+        PgyerSDKManager.Init()
+            .setContext(application) //设置上下问对象
+            .start()
+    }
+
+    private fun showDialog() {
+        showMsgDialog("隐私政策",
+            "此应用集成蒲公英SDK，蒲公英SDK需要收集您的设备Mac地址、唯一设备识别码以提供统计分析服务。",
+            leftAction = "退出应用",
+            rightAction = "我已了解",
+            listener = { dialog, index ->
+                dialog.dismiss()
+                if(index>0){
+                    CacheUtil.setFirst(false)
+                    init()
+                }else{
+                    finish()
+                }
+            }
+        , prop = ACTION_PROP_NEGATIVE
+        ).apply {
+            setCanceledOnTouchOutside(false)
+            setOnKeyListener(OnKeyBackClickListener())
+        }
     }
 
     private fun createObserve() {

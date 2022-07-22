@@ -34,6 +34,7 @@ object CacheUtil {
 
     private const val USER: String = "user"
     private const val USER_INFO: String = "user_info"
+    private const val FIRST: String = "user_first"
 
     fun isLogin(): Boolean = null != getUser()
 
@@ -53,6 +54,12 @@ object CacheUtil {
     }
 
     fun getUserInfo(): UserInfo?  = USER_INFO.getClassBean()
+
+    fun isFirst() = MMKVUtil.getBoolean(FIRST,true)
+
+    fun setFirst(value:Boolean){
+        MMKVUtil.putBoolean(FIRST,value)
+    }
 
     private fun <T> T?.putClassBean(key:String){
         val json = if (null != this) Gson().toJson(this) else ""

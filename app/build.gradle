@@ -4,8 +4,8 @@ apply from: "../default.gradle"
 android {
     defaultConfig {
         applicationId "com.theone.music.release"
-        versionCode 13
-        versionName "1.2.2"
+        versionCode 14
+        versionName "1.2.3"
 
         ndk {
             //设置支持的SO库架构
@@ -21,6 +21,8 @@ dependencies {
     implementation project(path: ':player')
     // 轮播图
     implementation 'com.github.zhpanvip:BannerViewPager:3.5.5'
+    // 蒲公英
+    implementation 'com.pgyer:analytics:4.2.0'
 
     // 播放器
     implementation 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer-java:v8.1.6-jitpack'
