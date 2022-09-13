@@ -1,7 +1,6 @@
 package com.theone.music.data.repository
 
-import android.util.Log
-import com.theone.lover.data.room.AppDataBase
+import com.theone.music.data.room.AppDataBase
 import com.theone.music.data.model.*
 import com.theone.music.data.room.DownloadDao
 import com.theone.music.data.room.MusicDao
@@ -75,6 +74,7 @@ class DataRepository {
             //.setCacheMode(CacheMode.READ_CACHE_FAILED_REQUEST_NETWORK)
             // 这是缓存时间
             //.setCacheValidTime(-1)
+            //.setHeader("Host","www.hifini.com")
             .setCacheMode(CacheMode.ONLY_NETWORK)
             .toStr()
             .await()

@@ -52,13 +52,14 @@ class App:CoreApplication() {
             // 这个是缓存地址  app.cacheDir.absolutePath 这个地址是APP内部的，这个是不需要请求权限的
             cacheFilePath = app.cacheDir.absolutePath
             isNeedCookie = true
-        }).setDebug(BuildConfig.DEBUG).setOnParamAssembly {
+        }).setDebug(BuildConfig.DEBUG)
+//            .setOnParamAssembly {
             //添加公共请求头
-            it.addHeader(
-                "User-Agent",
-                "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Mobile Safari/537.36"
-            )
-        }
+//            it.addHeader(
+//                "User-Agent",
+//                "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Mobile Safari/537.36"
+//            )
+//        }
         // 这个是播放器的配置
         PlayerFactory.setPlayManager(Exo2PlayerManager::class.java) //EXO模式
         CacheFactory.setCacheManager(ExoPlayerCacheManager::class.java) //exo缓存模式，支持m3u8，只支持exo

@@ -1,12 +1,10 @@
-package com.theone.lover.data.room
+package com.theone.music.data.room
 
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.theone.music.data.model.Download
 import com.theone.music.data.model.Music
-import com.theone.music.data.room.DownloadDao
-import com.theone.music.data.room.MusicDao
 import com.theone.mvvm.base.appContext
 
 

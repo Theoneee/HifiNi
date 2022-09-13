@@ -68,7 +68,6 @@ object NetConstant {
      */
     const val USER_INFO = "my.htm"
 
-
     const val INDEX = "index-%d.htm"
 
     const val FORUM = "forum-%d-%d.htm"
