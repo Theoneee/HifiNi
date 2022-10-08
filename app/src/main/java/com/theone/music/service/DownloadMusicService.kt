@@ -19,9 +19,16 @@ import com.theone.music.net.NetConstant
 import com.theone.mvvm.base.appContext
 import com.theone.mvvm.core.app.util.FileDirectoryManager
 import com.theone.mvvm.core.app.util.NotificationManager
-import com.zhy.http.okhttp.OkHttpUtils
-import com.zhy.http.okhttp.callback.FileCallBack
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import okhttp3.Call
+import rxhttp.asFlow
+import rxhttp.toDownload
+import rxhttp.toFlow
+import rxhttp.wrapper.param.RxHttp
 import java.io.File
 import java.util.*
 
@@ -41,6 +48,7 @@ class DownloadMusicService : Service() {
     private var musicId: Int = 0
 
     private lateinit var mNotificationBuilder: NotificationCompat.Builder
+    private var mJob:Job?=null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (null != intent && null == mDownload) {
@@ -123,43 +131,33 @@ class DownloadMusicService : Service() {
                 DataRepository.DOWNLOAD_DAO.update(download)
             }
             initNotification()
-            OkHttpUtils.get()
-                .url(getMusicUrl())
-                .addHeader("referer", NetConstant.BASE_URL)
-                .tag(getMusicUrl())
-                .build()
-                .execute(object : FileCallBack(downloadPath, name) {
 
-                    override fun inProgress(progress: Float, total: Long, id: Int) {
-                        // 下载中  通知栏进度的变化
-                        val percent = (progress * 100).toInt()
+            mJob =  GlobalScope.launch {
+                RxHttp.get(getMusicUrl())
+                    .addHeader("referer",NetConstant.BASE_URL)
+                    .toFlow(downloadPath+name){
+                        val percent = (it.progress * 100).toInt()
                         if (percent != mOldPercent) {
                             mOldPercent = percent
-                            mFileSize = total
+                            mFileSize = it.totalSize
                             updateProgress(percent)
                         }
-                    }
-
-                    override fun onResponse(response: File, id: Int) {
-                        // 下载完成
-                        updateDownloadDB(DownloadStatus.SUCCESS)
-                        updateLocationFile(response)
-                        updateNotification("下载完成", true)
-                    }
-
-                    override fun onError(call: Call?, e: Exception?, id: Int) {
-                        // 下载失败
+                    }.catch {
                         updateDownloadDB(DownloadStatus.FAIL)
-                        val error = e?.localizedMessage
+                        val error = this.toString()
                         updateNotification("下载失败", false)
                         ToastUtils.show("下载失败 $error")
                         val file = File(downloadPath, name)
                         if (file.exists()) {
                             file.delete()
                         }
+                    }.collect{
+                        // 下载完成
+                        updateDownloadDB(DownloadStatus.SUCCESS)
+                        updateLocationFile(File(it))
+                        updateNotification("下载完成", true)
                     }
-
-                })
+            }
         }
 
     }
@@ -212,6 +210,11 @@ class DownloadMusicService : Service() {
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mJob?.cancel()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

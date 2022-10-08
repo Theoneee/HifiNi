@@ -4,8 +4,8 @@ apply from: "../default.gradle"
 android {
     defaultConfig {
         applicationId "com.theone.music.release"
-        versionCode 14
-        versionName "1.2.3"
+        versionCode 15
+        versionName "1.2.5"
 
         ndk {
             //设置支持的SO库架构
